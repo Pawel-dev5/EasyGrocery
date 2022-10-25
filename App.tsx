@@ -6,9 +6,11 @@ import { t } from 'i18next';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { auth, global, profile } from 'routes/AppRoutes';
+import axios from 'axios';
 
 // CONFIG
 import 'src/config/i18nConfig';
+import { setupInterceptorsTo } from 'config/axiosConfig';
 
 // CONTEXT
 import { ContextProvider } from 'config/useGlobalContext';
@@ -29,6 +31,8 @@ import { Login, Register } from 'components/auth';
 import { Edit, Profile } from 'components/user';
 
 const { Screen, Navigator } = createNativeStackNavigator();
+
+setupInterceptorsTo(axios);
 
 const AppComponent = () => {
 	const { lang, setLang, isAuth } = useContext(GlobalContextData);
