@@ -1,0 +1,11 @@
+{
+	"general": {
+		"language": "English",
+		"languageChange": "Change language",
+		"myLists": "My lists"
+	},
+	"auth": {
+		"logout": "Logout",
+		"login": "Login"
+	}
+}

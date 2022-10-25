@@ -1,0 +1,11 @@
+{
+	"general": {
+		"language": "Polish",
+		"languageChange": "Zmień język",
+		"myLists": "Moje listy"
+	},
+	"auth": {
+		"logout": "Wyloguj",
+		"login": "Zaloguj się"
+	}
+}
