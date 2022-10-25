@@ -6,6 +6,11 @@
 	},
 	"auth": {
 		"logout": "Wyloguj",
-		"login": "Zaloguj się"
+		"login": "Zaloguj się",
+		"register": "Zarejestruj się"
+	},
+	"profile": {
+		"profile": "Profil",
+		"edit": "Edytuj profil"
 	}
 }

@@ -13,8 +13,8 @@ export const AppWrapper = ({ children, routeName, variant = 'grey', navigation, 
 	<StyledAppLayout>
 		<StyledAppNavbar variant={variant}>
 			<View style={{ width: 45, aspectRatio: 1 }}>
-				{navigation && (
-					<StyledButton onPress={() => navigation.goBack()}>
+				{navigation?.canGoBack() && (
+					<StyledButton onPress={() => navigation?.goBack()}>
 						<Icon variant={variant} name="angle-left" size={30} />
 					</StyledButton>
 				)}
