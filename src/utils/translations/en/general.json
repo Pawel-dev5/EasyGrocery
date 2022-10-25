@@ -6,6 +6,11 @@
 	},
 	"auth": {
 		"logout": "Logout",
-		"login": "Login"
+		"login": "Login",
+		"register": "Sign up"
+	},
+	"profile": {
+		"profile": "Profile",
+		"edit": "Profile edit"
 	}
 }

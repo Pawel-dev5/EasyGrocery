@@ -5,8 +5,12 @@ import { ContextProviderProps } from 'config/models';
 
 export const useGlobalContext = () => {
 	const [lang, setLang] = useState('pl');
+	const [isAuth, setIsAuth] = useState(false);
 
-	return { lang, setLang };
+	const signIn = () => setIsAuth(true);
+	const signOut = () => setIsAuth(false);
+
+	return { lang, setLang, isAuth, setIsAuth, signIn, signOut };
 };
 
 export const GlobalContextData = createContext({} as ReturnType<typeof useGlobalContext>);
