@@ -1,16 +1,29 @@
 import React, { createContext, useState } from 'react';
 
 // MODELS
-import { ContextProviderProps } from 'config/models';
+import { ContextProviderProps, UserDataInterface } from 'config/models';
+
+const InitialUserData: UserDataInterface = {
+	jwt: null,
+	user: null,
+};
 
 export const useGlobalContext = () => {
 	const [lang, setLang] = useState('pl');
 	const [isAuth, setIsAuth] = useState(false);
+	const [userData, setUserData] = useState<UserDataInterface>(InitialUserData);
 
-	const signIn = () => setIsAuth(true);
-	const signOut = () => setIsAuth(false);
+	const signIn = (data: UserDataInterface) => {
+		setUserData({ ...data });
+		setIsAuth(true);
+	};
 
-	return { lang, setLang, isAuth, setIsAuth, signIn, signOut };
+	const signOut = () => {
+		setUserData(InitialUserData);
+		setIsAuth(false);
+	};
+
+	return { lang, isAuth, userData, signIn, signOut, setLang };
 };
 
 export const GlobalContextData = createContext({} as ReturnType<typeof useGlobalContext>);

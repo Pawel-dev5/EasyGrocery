@@ -1,33 +1,54 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { SafeAreaView, TextInput, TouchableOpacity, Text } from 'react-native';
 import { t } from 'i18next';
-import { View, Text, TouchableOpacity } from 'react-native';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
-import axios from 'axios';
+import { useAuth } from '../hooks/useAuth';
 
 export const Login = () => {
-	const { setIsAuth } = useContext(GlobalContextData);
+	const { signIn } = useContext(GlobalContextData);
 
-	const fetchUsers = () => {
-		axios
-			.get('http://192.168.0.129:1337/api/users')
-			.then(function (response) {
-				console.log(response.data);
-			})
-			.catch(function (error) {
-				alert(error);
-			});
-	};
+	const { email, password, setEmail, setPassword, handleSubmit, error } = useAuth(signIn);
 
-	useEffect(() => {
-		fetchUsers();
-	}, []);
+	// const fetchUsers = () => {
+	// 	axios
+	// 		.get('http://192.168.0.129:1337/api/users')
+	// 		.then(function (response) {
+	// 			console.log(response.data);
+	// 		})
+	// 		.catch(function (error) {
+	// 			alert(error);
+	// 		});
+	// };
+
+	// useEffect(() => {
+	// 	fetchUsers();
+	// }, []);
+
 	return (
-		<View>
-			<TouchableOpacity onPress={() => setIsAuth(true)}>
+		<SafeAreaView>
+			<TextInput
+				placeholder="email"
+				keyboardType="email-address"
+				textContentType="emailAddress"
+				autoComplete="email"
+				value={email}
+				onChangeText={setEmail}
+			/>
+			<TextInput
+				placeholder="password"
+				keyboardType="default"
+				textContentType="password"
+				value={password}
+				onChangeText={setPassword}
+			/>
+
+			<TouchableOpacity onPress={handleSubmit}>
 				<Text>{t<string>('auth.login')}</Text>
 			</TouchableOpacity>
-		</View>
+
+			<Text>{error}</Text>
+		</SafeAreaView>
 	);
 };
