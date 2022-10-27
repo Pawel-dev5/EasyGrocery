@@ -5,6 +5,7 @@ import { t } from 'i18next';
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
 import { useAuth } from '../hooks/useAuth';
+// import axios from 'axios';
 
 export const Login = () => {
 	const { signIn } = useContext(GlobalContextData);
@@ -13,7 +14,7 @@ export const Login = () => {
 
 	// const fetchUsers = () => {
 	// 	axios
-	// 		.get('http://192.168.0.129:1337/api/users')
+	// 		.get('api/users')
 	// 		.then(function (response) {
 	// 			console.log(response.data);
 	// 		})
