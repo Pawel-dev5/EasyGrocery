@@ -12,7 +12,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 		config.headers = {};
 	}
 
-	config.baseURL = REACT_APP_API;
+	config.baseURL = `${REACT_APP_API}api/`;
 	config.headers['Accept-Language'] = 'en';
 	// config.headers['Authorization'] = tmp;
 

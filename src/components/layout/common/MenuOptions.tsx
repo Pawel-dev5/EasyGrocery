@@ -2,10 +2,10 @@ import React from 'react';
 import { MenuOption as MenuOptionComponent } from 'react-native-popup-menu';
 
 // MODELS
-import { MenuOptionInterface } from 'components/layout/models/items';
+import { MenuOptionInterface } from 'components/layout/models/common';
 
 // STYLES
-import { StyledMenuOption, StyledText, StyledMenuIcon } from 'components/layout/items/Styles';
+import { StyledMenuOption, StyledText, StyledMenuIcon } from 'components/layout/common/Styles';
 
 export const MenuOption = ({ onSelect, text, icon, color }: MenuOptionInterface) => (
 	<MenuOptionComponent onSelect={onSelect}>
