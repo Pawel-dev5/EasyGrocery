@@ -1,8 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
 
 // MODELS
-import { ContextProviderProps, UserDataInterface } from 'config/models';
+import { ContextProviderProps, UserDataInterface, User } from 'config/models';
 
 const InitialUserData: UserDataInterface = {
 	jwt: null,
@@ -36,6 +37,11 @@ export const useGlobalContext = () => {
 			});
 	};
 
+	const setUser = (user: User) => setUserData({ ...userData, user });
+
+	if (userData.jwt) axios.defaults.headers.common['Authorization'] = `Bearer ${userData.jwt}`;
+
+	// TOKEN HANDLER
 	useEffect(() => {
 		const checkAuth = async () => {
 			const cachedToken = await getValueFor('token');
@@ -49,7 +55,7 @@ export const useGlobalContext = () => {
 		checkAuth();
 	}, [userData.jwt]);
 
-	return { lang, isAuth, userData, signIn, signOut, setLang };
+	return { lang, isAuth, user: userData.user, signIn, signOut, setLang, setUser };
 };
 
 export const GlobalContextData = createContext({} as ReturnType<typeof useGlobalContext>);
