@@ -1,55 +1,59 @@
 import React, { useContext } from 'react';
-import { SafeAreaView, TextInput, TouchableOpacity, Text } from 'react-native';
+import { SafeAreaView, Button, Text } from 'react-native';
 import { t } from 'i18next';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
-import { useAuth } from '../hooks/useAuth';
-// import axios from 'axios';
+import { useAuth } from 'components/auth/hooks/useAuth';
+
+// COMPONENTS
+import { ControllerWrapper } from 'components/auth/sections';
+
+const schema = yup
+	.object({
+		email: yup.string().required(),
+		password: yup.string().required(),
+	})
+	.required();
 
 export const Login = () => {
 	const { signIn } = useContext(GlobalContextData);
+	const { submitLogin, backendError } = useAuth(signIn);
 
-	const { email, password, setEmail, setPassword, handleSubmit, error } = useAuth(signIn);
-
-	// const fetchUsers = () => {
-	// 	axios
-	// 		.get('api/users')
-	// 		.then(function (response) {
-	// 			console.log(response.data);
-	// 		})
-	// 		.catch(function (error) {
-	// 			alert(error);
-	// 		});
-	// };
-
-	// useEffect(() => {
-	// 	fetchUsers();
-	// }, []);
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: yupResolver(schema),
+	});
 
 	return (
 		<SafeAreaView>
-			<TextInput
-				placeholder="email"
+			<ControllerWrapper
+				name="email"
+				placeholder="Email"
 				keyboardType="email-address"
 				textContentType="emailAddress"
 				autoComplete="email"
-				value={email}
-				onChangeText={setEmail}
+				control={control}
+				errors={errors}
 			/>
-			<TextInput
-				placeholder="password"
-				keyboardType="default"
+			<ControllerWrapper
+				name="password"
+				placeholder="Password"
 				textContentType="password"
-				value={password}
-				onChangeText={setPassword}
+				autoComplete="password"
+				control={control}
+				errors={errors}
 			/>
 
-			<TouchableOpacity onPress={handleSubmit}>
-				<Text>{t<string>('auth.login')}</Text>
-			</TouchableOpacity>
+			<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
 
-			<Text>{error}</Text>
+			{backendError && <Text>{backendError}</Text>}
 		</SafeAreaView>
 	);
 };

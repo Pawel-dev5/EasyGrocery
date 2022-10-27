@@ -2,14 +2,16 @@
 	"general": {
 		"language": "English",
 		"languageChange": "Change language",
-		"myLists": "My lists"
+		"myLists": "My lists",
+		"field": "Field"
 	},
 	"auth": {
 		"logout": "Logout",
 		"login": "Login",
 		"enterEmailAndPassword": "Enter your email address and password",
 		"loginError": "Something went wrong, please try again",
-		"register": "Sign up"
+		"register": "Sign up",
+		"required": "is required."
 	},
 	"profile": {
 		"profile": "Profile",

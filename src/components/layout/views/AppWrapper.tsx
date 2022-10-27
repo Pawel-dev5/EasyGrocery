@@ -6,7 +6,7 @@ import { View } from 'react-native';
 // STYLES
 import { StyledAppLayout, StyledAppNavbar, StyledButton, StyledChildren, StyledText } from 'components/layout/views/Styles';
 import { Menu } from 'components/layout/sections/Menu';
-import { Icon } from 'components/layout/items/Icon';
+import { Icon } from 'components/layout/common/Icon';
 import { AppLayoutInterface } from 'components/layout/models/views';
 
 export const AppWrapper = ({ children, routeName, variant = 'grey', navigation, lang, setLang }: AppLayoutInterface) => (

@@ -1,35 +1,45 @@
-import { useState } from 'react';
+import { FieldValues } from 'react-hook-form';
 import axios from 'axios';
-import { t } from 'i18next';
 
 // MODELS
 import { UserDataInterface } from 'config/models';
+import { useState } from 'react';
 
-export const useAuth = (signIn: (arg0: UserDataInterface) => void) => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [error, setError] = useState<string | null>(null);
-
-	const handleSubmit = () => {
-		if (email !== '' && password !== '') {
-			axios
-				.post('api/auth/local', {
-					identifier: email,
-					password,
-				})
-				.then((response) => {
-					signIn(response.data);
-					setEmail('');
-					setPassword('');
-				})
-				.catch((error) => {
-					alert(error);
-					setError(t('auth.loginError'));
-				});
-		} else {
-			setError(t('auth.enterEmailAndPassword'));
-		}
+export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
+	const [backendError, setBackendError] = useState<string | null>(null);
+	console.log(backendError);
+	const submitLogin = (data: FieldValues) => {
+		const { email, password } = data;
+		axios
+			.post('auth/local', {
+				identifier: email,
+				password,
+			})
+			.then((response) => {
+				if (signIn) signIn(response.data);
+			})
+			.catch((error) => {
+				setBackendError(error.response.data.error.message);
+			});
 	};
 
-	return { email, password, error, setEmail, setPassword, handleSubmit };
+	const submitRegister = (data: FieldValues) => {
+		const { email, password, username } = data;
+
+		axios
+			.post('users', {
+				email,
+				password,
+				username,
+				confirmed: true,
+			})
+			.then(() => {
+				submitLogin(data);
+			})
+			.catch((error) => {
+				setBackendError(error.response.data.error.message);
+			});
+	};
+
+	return { submitLogin, submitRegister, backendError };
 };
