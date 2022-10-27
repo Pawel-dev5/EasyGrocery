@@ -7,6 +7,8 @@
 	"auth": {
 		"logout": "Wyloguj",
 		"login": "Zaloguj się",
+		"enterEmailAndPassword": "Uzupełnij email i hasło",
+		"loginError": "Coś poszło nie tak, spóbuj ponownie",
 		"register": "Zarejestruj się"
 	},
 	"profile": {
