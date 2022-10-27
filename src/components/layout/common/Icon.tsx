@@ -1,7 +1,7 @@
 // MODELS
 import React from 'react';
-import { StyledIcon } from 'components/layout/items/Styles';
-import { VariantType } from 'components/layout/models/items';
+import { StyledIcon } from 'components/layout/common/Styles';
+import { VariantType } from 'components/layout/models/common';
 
 // STYLES
 

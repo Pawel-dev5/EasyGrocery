@@ -20,7 +20,7 @@ export const LangSwitcher = () => {
 				}
 			}}
 		>
-			<Text>{t('general.languageChange')}</Text>
+			<Text>{t<string>('general.languageChange')}</Text>
 		</TouchableOpacity>
 	);
 };

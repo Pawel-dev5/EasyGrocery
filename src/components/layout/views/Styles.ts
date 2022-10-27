@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native';
 
 // MODELS
-import { VariantType } from 'components/layout/models/items';
+import { VariantType } from 'components/layout/models/common';
 
 export const StyledChildren = styled.View`
 	height: 100%;

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { FontAwesome } from '@expo/vector-icons';
 
 // MODELS
-import { VariantType } from 'components/layout/models/items';
+import { VariantType } from 'components/layout/models/common';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 
 export const StyledMenuOption = styled.View`
@@ -24,3 +24,5 @@ export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
 export const StyledIcon = styled(FontAwesome)<{ variant?: VariantType }>`
 	color: ${({ theme, variant }) => (variant === 'transparent' ? theme.white : theme.base1)};
 `;
+
+export const StyledInput = styled.TextInput``;

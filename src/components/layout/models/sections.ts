@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 // MODELS
-import { VariantType } from 'components/layout/models/items';
+import { VariantType } from 'components/layout/models/common';
 
 export interface MenuInterface {
 	variant: VariantType;
