@@ -5,5 +5,8 @@
     "module": "ESNext",
     "baseUrl": "src",
     "strict": true
-  }
+  },
+  "typeRoots": [
+    "./src/types"
+  ],
 }

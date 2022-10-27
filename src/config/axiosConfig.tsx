@@ -1,4 +1,5 @@
 import { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { REACT_APP_API } from '@env';
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 	if (!config) {
@@ -11,6 +12,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 		config.headers = {};
 	}
 
+	config.baseURL = REACT_APP_API;
 	config.headers['Accept-Language'] = 'en';
 	// config.headers['Authorization'] = tmp;
 
