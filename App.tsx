@@ -13,15 +13,13 @@ import 'src/config/i18nConfig';
 import { setupInterceptorsTo } from 'config/axiosConfig';
 
 // CONTEXT
+import { GlobalContextData } from 'config/useGlobalContext';
 import { ContextProvider } from 'config/useGlobalContext';
 
 // STYLES
 import { ThemeProvider } from 'styled-components';
 import theme from 'utils/theme/themeDefault';
 import { Lists } from 'components/lists';
-
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';

@@ -10,6 +10,7 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 	console.log(backendError);
 	const submitLogin = (data: FieldValues) => {
 		const { email, password } = data;
+
 		axios
 			.post('auth/local', {
 				identifier: email,
@@ -18,9 +19,7 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 			.then((response) => {
 				if (signIn) signIn(response.data);
 			})
-			.catch((error) => {
-				setBackendError(error.response.data.error.message);
-			});
+			.catch((error) => setBackendError(error?.response?.data?.error));
 	};
 
 	const submitRegister = (data: FieldValues) => {
@@ -36,9 +35,7 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 			.then(() => {
 				submitLogin(data);
 			})
-			.catch((error) => {
-				setBackendError(error.response.data.error.message);
-			});
+			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
 	return { submitLogin, submitRegister, backendError };

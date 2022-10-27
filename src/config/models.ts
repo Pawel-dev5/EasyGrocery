@@ -4,7 +4,7 @@ export interface ContextProviderProps {
 	children?: ReactNode | ReactNode[] | null;
 }
 
-interface User {
+export interface User {
 	blocked: boolean | null;
 	confirmed: boolean | null;
 	createdAt: string | null;
