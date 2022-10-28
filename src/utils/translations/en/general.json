@@ -3,7 +3,8 @@
 		"language": "English",
 		"languageChange": "Change language",
 		"myLists": "My lists",
-		"field": "Field"
+		"field": "Field",
+		"list": "List"
 	},
 	"auth": {
 		"logout": "Logout",

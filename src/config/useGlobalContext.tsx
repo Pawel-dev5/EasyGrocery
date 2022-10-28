@@ -34,14 +34,15 @@ export const useGlobalContext = () => {
 		if (userData?.jwt)
 			SecureStore.deleteItemAsync('token').then(() => {
 				setUserData(InitialUserData);
+				setIsAuth(false);
 			});
 	};
 
 	const setUser = (user: User) => setUserData({ ...userData, user });
 
-	if (userData.jwt) axios.defaults.headers.common['Authorization'] = `Bearer ${userData.jwt}`;
+	if (userData?.jwt) axios.defaults.headers.common['Authorization'] = `Bearer ${userData.jwt}`;
 
-	// TOKEN HANDLER
+	// AUTORIZATION HANDLER
 	useEffect(() => {
 		const checkAuth = async () => {
 			const cachedToken = await getValueFor('token');

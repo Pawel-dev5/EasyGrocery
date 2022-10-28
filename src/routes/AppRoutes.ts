@@ -1,6 +1,5 @@
 export const global = {
 	home: '/',
-	lists: '/lists',
 };
 
 export const auth = {
@@ -15,4 +14,8 @@ export const profile = {
 	profile: '/profile',
 	edit: '/profile/edit',
 	notifications: '/profile/notifications',
+};
+export const lists = {
+	lists: '/lists',
+	singleList: '/lists/:id',
 };

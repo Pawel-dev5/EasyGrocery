@@ -3,7 +3,8 @@
 		"language": "Polish",
 		"languageChange": "Zmień język",
 		"myLists": "Moje listy",
-		"field": "Pole"
+		"field": "Pole",
+		"list": "Lista"
 	},
 	"auth": {
 		"logout": "Wyloguj",

@@ -1,33 +1,31 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View } from 'react-native';
 
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
-
-import { useList } from '../hooks/useList';
+// HOOK
+import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
-import { ListInterface } from '../models/sections';
-import { List } from '../sections/List';
+import { ListVariant } from 'components/lists/models/sections';
+import { List } from 'components/lists/sections';
 
-export const Lists = () => {
-	const { lists, getLists } = useList();
-	const { user } = useContext(GlobalContextData);
-
-	// if (!lists) return <Text>elo</Text>;
+export const ListsWrapper = ({ navigation }: { navigation: any }) => {
+	const { lists, getLists } = useContext(ListsContextData);
 
 	useEffect(() => {
-		console.log(lists);
 		getLists();
 	}, []);
 
 	return (
 		<View>
-			{lists?.map((item: ListInterface) => (
-				<List {...item} />
+			{lists?.map((list) => (
+				<List key={list?.id} list={list} variant={ListVariant.PREVIEW} navigation={navigation} />
 			))}
-
-			<Button title="elo" onPress={() => getLists()} />
 		</View>
 	);
 };
+
+export const Lists = ({ navigation }: { navigation: any }) => (
+	<ContextProvider>
+		<ListsWrapper navigation={navigation} />
+	</ContextProvider>
+);

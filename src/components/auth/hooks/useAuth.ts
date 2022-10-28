@@ -19,7 +19,7 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 			.then((response) => {
 				if (signIn) signIn(response.data);
 			})
-			.catch((error) => setBackendError(error?.response?.data?.error));
+			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
 	const submitRegister = (data: FieldValues) => {

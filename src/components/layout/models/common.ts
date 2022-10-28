@@ -1,5 +1,5 @@
 import { ColorsKeys } from 'utils/theme/themeDefault';
-export type VariantType = 'white' | 'grey' | 'transparent';
+export type VariantType = 'white' | 'grey' | 'transparent' | 'done' | 'unDone';
 
 export interface IconInterface {
 	name: string;
