@@ -3,7 +3,7 @@ import { Menu as MenuComponent, MenuOptions, MenuTrigger } from 'react-native-po
 import { t } from 'i18next';
 
 // ROUTER
-import { auth, global, profile } from 'routes/AppRoutes';
+import { auth, lists, profile } from 'routes/AppRoutes';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -33,7 +33,7 @@ export const Menu = ({ variant, navigation }: MenuInterface) => {
 			<MenuOptions optionsContainerStyle={{ marginTop: 40, padding: 10 }}>
 				{isAuth && (
 					<>
-						<MenuOption onSelect={() => navigation.navigate(global.lists)} text={t('general.myLists')} icon="list" />
+						<MenuOption onSelect={() => navigation.navigate(lists.lists)} text={t('general.myLists')} icon="list" />
 						<MenuOption onSelect={() => navigation.navigate(profile.profile)} text={t('profile.profile')} icon="user" />
 						<MenuOption onSelect={() => signOut()} text={t('auth.logout')} icon="sign-out" />
 					</>

@@ -5,7 +5,7 @@ import { t } from 'i18next';
 // ROUTING
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { auth, global, profile } from 'routes/AppRoutes';
+import { auth, lists, profile } from 'routes/AppRoutes';
 import axios from 'axios';
 
 // CONFIG
@@ -27,6 +27,8 @@ import { StatusBar } from 'expo-status-bar';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Login, Register } from 'components/auth';
 import { Edit, Profile } from 'components/user';
+import { ListVariant } from 'components/lists/models/sections';
+import { List } from 'components/lists/sections';
 
 const { Screen, Navigator } = createNativeStackNavigator();
 
@@ -45,10 +47,17 @@ const AppComponent = () => {
 			>
 				{isAuth && (
 					<>
-						<Screen name={global.lists}>
+						<Screen name={lists.lists}>
 							{({ navigation }) => (
 								<AppWrapper routeName={t('general.myLists')} navigation={navigation} lang={lang} setLang={setLang}>
-									<Lists />
+									<Lists navigation={navigation} />
+								</AppWrapper>
+							)}
+						</Screen>
+						<Screen name={lists.singleList}>
+							{({ navigation }) => (
+								<AppWrapper routeName={t('general.myLists')} navigation={navigation} lang={lang} setLang={setLang}>
+									<List variant={ListVariant.FULL} />
 								</AppWrapper>
 							)}
 						</Screen>
