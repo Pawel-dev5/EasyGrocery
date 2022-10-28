@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
-	console.log(backendError);
+
 	const submitLogin = (data: FieldValues) => {
 		const { email, password } = data;
 

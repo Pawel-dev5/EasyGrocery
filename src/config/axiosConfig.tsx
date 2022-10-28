@@ -5,7 +5,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 	if (!config) config = {};
 	if (!config.headers) config.headers = {};
 	config.baseURL = `${REACT_APP_API}api/`;
-
+	config.params = { populate: 'deep' };
 	return config;
 };
 

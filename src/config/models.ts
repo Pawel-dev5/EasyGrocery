@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { ListInterface } from 'components/lists/models/sections';
 
 export interface ContextProviderProps {
 	children?: ReactNode | ReactNode[] | null;
@@ -13,6 +14,7 @@ export interface User {
 	provider: string | null;
 	updatedAt: string | null;
 	username: string | null;
+	lists: ListInterface[];
 }
 
 export interface UserDataInterface {
