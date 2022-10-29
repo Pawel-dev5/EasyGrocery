@@ -59,6 +59,7 @@ export const Register = () => {
 				placeholder="Password"
 				textContentType="password"
 				autoComplete="password"
+				type="password"
 				control={control}
 				errors={errors}
 			/>
@@ -67,6 +68,7 @@ export const Register = () => {
 				name="confirmPassword"
 				placeholder="Confirm Password"
 				textContentType="password"
+				type="password"
 				control={control}
 				errors={errors}
 			/>

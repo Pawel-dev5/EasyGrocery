@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 
-// MODELS
+// CONTEXT
 import { ContextProviderProps, UserDataInterface, User } from 'config/models';
 
 const InitialUserData: UserDataInterface = {
@@ -56,7 +56,15 @@ export const useGlobalContext = () => {
 		checkAuth();
 	}, [userData.jwt]);
 
-	return { lang, isAuth, user: userData.user, signIn, signOut, setLang, setUser };
+	return {
+		lang,
+		isAuth,
+		user: userData.user,
+		signIn,
+		signOut,
+		setLang,
+		setUser,
+	};
 };
 
 export const GlobalContextData = createContext({} as ReturnType<typeof useGlobalContext>);

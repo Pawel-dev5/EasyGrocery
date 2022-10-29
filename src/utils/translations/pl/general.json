@@ -4,7 +4,8 @@
 		"languageChange": "Zmień język",
 		"myLists": "Moje listy",
 		"field": "Pole",
-		"list": "Lista"
+		"list": "Lista",
+		"addNewList": "Dodaj nową listę"
 	},
 	"auth": {
 		"logout": "Wyloguj",

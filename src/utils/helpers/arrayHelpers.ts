@@ -15,3 +15,15 @@ export const findObjectInArray = <T, U extends keyof T>(array: T[], key: U, arg?
 
 	return null;
 };
+
+export const removeObjectFromArray = <T, U extends keyof T>(array: T[], key: U, arg: any) => {
+	if (array && Array.isArray(array)) {
+		const removeIndex = array?.findIndex((item) => item[key] === arg);
+
+		if (removeIndex !== -1) {
+			array.splice(removeIndex, 1);
+		}
+	}
+
+	return array;
+};
