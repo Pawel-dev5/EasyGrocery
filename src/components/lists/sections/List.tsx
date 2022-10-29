@@ -12,8 +12,8 @@ import { FullList } from 'components/lists/items/FullList';
 import { ListVariant, ListWrapperInterface } from 'components/lists/models/sections';
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 
-export const ListWrapper = ({ list, variant, navigation }: ListWrapperInterface) => {
-	const { deleteList, lists } = useContext(ListsContextData);
+export const ListWrapper = ({ list, variant, navigation, lists }: ListWrapperInterface) => {
+	const { deleteList } = useContext(ListsContextData);
 
 	switch (variant) {
 		case ListVariant.PREVIEW:
@@ -42,14 +42,14 @@ export const ListWrapper = ({ list, variant, navigation }: ListWrapperInterface)
 			}
 			return null;
 		case ListVariant.FULL:
-			return <FullList navigation={navigation} />;
+			return <FullList navigation={navigation} lists={lists} />;
 		default:
 			return null;
 	}
 };
 
-export const List = ({ list, variant, navigation }: ListWrapperInterface) => (
+export const List = ({ list, variant, navigation, lists }: ListWrapperInterface) => (
 	<ContextProvider>
-		<ListWrapper navigation={navigation} list={list} variant={variant} />
+		<ListWrapper navigation={navigation} list={list} variant={variant} lists={lists} />
 	</ContextProvider>
 );

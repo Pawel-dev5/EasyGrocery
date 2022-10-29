@@ -28,4 +28,5 @@ export interface ListWrapperInterface {
 	variant: ListVariant;
 	list?: ListInterface;
 	navigation: any;
+	lists?: ListInterface[];
 }

@@ -3,23 +3,26 @@ import axios from 'axios';
 import { FieldValues } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 
-// ROUTER
-import { lists as listRoute } from 'routes/AppRoutes';
-
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
 
 // MODELS
-import { ListInterface } from 'components/lists/models/sections';
-import { removeObjectFromArray } from 'utils/helpers/arrayHelpers';
-import { ListContextProvider } from 'components/lists/models/hooks';
+import { ItemInterface, ListInterface } from 'components/lists/models/sections';
+import {
+	ListContextProvider,
+	SingleListEditableInitial,
+	SingleListEditableInitialInterface,
+} from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
+import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
+import { updateObject } from 'utils/helpers/objectHelpers';
 
 export const useList = ({ navigation }: { navigation: any }) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [lists, setLists] = useState<ListInterface[]>([]);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
-
+	const [singleListEditable, setSingleListEditable] =
+		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
 	const { user } = useContext(GlobalContextData);
 
 	const getLists = () => {
@@ -34,7 +37,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		if (id)
 			axios
 				.get(`lists/${id}`)
-				.then((resp) => setSingleList(resp?.data?.data))
+				.then((resp) => setSingleList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes }))
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
@@ -42,12 +45,13 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		if (id)
 			axios
 				.delete(`lists/${id}`)
-				.then(() => {
-					// let newList: ListInterface[] = [];
-					// if (lists) newList = removeObjectFromArray(lists, 'id', resp?.data?.data?.id);
+				.then((resp) => {
+					const newList: ListInterface[] = [...lists];
+					// if (lists) newList = removeObjectFromArray(newList, 'id', resp?.data?.data?.id);
 					// console.log(newList);
-					// setLists(newList);
-					// setSingleList(null);
+					// const tmp = removeObjectFromArray(newList, 'id', resp?.data?.data?.id);
+					// setLists(tmp);
+					setSingleList(null);
 					// TMP
 					getLists();
 				})
@@ -74,6 +78,65 @@ export const useList = ({ navigation }: { navigation: any }) => {
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
+	const setIsEdited = (title: string | null) =>
+		setSingleListEditable({ isEdited: 'title', value: { ...singleListEditable.value, title } });
+
+	const setEditedValue = (title: string) =>
+		setSingleListEditable({ ...singleListEditable, value: { ...singleListEditable.value, title } });
+
+	const editSingleListTitle = () => {
+		if (singleList)
+			axios
+				.put(`lists/${singleList?.id}`, {
+					data: {
+						title: singleListEditable.value.title,
+					},
+				})
+				.then((resp) => {
+					const { id, attributes } = resp?.data?.data;
+					if (singleList) setSingleList({ id, ...attributes });
+					setSingleListEditable(SingleListEditableInitial);
+				})
+				.catch((error) => console.log(error?.response?.data?.error?.message));
+	};
+
+	const editSingleListItems = (variant: 'add' | 'delete' | 'update', id?: string) => {
+		if (singleList) {
+			let newData;
+			if (variant === 'add') newData = [...singleList?.items, singleListEditable.value.newItem];
+			if (variant === 'delete') newData = removeObjectFromArray(singleList.items, 'id', id);
+			if (variant === 'update' && singleList?.items)
+				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
+					updateObject(todo, { done: !todo.done }),
+				);
+
+			if (newData)
+				axios
+					.put(`lists/${singleList?.id}`, {
+						data: {
+							items: newData,
+						},
+					})
+					.then((resp) => {
+						const { id, attributes } = resp?.data?.data;
+						if (singleList) setSingleList({ id, ...attributes });
+						setSingleListEditable(SingleListEditableInitial);
+					})
+					.catch((error) => console.log(error?.response?.data?.error?.message));
+		}
+	};
+
+	const addNewListItem = (title: any) => {
+		const newItem = {
+			value: title,
+			done: false,
+		};
+		setSingleListEditable({
+			isEdited: 'items',
+			value: { ...singleListEditable.value, newItem },
+		});
+	};
+
 	return {
 		lists,
 		singleList,
@@ -83,6 +146,12 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		deleteList,
 		setNewList,
 		user,
+		singleListEditable,
+		setIsEdited,
+		editSingleListTitle,
+		editSingleListItems,
+		setEditedValue,
+		addNewListItem,
 	};
 };
 

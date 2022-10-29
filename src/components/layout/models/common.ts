@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 export type VariantType = 'white' | 'grey' | 'transparent' | 'done' | 'unDone';
 
@@ -21,8 +22,8 @@ export interface InputInterface {
 	autoComplete?: string;
 	ariaInvalid?: boolean;
 	onBlur?: () => void;
-	onChange?: () => void;
-	value?: HTMLInputElement;
+	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+	value?: HTMLInputElement | string;
 	name: string;
 	type?: 'password' | 'text' | 'number' | 'checkbox' | 'radio' | 'submit' | ' button' | 'date' | 'image';
 }
