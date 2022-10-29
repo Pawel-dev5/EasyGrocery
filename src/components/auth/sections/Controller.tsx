@@ -14,10 +14,11 @@ export const ControllerWrapper = ({
 	control,
 	errors,
 	name,
-	keyboardType,
+	keyboardType = 'default',
 	autoComplete,
 	textContentType,
 	placeholder,
+	type,
 }: ControllerInterface) => (
 	<>
 		<Controller
@@ -25,6 +26,7 @@ export const ControllerWrapper = ({
 			control={control}
 			render={({ field: { onChange, onBlur, value } }) => (
 				<Input
+					type={type}
 					placeholder={placeholder}
 					keyboardType={keyboardType}
 					textContentType={textContentType}

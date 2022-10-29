@@ -1,22 +1,28 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { t } from 'i18next';
+
+// CONTEXT
+import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
 import { Icon } from 'components/layout/common/Icon';
+import { lists as listsRoutes } from 'routes/AppRoutes';
 
 // MODELS
-import { ContextProvider, ListsContextData } from '../hooks/useList';
-import { t } from 'i18next';
+import { getRouteId } from 'utils/helpers/getRouteId';
 
-export const FullListWrapper = () => {
-	const { singleList, getList } = useContext(ListsContextData);
+export const FullListWrapper = ({ navigation }: { navigation: any }) => {
+	const { singleList, getList, deleteList } = useContext(ListsContextData);
+	const listUuid = getRouteId(navigation, listsRoutes.singleList);
 
 	useEffect(() => {
-		getList();
+		if (listUuid) getList(listUuid);
 	}, []);
 
 	if (singleList) {
 		const {
+			id,
 			attributes: { title, users_permissions_users, items },
 		} = singleList;
 
@@ -36,14 +42,17 @@ export const FullListWrapper = () => {
 						</View>
 					))}
 				</View>
+				<TouchableOpacity onPress={() => deleteList(id)}>
+					<Icon name="trash" size={20} />
+				</TouchableOpacity>
 			</View>
 		);
 	}
 	return <Text>Brak danych</Text>;
 };
 
-export const FullList = () => (
+export const FullList = ({ navigation }: { navigation: any }) => (
 	<ContextProvider>
-		<FullListWrapper />
+		<FullListWrapper navigation={navigation} />
 	</ContextProvider>
 );

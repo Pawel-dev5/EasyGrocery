@@ -24,4 +24,5 @@ export interface InputInterface {
 	onChange?: () => void;
 	value?: HTMLInputElement;
 	name: string;
+	type?: 'password' | 'text' | 'number' | 'checkbox' | 'radio' | 'submit' | ' button' | 'date' | 'image';
 }

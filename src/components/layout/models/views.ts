@@ -16,4 +16,5 @@ export interface AppLayoutInterface {
 	variant?: VariantType;
 	lang: string;
 	setLang: Dispatch<SetStateAction<string>>;
+	setRefresh?: () => void;
 }

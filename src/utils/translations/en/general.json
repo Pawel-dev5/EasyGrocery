@@ -4,7 +4,8 @@
 		"languageChange": "Change language",
 		"myLists": "My lists",
 		"field": "Field",
-		"list": "List"
+		"list": "List",
+		"addNewList": "Add new list"
 	},
 	"auth": {
 		"logout": "Logout",

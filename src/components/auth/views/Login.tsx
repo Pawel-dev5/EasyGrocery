@@ -49,6 +49,7 @@ export const Login = () => {
 				autoComplete="password"
 				control={control}
 				errors={errors}
+				type="password"
 			/>
 
 			<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />

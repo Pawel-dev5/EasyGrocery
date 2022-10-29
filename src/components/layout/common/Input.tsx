@@ -16,6 +16,7 @@ export const Input = ({
 	autoComplete,
 	ariaInvalid,
 	name,
+	type = 'text',
 }: InputInterface) => (
 	<StyledInput
 		name={name}
@@ -27,5 +28,7 @@ export const Input = ({
 		textContentType={textContentType}
 		autoComplete={autoComplete}
 		aria-invalid={ariaInvalid}
+		type={type}
+		secureTextEntry={type === 'password'}
 	/>
 );
