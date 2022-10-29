@@ -47,7 +47,7 @@ export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 	return (
 		<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 			{lists?.map((list) => (
-				<List key={list?.id} list={list} variant={ListVariant.PREVIEW} navigation={navigation} />
+				<List key={list?.id} list={list} lists={lists} variant={ListVariant.PREVIEW} navigation={navigation} />
 			))}
 
 			<Text>{t<string>('general.addNewList')}</Text>
