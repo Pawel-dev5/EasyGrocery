@@ -88,19 +88,22 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		setSingleListEditable({ ...singleListEditable, value: { ...singleListEditable.value, title } });
 
 	const editSingleListTitle = () => {
-		if (singleList)
-			axios
-				.put(`lists/${singleList?.id}`, {
-					data: {
-						title: singleListEditable.value.title,
-					},
-				})
-				.then((resp) => {
-					const { id, attributes } = resp?.data?.data;
-					if (singleList) setSingleList({ id, ...attributes });
-					setSingleListEditable(SingleListEditableInitial);
-				})
-				.catch((error) => console.log(error?.response?.data?.error?.message));
+		if (singleList) {
+			if (singleList?.title !== singleListEditable?.value?.title) {
+				axios
+					.put(`lists/${singleList?.id}`, {
+						data: {
+							title: singleListEditable.value.title,
+						},
+					})
+					.then((resp) => {
+						const { id, attributes } = resp?.data?.data;
+						if (singleList) setSingleList({ id, ...attributes });
+						setSingleListEditable(SingleListEditableInitial);
+					})
+					.catch((error) => console.log(error?.response?.data?.error?.message));
+			} else setSingleListEditable(SingleListEditableInitial);
+		}
 	};
 
 	const editSingleListItems = (variant: 'add' | 'delete' | 'update' | 'clear', id?: string) => {
@@ -130,6 +133,11 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		}
 	};
 
+	const handleKeyboardItems = (nativeEvent: any) => {
+		console.log(nativeEvent);
+		if (nativeEvent?.key === 'Enter') editSingleListItems('add');
+	};
+
 	const addNewListItem = (title: any) => {
 		const newItem = {
 			value: title,
@@ -150,6 +158,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		}
 	}, [showDone]);
 
+	console.log(lists);
 	return {
 		lists,
 		singleList,
@@ -168,6 +177,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		addNewListItem,
 		setShowDone,
 		showDone,
+		handleKeyboardItems,
 	};
 };
 

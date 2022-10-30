@@ -17,6 +17,9 @@ export const Input = ({
 	ariaInvalid,
 	name,
 	type = 'text',
+	onKeyPress,
+	autoFocus,
+	onSubmitEditing,
 }: InputInterface) => (
 	<StyledInput
 		name={name}
@@ -30,5 +33,10 @@ export const Input = ({
 		aria-invalid={ariaInvalid}
 		type={type}
 		secureTextEntry={type === 'password'}
+		onKeyPress={onKeyPress}
+		autoFocus={autoFocus}
+		onSubmitEditing={onSubmitEditing}
+		clearButtonMode="while-editing"
+		returnKeyType="search"
 	/>
 );

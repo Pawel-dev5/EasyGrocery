@@ -16,14 +16,17 @@ export interface MenuOptionInterface {
 }
 
 export interface InputInterface {
+	name: string;
+	value?: HTMLInputElement | string;
 	placeholder: string;
-	keyboardType?: string;
 	textContentType: string;
+	keyboardType?: string;
 	autoComplete?: string;
 	ariaInvalid?: boolean;
 	onBlur?: () => void;
 	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-	value?: HTMLInputElement | string;
-	name: string;
+	autoFocus?: boolean;
+	onSubmitEditing?: any;
+	onKeyPress?: (e: ChangeEvent<HTMLInputElement>) => void;
 	type?: 'password' | 'text' | 'number' | 'checkbox' | 'radio' | 'submit' | ' button' | 'date' | 'image';
 }

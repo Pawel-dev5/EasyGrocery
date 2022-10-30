@@ -7,14 +7,11 @@ import { ContextProvider, ListsContextData } from 'components/lists/hooks/useLis
 
 // COMPONENTS
 import { Icon } from 'components/layout/common/Icon';
-import { lists as listsRoutes } from 'routes/AppRoutes';
-
 // MODELS
-import { getRouteId } from 'utils/helpers/getRouteId';
 import { Input } from 'components/layout/common/Input';
 import { ListInterface } from 'components/lists/models/sections';
 
-export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?: ListInterface[] }) => {
+export const FullListWrapper = ({ navigation, lists, route }: { navigation: any; lists?: ListInterface[]; route: any }) => {
 	const {
 		singleList,
 		singleListEditable,
@@ -29,7 +26,7 @@ export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?
 		filteredItems,
 		showDone,
 	} = useContext(ListsContextData);
-	const listUuid = getRouteId(navigation, listsRoutes.singleList);
+	const listUuid = route?.params?.id;
 
 	useEffect(() => {
 		if (listUuid) getList(listUuid);
@@ -96,8 +93,9 @@ export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?
 					<Input
 						value={singleListEditable?.value?.newItem.value!}
 						name="title"
-						placeholder="title"
+						placeholder="Add"
 						textContentType="nickname"
+						onKeyPress={(e) => console.log(e.nativeEvent)}
 						onChange={(text) => addNewListItem(text)}
 					/>
 					<TouchableOpacity onPress={() => editSingleListItems('add')}>
@@ -127,8 +125,8 @@ export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?
 	return <Text>Brak danych</Text>;
 };
 
-export const FullList = ({ navigation, lists }: { navigation: any; lists?: ListInterface[] }) => (
+export const FullList = (props: any) => (
 	<ContextProvider>
-		<FullListWrapper navigation={navigation} lists={lists} />
+		<FullListWrapper {...props} />
 	</ContextProvider>
 );
