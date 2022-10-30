@@ -17,14 +17,17 @@ import { ListInterface } from 'components/lists/models/sections';
 export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?: ListInterface[] }) => {
 	const {
 		singleList,
+		singleListEditable,
 		getList,
 		deleteList,
-		singleListEditable,
 		addNewListItem,
 		editSingleListTitle,
 		setIsEdited,
 		setEditedValue,
 		editSingleListItems,
+		setShowDone,
+		filteredItems,
+		showDone,
 	} = useContext(ListsContextData);
 	const listUuid = getRouteId(navigation, listsRoutes.singleList);
 
@@ -34,6 +37,7 @@ export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?
 
 	if (singleList) {
 		const { id, title, users_permissions_users, items } = singleList;
+		const listItems = filteredItems || items;
 
 		return (
 			<View>
@@ -70,7 +74,12 @@ export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?
 				</TouchableOpacity>
 				<View>
 					<Text>{t<string>('general.list')}:</Text>
-					{items?.map((item) => (
+
+					<TouchableOpacity onPress={() => editSingleListItems('clear', id!)}>
+						<Icon name="broom" size={20} />
+					</TouchableOpacity>
+
+					{listItems?.map((item) => (
 						<View key={item?.id}>
 							<Text>{item?.value}</Text>
 							<TouchableOpacity onPress={() => editSingleListItems('update', item.id)}>
@@ -95,6 +104,23 @@ export const FullListWrapper = ({ navigation, lists }: { navigation: any; lists?
 						<Icon name="plus" size={20} />
 					</TouchableOpacity>
 				</View>
+				{(showDone !== 'done' || showDone === null) && (
+					<TouchableOpacity onPress={() => setShowDone('done')}>
+						<Text>Pokaż tylko zrobione</Text>
+					</TouchableOpacity>
+				)}
+
+				{(showDone !== 'unDone' || showDone === null) && (
+					<TouchableOpacity onPress={() => setShowDone('unDone')}>
+						<Text>Pokaż tylko niezrobione</Text>
+					</TouchableOpacity>
+				)}
+
+				{showDone !== null && (
+					<TouchableOpacity onPress={() => setShowDone(null)}>
+						<Text>Pokaż wszystko</Text>
+					</TouchableOpacity>
+				)}
 			</View>
 		);
 	}

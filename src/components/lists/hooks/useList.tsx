@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,8 +14,10 @@ import {
 	SingleListEditableInitialInterface,
 } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
-import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
+
+// HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
+import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 
 export const useList = ({ navigation }: { navigation: any }) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
@@ -24,6 +26,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 	const [singleListEditable, setSingleListEditable] =
 		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
 	const { user } = useContext(GlobalContextData);
+	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
 
 	const getLists = () => {
 		if (user?.id)
@@ -100,7 +103,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 				.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
-	const editSingleListItems = (variant: 'add' | 'delete' | 'update', id?: string) => {
+	const editSingleListItems = (variant: 'add' | 'delete' | 'update' | 'clear', id?: string) => {
 		if (singleList) {
 			let newData;
 			if (variant === 'add') newData = [...singleList?.items, singleListEditable.value.newItem];
@@ -109,6 +112,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
 					updateObject(todo, { done: !todo.done }),
 				);
+			if (variant === 'clear') newData = [];
 
 			if (newData)
 				axios
@@ -137,21 +141,33 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		});
 	};
 
+	const filteredItems = useMemo(() => {
+		if (singleList?.items) {
+			const baseItems = [...singleList?.items];
+			const filter = showDone === 'done' ?? true;
+			if (baseItems && showDone !== null) return baseItems.filter(({ done }) => done === filter);
+			if (showDone === null) return null;
+		}
+	}, [showDone]);
+
 	return {
 		lists,
 		singleList,
 		backendError,
+		user,
+		singleListEditable,
+		filteredItems,
 		getLists,
 		getList,
 		deleteList,
 		setNewList,
-		user,
-		singleListEditable,
 		setIsEdited,
 		editSingleListTitle,
 		editSingleListItems,
 		setEditedValue,
 		addNewListItem,
+		setShowDone,
+		showDone,
 	};
 };
 
