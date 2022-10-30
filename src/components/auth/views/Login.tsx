@@ -29,6 +29,10 @@ export const Login = () => {
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
+		defaultValues: {
+			email: 'p.nowecki@gmail.com',
+			password: 'Pawel6503!',
+		},
 	});
 
 	return (

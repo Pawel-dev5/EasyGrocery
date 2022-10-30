@@ -28,11 +28,15 @@ export const StyledIcon = styled(FontAwesome5)<{ variant?: VariantType }>`
 		switch (variant) {
 			case 'done':
 				return css`
-					color: green;
+					color: ${({ theme }) => theme.success};
 				`;
 			case 'unDone':
 				return css`
-					color: red;
+					color: ${({ theme }) => theme.danger};
+				`;
+			case 'white':
+				return css`
+					color: ${({ theme }) => theme.white};
 				`;
 
 			default:
@@ -48,4 +52,42 @@ export const StyledInput = styled.TextInput`
 	border-radius: ${({ theme }) => theme.radius[2]};
 	padding: 12px;
 	margin-bottom: 16px;
+`;
+
+export const StyledProgressBarContainer = styled.View`
+	height: 7px;
+	width: 85%;
+	position: relative;
+`;
+
+export const StyledProgressBarBaseBox = styled.View`
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	border-radius: 3px;
+	transition: width 10s ease-in-out;
+`;
+
+export const StyledProgressBarBackground = styled(StyledProgressBarBaseBox)`
+	background: ${({ theme }) => theme.grey200};
+	width: 100%;
+`;
+
+export const StyledProgressBarProgress = styled(StyledProgressBarBaseBox)`
+	background: ${({ theme }) => theme.grey600};
+	width: ${({ percent }) => percent}%;
+`;
+
+export const StyledProgressBarWrapper = styled.View`
+	width: 100%;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+`;
+
+export const StyledProgressBarCounter = styled.View`
+	width: 10%;
+	justify-content: flex-end;
+	align-items: flex-end;
 `;

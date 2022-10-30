@@ -2,6 +2,9 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -19,6 +22,13 @@ import { SingleListInterface } from 'components/lists/models/items';
 import { updateObject } from 'utils/helpers/objectHelpers';
 import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 
+const schema = yup
+	.object({
+		title: yup.string().required(),
+		description: yup.string(),
+	})
+	.required();
+
 export const useList = ({ navigation }: { navigation: any }) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [lists, setLists] = useState<ListInterface[]>([]);
@@ -27,6 +37,15 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
 	const { user } = useContext(GlobalContextData);
 	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
+	const [visible, setVisible] = useState(false);
+
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: yupResolver(schema),
+	});
 
 	const getLists = () => {
 		if (user?.id)
@@ -77,6 +96,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 					...resp?.data?.data?.attributes,
 				};
 				setLists([...lists, newList]);
+				setVisible(!visible);
 			})
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
@@ -158,7 +178,6 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		}
 	}, [showDone]);
 
-	console.log(lists);
 	return {
 		lists,
 		singleList,
@@ -178,6 +197,11 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		setShowDone,
 		showDone,
 		handleKeyboardItems,
+		visible,
+		setVisible,
+		control,
+		errors,
+		handleSubmit,
 	};
 };
 
