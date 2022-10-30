@@ -5,7 +5,8 @@
 		"myLists": "Moje listy",
 		"field": "Pole",
 		"list": "Lista",
-		"addNewList": "Dodaj nową listę"
+		"addNewList": "Dodaj nową listę",
+		"add": "Dodaj"
 	},
 	"auth": {
 		"logout": "Wyloguj",

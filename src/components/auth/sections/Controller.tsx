@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from 'components/layout/common/Input';
+import { Input } from 'components/layout/common';
 import { Controller } from 'react-hook-form';
 import { InputInterface } from 'components/layout/models/common';
 import { Text } from 'react-native';

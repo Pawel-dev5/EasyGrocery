@@ -4,7 +4,8 @@ import styled, { css } from 'styled-components/native';
 import { VariantType } from 'components/layout/models/common';
 
 export const StyledChildren = styled.View`
-	height: 100%;
+	height: 89%;
+	width: 100%;
 	background-color: ${({ theme }) => theme.white};
 	align-items: center;
 	justify-content: flex-start;

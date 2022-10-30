@@ -6,12 +6,9 @@ import { t } from 'i18next';
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
-import { Icon } from 'components/layout/common/Icon';
-// MODELS
-import { Input } from 'components/layout/common/Input';
-import { ListInterface } from 'components/lists/models/sections';
+import { Icon, Input } from 'components/layout/common';
 
-export const FullListWrapper = ({ navigation, lists, route }: { navigation: any; lists?: ListInterface[]; route: any }) => {
+export const FullListWrapper = ({ route }: { route: any }) => {
 	const {
 		singleList,
 		singleListEditable,
@@ -39,7 +36,7 @@ export const FullListWrapper = ({ navigation, lists, route }: { navigation: any;
 		return (
 			<View>
 				<View>
-					{singleListEditable.isEdited === 'title' ? (
+					{singleListEditable?.isEdited === 'title' ? (
 						<>
 							<Input
 								value={singleListEditable?.value?.title!}

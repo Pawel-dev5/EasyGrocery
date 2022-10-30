@@ -41,7 +41,7 @@ const theme = {
 	fontFeatured: '"Roboto Condensed", sans-serif',
 
 	navbarHeight: '100px',
-	globalPadding: '32px',
+	globalPadding: '16px',
 
 	fontWeight: {
 		light: 300,
@@ -70,8 +70,8 @@ const theme = {
 	lighten: ({ amount = 0.7, color }: Polished) => lighten(amount ?? 0.7, color ?? theme.base1),
 	darken: ({ amount, color }: Polished) => darken(amount ?? 0.2, color ?? theme.base1),
 	shadow: ({ color }: { color?: string }) => `
-		box-shadow: 0px 4px 16px ${theme.transparentize({ color, amount: 0.75 })};
-		-webkit-box-shadow: 0px 4px 16px ${theme.transparentize({ color, amount: 0.75 })};
+		box-shadow: 4px 8px 16px ${theme.transparentize({ color, amount: 0.75 })};
+		-webkit-box-shadow: 4px 8px 16px ${theme.transparentize({ color, amount: 0.75 })};
 	`,
 };
 

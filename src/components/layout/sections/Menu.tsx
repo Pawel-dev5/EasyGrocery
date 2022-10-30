@@ -9,9 +9,7 @@ import { auth, lists, profile } from 'routes/AppRoutes';
 import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
-import { Icon } from 'components/layout/common/Icon';
-import { MenuOption } from 'components/layout/common/MenuOptions';
-import { LangSwitcher } from 'components/layout/common/LangSwitcher';
+import { Icon, MenuOption, LangSwitcher } from 'components/layout/common';
 
 // STYLES
 import { StyledMenuTrigger } from 'components/layout/sections/Styles';

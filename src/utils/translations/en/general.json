@@ -5,7 +5,8 @@
 		"myLists": "My lists",
 		"field": "Field",
 		"list": "List",
-		"addNewList": "Add new list"
+		"addNewList": "Add new list",
+		"add": "Add"
 	},
 	"auth": {
 		"logout": "Logout",

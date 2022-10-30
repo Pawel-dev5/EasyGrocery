@@ -1,9 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ScrollView, Button, Text, SafeAreaView, RefreshControl } from 'react-native';
+import { FlatList, Button, Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { BottomSheet } from 'react-native-btr';
+
+// ROUTER
+import { lists as listRoute } from 'routes/AppRoutes';
 
 // HOOK
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
@@ -12,16 +13,22 @@ import { ContextProvider, ListsContextData } from 'components/lists/hooks/useLis
 import { ListVariant } from 'components/lists/models/sections';
 import { List } from 'components/lists/sections';
 import { ControllerWrapper } from 'components/auth/sections';
+import { Icon } from 'components/layout/common';
 
-const schema = yup
-	.object({
-		title: yup.string().required(),
-		description: yup.string(),
-	})
-	.required();
+// STYLES
+import {
+	StyledBottomAddListButton,
+	StyledBottomSheet,
+	StyledBottomSheetBody,
+	StyledBottomSheetClose,
+	StyledBottomSheetHeader,
+	StyledFloatingAddListButton,
+	StyledListsScrollView,
+} from 'components/lists/views/Styles';
 
 export const ListsWrapper = ({ navigation }: { navigation: any }) => {
-	const { lists, getLists, setNewList, backendError } = useContext(ListsContextData);
+	const { lists, getLists, setNewList, backendError, visible, setVisible, control, errors, handleSubmit } =
+		useContext(ListsContextData);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -36,36 +43,67 @@ export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 		getLists();
 	}, []);
 
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		resolver: yupResolver(schema),
-	});
-
 	return (
-		<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-			{lists?.map((list) => (
-				<List key={list?.id} list={list} lists={lists} variant={ListVariant.PREVIEW} navigation={navigation} />
-			))}
+		<StyledListsScrollView>
+			<FlatList
+				data={lists}
+				keyExtractor={(item) => item?.id}
+				refreshing={refreshing}
+				onRefresh={onRefresh}
+				renderItem={({ item }) => {
+					const props = {
+						list: item,
+						navigation,
+						variant: ListVariant.PREVIEW,
+					};
+					return (
+						<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
+							<List {...props} />
+						</TouchableOpacity>
+					);
+				}}
+			/>
 
-			<Text>{t<string>('general.addNewList')}</Text>
+			<StyledFloatingAddListButton onPress={() => setVisible(!visible)}>
+				<Icon name="plus" size={20} variant="white" />
+			</StyledFloatingAddListButton>
 
-			<SafeAreaView>
-				<ControllerWrapper name="title" placeholder="title" textContentType="nickname" control={control} errors={errors} />
-				<ControllerWrapper
-					name="description"
-					placeholder="description"
-					textContentType="nickname"
-					control={control}
-					errors={errors}
-				/>
+			<BottomSheet
+				visible={visible}
+				//setting the visibility state of the bottom shee
+				onBackButtonPress={() => setVisible(!visible)}
+				//Toggling the visibility state on the click of the back botton
+				onBackdropPress={() => setVisible(!visible)}
+				//Toggling the visibility state on the clicking out side of the sheet
+			>
+				<StyledBottomSheet>
+					<StyledBottomSheetClose onPress={() => setVisible(!visible)} />
 
-				<Button title={t<string>('general.addNewList')} onPress={handleSubmit(setNewList)} />
-				{backendError && <Text>{backendError}</Text>}
-			</SafeAreaView>
-		</ScrollView>
+					<StyledBottomSheetBody>
+						<StyledBottomSheetHeader>{t<string>('general.addNewList')}</StyledBottomSheetHeader>
+						<ControllerWrapper
+							name="title"
+							placeholder="title"
+							textContentType="nickname"
+							control={control}
+							errors={errors}
+						/>
+						<ControllerWrapper
+							name="description"
+							placeholder="description"
+							textContentType="nickname"
+							control={control}
+							errors={errors}
+						/>
+						<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
+							<Icon name="plus" size={20} variant="white" />
+						</StyledBottomAddListButton>
+
+						{backendError && <Text>{backendError}</Text>}
+					</StyledBottomSheetBody>
+				</StyledBottomSheet>
+			</BottomSheet>
+		</StyledListsScrollView>
 	);
 };
 
