@@ -1,6 +1,6 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
-export const StyledListCard = styled.View`
+export const StyledListCard = styled.View<{ type: string }>`
 	max-width: 100%;
 	min-height: 80px;
 	border-radius: ${({ theme }) => theme.radius[2]};
@@ -10,6 +10,12 @@ export const StyledListCard = styled.View`
 	overflow: hidden;
 	background: ${({ theme }) => theme.white};
 	${({ theme }) => theme.shadow({ color: theme.grey1000 })};
+
+	${({ type }) =>
+		type === 'grid' &&
+		css`
+			max-width: 180px;
+		`}
 `;
 
 export const StyledListCardItem = styled.View`

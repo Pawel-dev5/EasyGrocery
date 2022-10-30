@@ -38,10 +38,12 @@ export const useList = ({ navigation }: { navigation: any }) => {
 	const { user } = useContext(GlobalContextData);
 	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
 	const [visible, setVisible] = useState(false);
+	const [listsView, setListsView] = useState(true);
 
 	const {
 		control,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
@@ -97,6 +99,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 				};
 				setLists([...lists, newList]);
 				setVisible(!visible);
+				reset();
 			})
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
@@ -202,6 +205,8 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		control,
 		errors,
 		handleSubmit,
+		listsView,
+		setListsView,
 	};
 };
 

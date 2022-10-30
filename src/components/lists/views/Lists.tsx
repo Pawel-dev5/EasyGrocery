@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { FlatList, Button, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { t } from 'i18next';
 import { BottomSheet } from 'react-native-btr';
 
@@ -23,12 +23,25 @@ import {
 	StyledBottomSheetClose,
 	StyledBottomSheetHeader,
 	StyledFloatingAddListButton,
+	StyledGridList,
 	StyledListsScrollView,
+	StyledListStyleDisplay,
 } from 'components/lists/views/Styles';
 
 export const ListsWrapper = ({ navigation }: { navigation: any }) => {
-	const { lists, getLists, setNewList, backendError, visible, setVisible, control, errors, handleSubmit } =
-		useContext(ListsContextData);
+	const {
+		lists,
+		getLists,
+		setNewList,
+		backendError,
+		visible,
+		setVisible,
+		control,
+		errors,
+		handleSubmit,
+		listsView,
+		setListsView,
+	} = useContext(ListsContextData);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -38,31 +51,57 @@ export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 		await setRefreshing(false);
 	}, []);
 
-	console.log(lists);
 	useEffect(() => {
 		getLists();
 	}, []);
 
 	return (
 		<StyledListsScrollView>
-			<FlatList
-				data={lists}
-				keyExtractor={(item) => item?.id}
-				refreshing={refreshing}
-				onRefresh={onRefresh}
-				renderItem={({ item }) => {
-					const props = {
-						list: item,
-						navigation,
-						variant: ListVariant.PREVIEW,
-					};
-					return (
-						<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
-							<List {...props} />
-						</TouchableOpacity>
-					);
-				}}
-			/>
+			<StyledListStyleDisplay onPress={() => setListsView(!listsView)}>
+				<Icon name={!listsView ? 'list' : 'th'} size={20} variant="white" />
+			</StyledListStyleDisplay>
+
+			{listsView ? (
+				<FlatList
+					data={lists}
+					keyExtractor={(item) => item?.id}
+					refreshing={refreshing}
+					onRefresh={onRefresh}
+					renderItem={({ item }) => {
+						const props = {
+							list: item,
+							navigation,
+							variant: ListVariant.PREVIEW,
+						};
+						return (
+							<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
+								<List {...props} />
+							</TouchableOpacity>
+						);
+					}}
+				/>
+			) : (
+				<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+					<StyledGridList>
+						{lists.map((item) => {
+							const props = {
+								list: item,
+								navigation,
+								variant: ListVariant.PREVIEW,
+								type: 'grid',
+							};
+							return (
+								<TouchableOpacity
+									key={item?.id}
+									onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}
+								>
+									<List {...props} />
+								</TouchableOpacity>
+							);
+						})}
+					</StyledGridList>
+				</ScrollView>
+			)}
 
 			<StyledFloatingAddListButton onPress={() => setVisible(!visible)}>
 				<Icon name="plus" size={20} variant="white" />
@@ -70,11 +109,8 @@ export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 
 			<BottomSheet
 				visible={visible}
-				//setting the visibility state of the bottom shee
 				onBackButtonPress={() => setVisible(!visible)}
-				//Toggling the visibility state on the click of the back botton
 				onBackdropPress={() => setVisible(!visible)}
-				//Toggling the visibility state on the clicking out side of the sheet
 			>
 				<StyledBottomSheet>
 					<StyledBottomSheetClose onPress={() => setVisible(!visible)} />

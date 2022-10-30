@@ -56,7 +56,7 @@ export const StyledInput = styled.TextInput`
 
 export const StyledProgressBarContainer = styled.View`
 	height: 7px;
-	width: 85%;
+	width: 80%;
 	position: relative;
 `;
 
@@ -87,7 +87,7 @@ export const StyledProgressBarWrapper = styled.View`
 `;
 
 export const StyledProgressBarCounter = styled.View`
-	width: 10%;
+	min-width: 10%;
 	justify-content: flex-end;
 	align-items: flex-end;
 `;

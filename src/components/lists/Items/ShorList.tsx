@@ -24,13 +24,12 @@ import {
 
 export const ShortList = (props: any) => {
 	const { deleteList } = useContext(ListsContextData);
-	const { navigation, title, users_permissions_users, items, id } = props;
+	const { navigation, title, users_permissions_users, items, id, type } = props;
 
-	console.log(id);
 	return (
 		<Swipeable renderRightActions={() => <RightSwipeDelete onClick={() => deleteList(id)} />}>
 			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard>
+				<StyledListCard type={type}>
 					<StyledListCardTitleWrapper>
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 

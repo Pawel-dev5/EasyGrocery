@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 export const StyledListsScrollView = styled.View`
 	width: 100%;
 	overflow: scroll;
-	position: relative;
 `;
 
 export const StyledBottomSheet = styled.SafeAreaView`
@@ -47,4 +46,19 @@ export const StyledFloatingAddListButton = styled(StyledBottomAddListButton)`
 	z-index: 999;
 	bottom: 10px;
 	right: 0;
+`;
+
+export const StyledGridList = styled.View`
+	flex-direction: row;
+	justify-content: space-between;
+	flex-wrap: wrap;
+`;
+
+export const StyledListStyleDisplay = styled.TouchableOpacity`
+	height: 50px;
+	width: 50px;
+	border-radius: 5px;
+	background: black;
+	align-items: center;
+	justify-content: center;
 `;
