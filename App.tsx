@@ -55,9 +55,9 @@ const AppComponent = () => {
 							)}
 						</Screen>
 						<Screen name={lists.singleList}>
-							{({ navigation }) => (
-								<AppWrapper routeName={t('general.myLists')} navigation={navigation} lang={lang} setLang={setLang}>
-									<List variant={ListVariant.FULL} navigation={navigation} />
+							{(props) => (
+								<AppWrapper routeName={t('general.myLists')} {...props} lang={lang} setLang={setLang}>
+									<List variant={ListVariant.FULL} {...props} />
 								</AppWrapper>
 							)}
 						</Screen>
