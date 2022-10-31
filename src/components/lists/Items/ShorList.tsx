@@ -21,6 +21,7 @@ import {
 	StyledListCardTitle,
 	StyledListCardItemElement,
 } from 'components/lists/items/Styles';
+import { shadowInline } from 'utils/theme/themeDefault';
 
 export const ShortList = (props: any) => {
 	const { deleteList } = useContext(ListsContextData);
@@ -29,7 +30,7 @@ export const ShortList = (props: any) => {
 	return (
 		<Swipeable renderRightActions={() => <RightSwipeDelete onClick={() => deleteList(id)} />}>
 			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard type={type}>
+				<StyledListCard type={type} style={shadowInline}>
 					<StyledListCardTitleWrapper>
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 

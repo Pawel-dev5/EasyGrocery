@@ -5,7 +5,7 @@ export const StyledListCard = styled.View<{ type: string }>`
 	min-height: 80px;
 	border-radius: ${({ theme }) => theme.radius[2]};
 	border: 1px solid ${({ theme }) => theme.grey200};
-	margin: 10px 0;
+	margin: 10px 5px;
 	padding: 12px;
 	overflow: hidden;
 	background: ${({ theme }) => theme.white};
@@ -14,7 +14,7 @@ export const StyledListCard = styled.View<{ type: string }>`
 	${({ type }) =>
 		type === 'grid' &&
 		css`
-			max-width: 180px;
+			max-width: 179px;
 		`}
 `;
 

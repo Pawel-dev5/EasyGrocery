@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { t } from 'i18next';
-import { BottomSheet } from 'react-native-btr';
 
 // ROUTER
 import { lists as listRoute } from 'routes/AppRoutes';
@@ -22,11 +21,14 @@ import {
 	StyledBottomSheetBody,
 	StyledBottomSheetClose,
 	StyledBottomSheetHeader,
-	StyledFloatingAddListButton,
+	StyledFloatingAddListButtonWrapper,
 	StyledGridList,
 	StyledListsScrollView,
-	StyledListStyleDisplay,
+	StyledOverlayBottomSheet,
 } from 'components/lists/views/Styles';
+
+// THEME
+import { shadowInline } from 'utils/theme/themeDefault';
 
 export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 	const {
@@ -57,10 +59,6 @@ export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 
 	return (
 		<StyledListsScrollView>
-			<StyledListStyleDisplay onPress={() => setListsView(!listsView)}>
-				<Icon name={!listsView ? 'list' : 'th'} size={20} variant="white" />
-			</StyledListStyleDisplay>
-
 			{listsView ? (
 				<FlatList
 					data={lists}
@@ -103,42 +101,56 @@ export const ListsWrapper = ({ navigation }: { navigation: any }) => {
 				</ScrollView>
 			)}
 
-			<StyledFloatingAddListButton onPress={() => setVisible(!visible)}>
-				<Icon name="plus" size={20} variant="white" />
-			</StyledFloatingAddListButton>
+			{!visible && (
+				<StyledFloatingAddListButtonWrapper>
+					<StyledBottomAddListButton onPress={() => setListsView(!listsView)} style={shadowInline}>
+						<Icon name={!listsView ? 'list' : 'th'} size={20} variant="white" />
+					</StyledBottomAddListButton>
+					<StyledBottomAddListButton onPress={() => setVisible(!visible)} style={shadowInline}>
+						<Icon name="plus" size={20} variant="white" />
+					</StyledBottomAddListButton>
+				</StyledFloatingAddListButtonWrapper>
+			)}
 
-			<BottomSheet
-				visible={visible}
-				onBackButtonPress={() => setVisible(!visible)}
-				onBackdropPress={() => setVisible(!visible)}
-			>
-				<StyledBottomSheet>
-					<StyledBottomSheetClose onPress={() => setVisible(!visible)} />
+			{visible && (
+				<>
+					<StyledOverlayBottomSheet onPress={() => setVisible(!visible)} />
+					<StyledBottomSheet style={shadowInline}>
+						<StyledBottomSheetClose onPress={() => setVisible(!visible)} />
 
-					<StyledBottomSheetBody>
-						<StyledBottomSheetHeader>{t<string>('general.addNewList')}</StyledBottomSheetHeader>
-						<ControllerWrapper
-							name="title"
-							placeholder="title"
-							textContentType="nickname"
-							control={control}
-							errors={errors}
-						/>
-						<ControllerWrapper
-							name="description"
-							placeholder="description"
-							textContentType="nickname"
-							control={control}
-							errors={errors}
-						/>
-						<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
-							<Icon name="plus" size={20} variant="white" />
-						</StyledBottomAddListButton>
+						<StyledBottomSheetBody>
+							<StyledBottomSheetHeader
+								style={{
+									shadowColor: '#000',
+									shadowOffset: {
+										width: 0,
+										height: 11,
+									},
+									shadowOpacity: 0.57,
+									shadowRadius: 15.19,
 
-						{backendError && <Text>{backendError}</Text>}
-					</StyledBottomSheetBody>
-				</StyledBottomSheet>
-			</BottomSheet>
+									elevation: 23,
+								}}
+							>
+								{t<string>('general.addNewList')}
+							</StyledBottomSheetHeader>
+							<ControllerWrapper
+								name="title"
+								placeholder="title"
+								textContentType="nickname"
+								control={control}
+								errors={errors}
+							/>
+
+							<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
+								<Icon name="plus" size={20} variant="white" />
+							</StyledBottomAddListButton>
+
+							{backendError && <Text>{backendError}</Text>}
+						</StyledBottomSheetBody>
+					</StyledBottomSheet>
+				</>
+			)}
 		</StyledListsScrollView>
 	);
 };

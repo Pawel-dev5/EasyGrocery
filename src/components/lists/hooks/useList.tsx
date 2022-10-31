@@ -25,7 +25,7 @@ import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayH
 const schema = yup
 	.object({
 		title: yup.string().required(),
-		description: yup.string(),
+		// description: yup.string(),
 	})
 	.required();
 
