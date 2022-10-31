@@ -6,7 +6,10 @@
 		"field": "Field",
 		"list": "List",
 		"addNewList": "Add new list",
-		"add": "Add"
+		"add": "Add",
+		"save": "Save",
+		"nick": "Username",
+		"title": "Title"
 	},
 	"auth": {
 		"logout": "Logout",
@@ -14,7 +17,9 @@
 		"enterEmailAndPassword": "Enter your email address and password",
 		"loginError": "Something went wrong, please try again",
 		"register": "Sign up",
-		"required": "is required."
+		"required": "is required.",
+		"password": "Password",
+		"cofirmPassword": "Confirm password"
 	},
 	"profile": {
 		"profile": "Profile",

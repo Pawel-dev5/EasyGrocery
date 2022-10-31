@@ -39,6 +39,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
 	const [visible, setVisible] = useState(false);
 	const [listsView, setListsView] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		control,
@@ -53,7 +54,10 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		if (user?.id)
 			axios
 				.get(`users/${user?.id}`)
-				.then((resp) => setLists(resp.data.lists))
+				.then((resp) => {
+					setIsLoading(false);
+					setLists(resp.data.lists);
+				})
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
@@ -61,7 +65,10 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		if (id)
 			axios
 				.get(`lists/${id}`)
-				.then((resp) => setSingleList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes }))
+				.then((resp) => {
+					setIsLoading(false);
+					setSingleList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes });
+				})
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
@@ -207,6 +214,8 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		handleSubmit,
 		listsView,
 		setListsView,
+		isLoading,
+		setIsLoading,
 	};
 };
 

@@ -41,3 +41,107 @@ export const StyledListCardItemElement = styled.View`
 	justify-content: center;
 	margin-bottom: 5px;
 `;
+
+// ========= START FULL LIST ===========
+
+export const StyledFullListWrapper = styled.View`
+	width: 100%;
+	flex-direction: column;
+	padding: ${({ theme }) => theme.globalPadding};
+`;
+export const StyledItemTitle = styled.Text`
+	font-size: 16px;
+	margin-left: 10px;
+`;
+
+export const StyledItemTitleWrapper = styled.View`
+	flex-direction: row;
+	align-items: center;
+`;
+
+export const StyledItemsWrapper = styled.View`
+	width: 100%;
+	height: 76%;
+	border-top-left-radius: 32px;
+	border-top-right-radius: 32px;
+	padding: 24px;
+	margin-top: 16px;
+	background: ${({ theme }) => theme.white};
+`;
+
+export const StyledInputTitleWrapper = styled.View`
+	width: 100%;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+`;
+export const StyledListBackground = styled.View`
+	width: 100%;
+	flex: 1;
+	background: ${({ theme }) => theme.grey200};
+`;
+
+export const StyledActionButton = styled.TouchableOpacity`
+	width: 42px;
+	height: 50px;
+	margin-bottom: 32px;
+	border-radius: 8px;
+	align-items: center;
+	justify-content: center;
+`;
+
+export const StyledAddItemButton = styled(StyledActionButton)`
+	height: 42px;
+	margin-bottom: 16px;
+	border: 1px solid ${({ theme }) => theme.grey200};
+`;
+
+export const StyledListTitle = styled.Text`
+	font-size: 42px;
+	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+`;
+
+export const StyledAddNewItem = styled.View`
+	width: 100%;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+`;
+
+export const StyledListOptionWrapper = styled.View`
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	height: 100%;
+`;
+
+export const StyledUsersWrapper = styled.View`
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 45px;
+`;
+
+export const StyledUsersCounter = styled.Text`
+	font-size: 16px;
+`;
+
+export const StyledListItemsWrapper = styled.View`
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 10px 0;
+	border-bottom-color: ${({ theme }) => theme.grey200};
+	border-bottom-width: 1px;
+`;
+
+export const StyledListItemsOptions = styled.View`
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 50px;
+`;
+
+// ========= END FULL LIST ===========

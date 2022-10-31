@@ -11,6 +11,7 @@ import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
+import { AppWrapper } from 'components/layout';
 
 const schema = yup
 	.object({
@@ -21,8 +22,8 @@ const schema = yup
 	})
 	.required();
 
-export const Register = () => {
-	const { signIn } = useContext(GlobalContextData);
+export const Register = (props: any) => {
+	const { signIn, lang, setLang } = useContext(GlobalContextData);
 	const { submitRegister, backendError } = useAuth(signIn);
 
 	const {
@@ -34,48 +35,50 @@ export const Register = () => {
 	});
 
 	return (
-		<SafeAreaView>
-			<ControllerWrapper
-				name="username"
-				placeholder="username"
-				keyboardType="default"
-				textContentType="nickname"
-				control={control}
-				errors={errors}
-			/>
+		<AppWrapper routeName={t('auth.register')} {...props} lang={lang} setLang={setLang}>
+			<SafeAreaView>
+				<ControllerWrapper
+					name="username"
+					placeholder={t('general.nick')}
+					keyboardType="default"
+					textContentType="nickname"
+					control={control}
+					errors={errors}
+				/>
 
-			<ControllerWrapper
-				name="email"
-				placeholder="Email"
-				keyboardType="email-address"
-				textContentType="emailAddress"
-				autoComplete="email"
-				control={control}
-				errors={errors}
-			/>
+				<ControllerWrapper
+					name="email"
+					placeholder="Email"
+					keyboardType="email-address"
+					textContentType="emailAddress"
+					autoComplete="email"
+					control={control}
+					errors={errors}
+				/>
 
-			<ControllerWrapper
-				name="password"
-				placeholder="Password"
-				textContentType="password"
-				autoComplete="password"
-				type="password"
-				control={control}
-				errors={errors}
-			/>
+				<ControllerWrapper
+					name="password"
+					placeholder={t('auth.password')}
+					textContentType="password"
+					autoComplete="password"
+					type="password"
+					control={control}
+					errors={errors}
+				/>
 
-			<ControllerWrapper
-				name="confirmPassword"
-				placeholder="Confirm Password"
-				textContentType="password"
-				type="password"
-				control={control}
-				errors={errors}
-			/>
+				<ControllerWrapper
+					name="confirmPassword"
+					placeholder={t('auth.cofirmPassword')}
+					textContentType="password"
+					type="password"
+					control={control}
+					errors={errors}
+				/>
 
-			<Button title={t<string>('auth.register')} onPress={handleSubmit(submitRegister)} />
+				<Button title={t<string>('auth.register')} onPress={handleSubmit(submitRegister)} />
 
-			{backendError && <Text>{backendError}</Text>}
-		</SafeAreaView>
+				{backendError && <Text>{backendError}</Text>}
+			</SafeAreaView>
+		</AppWrapper>
 	);
 };

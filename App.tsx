@@ -22,11 +22,10 @@ import theme from 'utils/theme/themeDefault';
 import { Lists } from 'components/lists';
 
 // COMPONENTS
-import { AppWrapper } from 'components/layout';
 import { StatusBar } from 'expo-status-bar';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Login, Register } from 'components/auth';
-import { Edit, Profile } from 'components/user';
+import { Profile } from 'components/user';
 import { ListVariant } from 'components/lists/models/sections';
 import { List } from 'components/lists/sections';
 
@@ -35,7 +34,7 @@ const { Screen, Navigator } = createNativeStackNavigator();
 setupInterceptorsTo(axios);
 
 const AppComponent = () => {
-	const { lang, setLang, isAuth } = useContext(GlobalContextData);
+	const { isAuth } = useContext(GlobalContextData);
 
 	return (
 		<NavigationContainer>
@@ -47,53 +46,16 @@ const AppComponent = () => {
 			>
 				{isAuth && (
 					<>
-						<Screen name={lists.lists}>
-							{({ navigation }) => (
-								<AppWrapper routeName={t('general.myLists')} navigation={navigation} lang={lang} setLang={setLang}>
-									<Lists navigation={navigation} />
-								</AppWrapper>
-							)}
-						</Screen>
-						<Screen name={lists.singleList}>
-							{(props) => (
-								<AppWrapper routeName={t('general.myLists')} {...props} lang={lang} setLang={setLang}>
-									<List variant={ListVariant.FULL} {...props} />
-								</AppWrapper>
-							)}
-						</Screen>
-						<Screen name={profile.profile}>
-							{({ navigation }) => (
-								<AppWrapper routeName={t('profile.profile')} navigation={navigation} lang={lang} setLang={setLang}>
-									<Profile navigation={navigation} />
-								</AppWrapper>
-							)}
-						</Screen>
-						<Screen name={profile.edit}>
-							{({ navigation }) => (
-								<AppWrapper routeName={t('profile.edit')} navigation={navigation} lang={lang} setLang={setLang}>
-									<Edit />
-								</AppWrapper>
-							)}
-						</Screen>
+						<Screen name={lists.lists}>{(props) => <Lists {...props} />}</Screen>
+						<Screen name={lists.singleList}>{(props) => <List variant={ListVariant.FULL} {...props} />}</Screen>
+						<Screen name={profile.profile}>{(props) => <Profile {...props} />}</Screen>
 					</>
 				)}
 
 				{!isAuth && (
 					<>
-						<Screen name={auth.login}>
-							{({ navigation }) => (
-								<AppWrapper routeName={t('auth.login')} navigation={navigation} lang={lang} setLang={setLang}>
-									<Login />
-								</AppWrapper>
-							)}
-						</Screen>
-						<Screen name={auth.register}>
-							{({ navigation }) => (
-								<AppWrapper routeName={t('auth.register')} navigation={navigation} lang={lang} setLang={setLang}>
-									<Register />
-								</AppWrapper>
-							)}
-						</Screen>
+						<Screen name={auth.login}>{(props) => <Login {...props} />}</Screen>
+						<Screen name={auth.register}>{(props) => <Register {...props} />}</Screen>
 					</>
 				)}
 			</Navigator>

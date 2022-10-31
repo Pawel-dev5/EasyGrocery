@@ -11,6 +11,7 @@ import { useAuth } from 'components/auth/hooks/useAuth';
 
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
+import { AppWrapper } from 'components/layout';
 
 const schema = yup
 	.object({
@@ -19,8 +20,8 @@ const schema = yup
 	})
 	.required();
 
-export const Login = () => {
-	const { signIn } = useContext(GlobalContextData);
+export const Login = (props: any) => {
+	const { signIn, lang, setLang } = useContext(GlobalContextData);
 	const { submitLogin, backendError } = useAuth(signIn);
 
 	const {
@@ -29,32 +30,38 @@ export const Login = () => {
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
+		defaultValues: {
+			email: 'p.nowecki@gmail.com',
+			password: 'Pawel6503!',
+		},
 	});
 
 	return (
-		<SafeAreaView>
-			<ControllerWrapper
-				name="email"
-				placeholder="Email"
-				keyboardType="email-address"
-				textContentType="emailAddress"
-				autoComplete="email"
-				control={control}
-				errors={errors}
-			/>
-			<ControllerWrapper
-				name="password"
-				placeholder="Password"
-				textContentType="password"
-				autoComplete="password"
-				control={control}
-				errors={errors}
-				type="password"
-			/>
+		<AppWrapper routeName={t('auth.login')} {...props} lang={lang} setLang={setLang}>
+			<SafeAreaView>
+				<ControllerWrapper
+					name="email"
+					placeholder="Email"
+					keyboardType="email-address"
+					textContentType="emailAddress"
+					autoComplete="email"
+					control={control}
+					errors={errors}
+				/>
+				<ControllerWrapper
+					name="password"
+					placeholder={t('auth.password')}
+					textContentType="password"
+					autoComplete="password"
+					control={control}
+					errors={errors}
+					type="password"
+				/>
 
-			<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
+				<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
 
-			{backendError && <Text>{backendError}</Text>}
-		</SafeAreaView>
+				{backendError && <Text>{backendError}</Text>}
+			</SafeAreaView>
+		</AppWrapper>
 	);
 };

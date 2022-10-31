@@ -1,15 +1,45 @@
 import React from 'react';
-
-// MODELS
+import { t } from 'i18next';
 import { View } from 'react-native';
 
-// STYLES
-import { StyledAppLayout, StyledAppNavbar, StyledButton, StyledChildren, StyledText } from 'components/layout/views/Styles';
-import { Menu } from 'components/layout/sections/Menu';
-import { Icon } from 'components/layout/common/Icon';
+// COMPONENTS
+import { Menu } from 'components/layout/sections';
+import { Icon, Loader } from 'components/layout/common';
+
+// MODELS
 import { AppLayoutInterface } from 'components/layout/models/views';
 
-export const AppWrapper = ({ children, routeName, variant = 'grey', navigation, lang, setLang }: AppLayoutInterface) => (
+// STYLES
+import {
+	StyledAppLayout,
+	StyledAppNavbar,
+	StyledButton,
+	StyledChildren,
+	StyledText,
+	StyledBottomAddListButton,
+	StyledBottomSheet,
+	StyledBottomSheetBody,
+	StyledBottomSheetClose,
+	StyledBottomSheetHeader,
+	StyledFloatingAddListButtonWrapper,
+	StyledOverlayBottomSheet,
+} from 'components/layout/views/Styles';
+import { shadowInline } from 'utils/theme/themeDefault';
+
+export const AppWrapper = ({
+	children,
+	routeName,
+	variant = 'grey',
+	navigation,
+	bottomSheet,
+	lang,
+	setLang,
+	visible,
+	setVisible,
+	floatedItems,
+	customPadding,
+	isLoading,
+}: AppLayoutInterface) => (
 	<StyledAppLayout>
 		<StyledAppNavbar variant={variant}>
 			<View style={{ width: 45, aspectRatio: 1 }}>
@@ -25,6 +55,36 @@ export const AppWrapper = ({ children, routeName, variant = 'grey', navigation, 
 			<Menu variant={variant} navigation={navigation} lang={lang} setLang={setLang} />
 		</StyledAppNavbar>
 
-		{children && <StyledChildren>{children}</StyledChildren>}
+		{isLoading ? (
+			<Loader />
+		) : (
+			<>
+				{children && <StyledChildren customPadding={customPadding}>{children}</StyledChildren>}
+
+				{bottomSheet && visible && setVisible && (
+					<>
+						<StyledOverlayBottomSheet onPress={() => setVisible(false)} />
+						<StyledBottomSheet style={shadowInline}>
+							<StyledBottomSheetClose onPress={() => setVisible(false)} />
+
+							<StyledBottomSheetBody>
+								<StyledBottomSheetHeader>{t<string>('general.addNewList')}</StyledBottomSheetHeader>
+								{bottomSheet}
+							</StyledBottomSheetBody>
+						</StyledBottomSheet>
+					</>
+				)}
+
+				{floatedItems && (
+					<StyledFloatingAddListButtonWrapper>
+						{floatedItems?.map(({ id, icon, variant, size, onPress }) => (
+							<StyledBottomAddListButton key={id} onPress={onPress} style={shadowInline}>
+								<Icon name={icon} size={size} variant={variant} />
+							</StyledBottomAddListButton>
+						))}
+					</StyledFloatingAddListButtonWrapper>
+				)}
+			</>
+		)}
 	</StyledAppLayout>
 );
