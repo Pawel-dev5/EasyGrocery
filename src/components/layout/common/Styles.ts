@@ -91,3 +91,12 @@ export const StyledProgressBarCounter = styled.View`
 	justify-content: flex-end;
 	align-items: flex-end;
 `;
+
+// =========  LOADER  ===========
+export const StyledLoaderContainer = styled.View`
+	flex: 1;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	padding: 10px;
+`;

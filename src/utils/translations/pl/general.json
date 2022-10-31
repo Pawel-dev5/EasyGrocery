@@ -6,7 +6,10 @@
 		"field": "Pole",
 		"list": "Lista",
 		"addNewList": "Dodaj nową listę",
-		"add": "Dodaj"
+		"add": "Dodaj",
+		"save": "Zapisz",
+		"nick": "Nazwa użytkownika",
+		"title": "Tytuł"
 	},
 	"auth": {
 		"logout": "Wyloguj",
@@ -14,7 +17,9 @@
 		"enterEmailAndPassword": "Uzupełnij email i hasło",
 		"loginError": "Coś poszło nie tak, spóbuj ponownie",
 		"required": "jest wymagane.",
-		"register": "Zarejestruj się"
+		"register": "Zarejestruj się",
+		"password": "Hasło",
+		"cofirmPassword": "Potwierdź hasło"
 	},
 	"profile": {
 		"profile": "Profil",

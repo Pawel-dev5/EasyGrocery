@@ -1,1 +1,1 @@
-export * from 'components/layout/sections';
+export * from 'components/layout/sections/Menu';
