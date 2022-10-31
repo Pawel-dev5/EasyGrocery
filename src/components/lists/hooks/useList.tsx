@@ -41,6 +41,9 @@ export const useList = () => {
 	const [listsView, setListsView] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 
+	// NEW LIST AL VALUES EDIT
+	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
+
 	const {
 		control,
 		handleSubmit,
@@ -196,6 +199,7 @@ export const useList = () => {
 		}
 	}, [showDone]);
 
+	console.log(editedSingleList);
 	return {
 		lists,
 		singleList,
@@ -224,6 +228,8 @@ export const useList = () => {
 		handleSubmit,
 		setIsLoading,
 		setListsView,
+		editedSingleList,
+		setEditedSingleList,
 	};
 };
 
