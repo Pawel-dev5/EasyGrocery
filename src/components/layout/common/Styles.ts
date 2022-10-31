@@ -51,7 +51,6 @@ export const StyledInput = styled.TextInput`
 	border: 1px solid ${({ theme }) => theme.grey200};
 	border-radius: ${({ theme }) => theme.radius[2]};
 	padding: 12px;
-	margin-bottom: 16px;
 `;
 
 export const StyledProgressBarContainer = styled.View`
@@ -70,7 +69,7 @@ export const StyledProgressBarBaseBox = styled.View`
 `;
 
 export const StyledProgressBarBackground = styled(StyledProgressBarBaseBox)`
-	background: ${({ theme }) => theme.grey200};
+	background: ${({ theme }) => theme.grey300};
 	width: 100%;
 `;
 

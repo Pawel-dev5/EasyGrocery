@@ -49,15 +49,6 @@ export const StyledFullListWrapper = styled.View`
 	flex-direction: column;
 	padding: ${({ theme }) => theme.globalPadding};
 `;
-export const StyledItemTitle = styled.Text`
-	font-size: 16px;
-	margin-left: 10px;
-`;
-
-export const StyledItemTitleWrapper = styled.View`
-	flex-direction: row;
-	align-items: center;
-`;
 
 export const StyledItemsWrapper = styled.View`
 	width: 100%;
@@ -84,7 +75,6 @@ export const StyledListBackground = styled.View`
 export const StyledActionButton = styled.TouchableOpacity`
 	width: 42px;
 	height: 50px;
-	margin-bottom: 32px;
 	border-radius: 8px;
 	align-items: center;
 	justify-content: center;
@@ -92,7 +82,6 @@ export const StyledActionButton = styled.TouchableOpacity`
 
 export const StyledAddItemButton = styled(StyledActionButton)`
 	height: 42px;
-	margin-bottom: 16px;
 	border: 1px solid ${({ theme }) => theme.grey200};
 `;
 
@@ -124,24 +113,6 @@ export const StyledUsersWrapper = styled.View`
 
 export const StyledUsersCounter = styled.Text`
 	font-size: 16px;
-`;
-
-export const StyledListItemsWrapper = styled.View`
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	width: 100%;
-	margin-bottom: 10px;
-	padding: 10px 0;
-	border-bottom-color: ${({ theme }) => theme.grey200};
-	border-bottom-width: 1px;
-`;
-
-export const StyledListItemsOptions = styled.View`
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	width: 50px;
 `;
 
 // ========= END FULL LIST ===========

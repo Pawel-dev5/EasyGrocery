@@ -29,7 +29,7 @@ const schema = yup
 	})
 	.required();
 
-export const useList = ({ navigation }: { navigation: any }) => {
+export const useList = () => {
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [lists, setLists] = useState<ListInterface[]>([]);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
@@ -77,7 +77,7 @@ export const useList = ({ navigation }: { navigation: any }) => {
 			axios
 				.delete(`lists/${id}`)
 				.then((resp) => {
-					const newList: ListInterface[] = [...lists];
+					// const newList: ListInterface[] = [...lists];
 					// if (lists) newList = removeObjectFromArray(newList, 'id', resp?.data?.data?.id);
 					// console.log(newList);
 					// const tmp = removeObjectFromArray(newList, 'id', resp?.data?.data?.id);
@@ -136,16 +136,24 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		}
 	};
 
-	const editSingleListItems = (variant: 'add' | 'delete' | 'update' | 'clear', id?: string) => {
-		if (singleList) {
+	const editSingleListItems = (
+		variant: 'add' | 'delete' | 'updateDone' | 'clear' | 'updateTitle',
+		id?: string,
+		title?: string,
+	) => {
+		if (singleList?.items) {
 			let newData;
 			if (variant === 'add') newData = [...singleList?.items, singleListEditable.value.newItem];
-			if (variant === 'delete') newData = removeObjectFromArray(singleList.items, 'id', id);
-			if (variant === 'update' && singleList?.items)
+			if (variant === 'delete' && id) newData = removeObjectFromArray(singleList.items, 'id', id);
+			if (variant === 'updateDone' && id)
 				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
 					updateObject(todo, { done: !todo.done }),
 				);
 			if (variant === 'clear') newData = [];
+			if (variant === 'updateTitle' && id && title)
+				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
+					updateObject(todo, { value: title }),
+				);
 
 			if (newData)
 				axios
@@ -195,6 +203,12 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		user,
 		singleListEditable,
 		filteredItems,
+		showDone,
+		visible,
+		control,
+		errors,
+		listsView,
+		isLoading,
 		getLists,
 		getList,
 		deleteList,
@@ -205,22 +219,16 @@ export const useList = ({ navigation }: { navigation: any }) => {
 		setEditedValue,
 		addNewListItem,
 		setShowDone,
-		showDone,
 		handleKeyboardItems,
-		visible,
 		setVisible,
-		control,
-		errors,
 		handleSubmit,
-		listsView,
-		setListsView,
-		isLoading,
 		setIsLoading,
+		setListsView,
 	};
 };
 
 export const ListsContextData = createContext({} as ReturnType<typeof useList>);
 
-export const ContextProvider = ({ children, navigation }: ListContextProvider) => (
-	<ListsContextData.Provider value={useList({ navigation })}>{children}</ListsContextData.Provider>
+export const ContextProvider = ({ children }: ListContextProvider) => (
+	<ListsContextData.Provider value={useList()}>{children}</ListsContextData.Provider>
 );
