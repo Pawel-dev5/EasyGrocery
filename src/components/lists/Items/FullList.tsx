@@ -9,6 +9,7 @@ import { GlobalContextData } from 'config/useGlobalContext';
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
 import { Icon, Input, ProgressBar } from 'components/layout/common';
+import { Item } from 'components/lists/elements';
 
 // STYLES
 import {
@@ -18,18 +19,13 @@ import {
 	StyledFullListWrapper,
 	StyledInputTitleWrapper,
 	StyledItemsWrapper,
-	StyledItemTitle,
-	StyledItemTitleWrapper,
 	StyledListBackground,
 	StyledListCardItemElement,
-	StyledListItemsOptions,
-	StyledListItemsWrapper,
 	StyledListOptionWrapper,
 	StyledListTitle,
 	StyledUsersCounter,
 	StyledUsersWrapper,
 } from 'components/lists/items/Styles';
-import { shadowInline } from 'utils/theme/themeDefault';
 
 export const FullListWrapper = (props: any) => {
 	const {
@@ -154,25 +150,7 @@ export const FullListWrapper = (props: any) => {
 
 							<ScrollView>
 								{listItems?.map((item) => (
-									<StyledListItemsWrapper key={item?.id}>
-										<StyledItemTitleWrapper>
-											<TouchableOpacity onPress={() => editSingleListItems('update', item.id)}>
-												<Icon variant={item?.done ? 'done' : 'unDone'} name="check-circle" size={30} />
-											</TouchableOpacity>
-
-											<StyledItemTitle>{item?.value}</StyledItemTitle>
-										</StyledItemTitleWrapper>
-
-										<StyledListItemsOptions>
-											<TouchableOpacity onPress={() => console.log('elo')}>
-												<Icon name="edit" size={20} />
-											</TouchableOpacity>
-
-											<TouchableOpacity onPress={() => editSingleListItems('delete', item.id)}>
-												<Icon name="trash" size={20} />
-											</TouchableOpacity>
-										</StyledListItemsOptions>
-									</StyledListItemsWrapper>
+									<Item key={item?.id} {...item} />
 								))}
 							</ScrollView>
 						</StyledItemsWrapper>
