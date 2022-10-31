@@ -46,6 +46,7 @@ export const StyledListCardItemElement = styled.View`
 
 export const StyledFullListWrapper = styled.View`
 	width: 100%;
+	max-width: 100%;
 	flex-direction: column;
 	padding: ${({ theme }) => theme.globalPadding};
 `;
@@ -113,6 +114,10 @@ export const StyledUsersWrapper = styled.View`
 
 export const StyledUsersCounter = styled.Text`
 	font-size: 16px;
+`;
+export const StyledListDescription = styled.Text`
+	font-size: 16px;
+	margin-bottom: 14px;
 `;
 
 // ========= END FULL LIST ===========
