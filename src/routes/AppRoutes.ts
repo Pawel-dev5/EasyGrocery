@@ -14,7 +14,13 @@ export const profile = {
 	profile: '/profile',
 	notifications: '/profile/notifications',
 };
+
 export const lists = {
 	lists: '/lists',
 	singleList: '/lists/:id',
+};
+
+export const shops = {
+	shops: '/shops',
+	singleShop: '/shop/:id',
 };

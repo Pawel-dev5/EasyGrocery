@@ -9,7 +9,8 @@
 		"add": "Dodaj",
 		"save": "Zapisz",
 		"nick": "Nazwa użytkownika",
-		"title": "Tytuł"
+		"title": "Tytuł",
+		"mostPopular": "Najpopularniejsze"
 	},
 	"auth": {
 		"logout": "Wyloguj",
@@ -24,5 +25,10 @@
 	"profile": {
 		"profile": "Profil",
 		"edit": "Edytuj profil"
+	},
+	"shops": {
+		"shops": "Sklepy",
+		"shop": "Sklep",
+		"myShops": "Moje sklepy"
 	}
 }
