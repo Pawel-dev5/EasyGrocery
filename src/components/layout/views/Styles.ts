@@ -10,6 +10,7 @@ export const StyledChildren = styled.View<{ customPadding: string }>`
 	align-items: center;
 	justify-content: flex-start;
 	padding: ${({ theme }) => theme.globalPadding};
+	padding-top: 0;
 
 	${({ customPadding }) =>
 		customPadding &&

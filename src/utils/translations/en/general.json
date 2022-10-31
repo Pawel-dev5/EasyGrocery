@@ -9,7 +9,8 @@
 		"add": "Add",
 		"save": "Save",
 		"nick": "Username",
-		"title": "Title"
+		"title": "Title",
+		"mostPopular": "Most popular"
 	},
 	"auth": {
 		"logout": "Logout",
@@ -24,5 +25,10 @@
 	"profile": {
 		"profile": "Profile",
 		"edit": "Profile edit"
+	},
+	"shops": {
+		"shops": "Shops",
+		"shop": "Shop",
+		"myShops": "My shops"
 	}
 }
