@@ -19,7 +19,7 @@ export interface ListInterface {
 	updatedAt: string;
 	publishedAt: string;
 	title: string;
-	descriptrion: string;
+	description: string;
 	items: ItemInterface[];
 	variant: ListVariant;
 }

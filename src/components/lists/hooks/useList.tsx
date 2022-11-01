@@ -40,6 +40,7 @@ export const useList = () => {
 	const [visible, setVisible] = useState(false);
 	const [listsView, setListsView] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	// NEW LIST AL VALUES EDIT
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
@@ -139,11 +140,7 @@ export const useList = () => {
 		}
 	};
 
-	const editSingleListItems = (
-		variant: 'add' | 'delete' | 'updateDone' | 'clear' | 'updateTitle',
-		id?: string,
-		title?: string,
-	) => {
+	const editSingleListItems = (variant: 'add' | 'delete' | 'updateDone' | 'clear', id?: string) => {
 		if (singleList?.items) {
 			let newData;
 			if (variant === 'add') newData = [...singleList?.items, singleListEditable.value.newItem];
@@ -153,10 +150,6 @@ export const useList = () => {
 					updateObject(todo, { done: !todo.done }),
 				);
 			if (variant === 'clear') newData = [];
-			if (variant === 'updateTitle' && id && title)
-				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
-					updateObject(todo, { value: title }),
-				);
 
 			if (newData)
 				axios
@@ -199,6 +192,23 @@ export const useList = () => {
 		}
 	}, [showDone]);
 
+	const submitEditList = (data: FieldValues) => {
+		if (data && editedSingleList) {
+			setIsUpdating(true);
+			axios
+				.put(`lists/${editedSingleList?.id}`, {
+					data,
+				})
+				.then((resp) => {
+					const { id, attributes } = resp?.data?.data;
+					if (singleList) setSingleList({ id, ...attributes });
+					setEditedSingleList(resp?.data?.data);
+				})
+				.catch((error) => console.log(error?.response?.data?.error?.message))
+				.finally(() => setIsUpdating(false));
+		}
+	};
+
 	console.log(editedSingleList);
 	return {
 		lists,
@@ -213,6 +223,8 @@ export const useList = () => {
 		errors,
 		listsView,
 		isLoading,
+		isUpdating,
+		submitEditList,
 		getLists,
 		getList,
 		deleteList,

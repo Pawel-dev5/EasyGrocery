@@ -6,6 +6,7 @@ export interface ContextProviderProps {
 }
 
 export interface User {
+	attributes?: any;
 	blocked: boolean | null;
 	confirmed: boolean | null;
 	createdAt: string | null;

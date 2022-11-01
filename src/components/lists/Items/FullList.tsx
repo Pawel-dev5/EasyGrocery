@@ -9,7 +9,7 @@ import { GlobalContextData } from 'config/useGlobalContext';
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
 import { Icon, Input, ProgressBar } from 'components/layout/common';
-import { Item } from 'components/lists/elements';
+import { EditListForm, Item } from 'components/lists/elements';
 
 // STYLES
 import {
@@ -27,6 +27,7 @@ import {
 	StyledUsersWrapper,
 	StyledListDescription,
 } from 'components/lists/items/Styles';
+import { ItemInterface } from '../models/sections';
 
 export const FullListWrapper = (props: any) => {
 	const {
@@ -58,7 +59,7 @@ export const FullListWrapper = (props: any) => {
 	}, []);
 
 	if (singleList) {
-		const { id, title, users_permissions_users, items, descriptrion } = singleList;
+		const { id, title, users_permissions_users, items, description, color } = singleList;
 		const listItems = filteredItems || items;
 
 		return (
@@ -71,10 +72,10 @@ export const FullListWrapper = (props: any) => {
 					setLang={setLang}
 					customPadding="0"
 				>
-					<StyledListBackground>
+					<StyledListBackground color={color}>
 						<StyledFullListWrapper>
 							<StyledInputTitleWrapper>
-								<StyledListTitle>{title}</StyledListTitle>
+								<StyledListTitle>{editedSingleList?.title || title}</StyledListTitle>
 
 								<StyledListOptionWrapper>
 									<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
@@ -102,7 +103,7 @@ export const FullListWrapper = (props: any) => {
 							</StyledUsersWrapper>
 
 							<StyledListDescription>
-								{descriptrion ||
+								{description ||
 									'Donec rutrum congue leo eget malesuada. Nulla porttitor accumsan tincidunt. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Nulla quis lorem'}
 							</StyledListDescription>
 							<ProgressBar items={items} />
@@ -128,30 +129,7 @@ export const FullListWrapper = (props: any) => {
 
 						<StyledItemsWrapper>
 							{editedSingleList ? (
-								<View>
-									<View>
-										<Input
-											value={editedSingleList?.title!}
-											name="title"
-											placeholder="title"
-											textContentType="nickname"
-											onChange={(text) => setEditedValue(text as unknown as string)}
-										/>
-										<StyledActionButton
-											onPress={() => {
-												if (singleListEditable?.isEdited === 'title') {
-													editSingleListTitle();
-												} else setIsEdited(title);
-											}}
-										>
-											<Icon name={singleListEditable?.isEdited === 'title' ? 'check' : 'edit'} size={20} />
-										</StyledActionButton>
-
-										<Text>Opis</Text>
-										<Text>Użytkownicy</Text>
-										<Text>Wybierz kolor</Text>
-									</View>
-								</View>
+								<EditListForm />
 							) : (
 								<>
 									<StyledAddNewItem>
@@ -170,7 +148,7 @@ export const FullListWrapper = (props: any) => {
 									</StyledAddNewItem>
 
 									<ScrollView>
-										{listItems?.map((item) => (
+										{listItems?.map((item: ItemInterface) => (
 											<Item key={item?.id} {...item} />
 										))}
 									</ScrollView>

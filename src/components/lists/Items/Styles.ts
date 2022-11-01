@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/native';
 
-export const StyledListCard = styled.View<{ type: string }>`
+export const StyledListCard = styled.View<{ type: string; color: string | null }>`
 	max-width: 100%;
 	min-height: 80px;
 	border-radius: ${({ theme }) => theme.radius[2]};
@@ -15,6 +15,12 @@ export const StyledListCard = styled.View<{ type: string }>`
 		type === 'grid' &&
 		css`
 			max-width: 179px;
+		`}
+
+	${({ color }) =>
+		color &&
+		css`
+			background: ${color};
 		`}
 `;
 
@@ -67,10 +73,16 @@ export const StyledInputTitleWrapper = styled.View`
 	align-items: center;
 	justify-content: space-between;
 `;
-export const StyledListBackground = styled.View`
+export const StyledListBackground = styled.View<{ color: string | null }>`
 	width: 100%;
 	flex: 1;
 	background: ${({ theme }) => theme.grey200};
+
+	${({ color }) =>
+		color &&
+		css`
+			background: ${color};
+		`}
 `;
 
 export const StyledActionButton = styled.TouchableOpacity`

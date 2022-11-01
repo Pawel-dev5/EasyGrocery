@@ -10,7 +10,10 @@
 		"save": "Zapisz",
 		"nick": "Nazwa użytkownika",
 		"title": "Tytuł",
-		"mostPopular": "Najpopularniejsze"
+		"mostPopular": "Najpopularniejsze",
+		"description": "Opis",
+		"reset": "Resetuj",
+		"cancel": "Anuluj"
 	},
 	"auth": {
 		"logout": "Wyloguj",

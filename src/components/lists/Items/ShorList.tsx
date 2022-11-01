@@ -25,12 +25,12 @@ import { shadowInline } from 'utils/theme/themeDefault';
 
 export const ShortList = (props: any) => {
 	const { deleteList } = useContext(ListsContextData);
-	const { navigation, title, users_permissions_users, items, id, type } = props;
-
+	const { navigation, title, users_permissions_users, items, id, type, color } = props;
+	console.log(color);
 	return (
 		<Swipeable renderRightActions={() => <RightSwipeDelete onClick={() => deleteList(id)} />}>
 			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard type={type} style={shadowInline}>
+				<StyledListCard type={type} style={shadowInline} color={color}>
 					<StyledListCardTitleWrapper>
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 

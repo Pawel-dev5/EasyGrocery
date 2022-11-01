@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const StyledRightSwipeDelete = styled.TouchableOpacity`
 	margin: 10px 0;
@@ -39,4 +39,29 @@ export const StyledListItemsWrapper = styled.View`
 	padding: 10px 0;
 	border-bottom-color: ${({ theme }) => theme.grey200};
 	border-bottom-width: 1px;
+`;
+
+export const StyledEditButton = styled.TouchableOpacity<{ variant: string }>`
+	width: 48%;
+	margin: 10px 0;
+	align-items: center;
+	padding: 16px;
+	min-height: 50px;
+	color: red;
+	border-radius: ${({ theme }) => theme.radius[2]};
+	border: 1px solid ${({ theme }) => theme.grey400};
+	background: ${({ theme }) => theme.grey400};
+
+	${({ variant }) =>
+		variant === 'delete' &&
+		css`
+			background: ${({ theme }) => theme.white};
+		`};
+`;
+
+export const StyledEditButtonsWrapper = styled.View`
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
 `;

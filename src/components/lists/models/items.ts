@@ -8,6 +8,7 @@ export interface SingleListInterface {
 	updatedAt: string | null;
 	publishedAt: string | null;
 	title: string | null;
-	descriptrion: string | null;
+	description: string | null;
 	items: ItemInterface[];
+	color: string | null;
 }

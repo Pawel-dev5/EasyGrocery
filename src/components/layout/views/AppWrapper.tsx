@@ -56,7 +56,7 @@ export const AppWrapper = ({
 		</StyledAppNavbar>
 
 		{isLoading ? (
-			<Loader />
+			<Loader size={100} />
 		) : (
 			<>
 				{children && <StyledChildren customPadding={customPadding}>{children}</StyledChildren>}
