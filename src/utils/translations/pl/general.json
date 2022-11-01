@@ -15,7 +15,9 @@
 		"reset": "Resetuj",
 		"cancel": "Anuluj",
 		"entrance": "Wejście",
-		"cash": "Kasa"
+		"cash": "Kasa",
+		"users": "Użytkownicy",
+		"color": "Kolor"
 	},
 	"auth": {
 		"logout": "Wyloguj",

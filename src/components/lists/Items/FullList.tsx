@@ -5,6 +5,7 @@ import { t } from 'i18next';
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 import { GlobalContextData } from 'config/useGlobalContext';
+import { ContextProvider as ShopContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
@@ -48,6 +49,7 @@ export const FullListWrapper = (props: any) => {
 		setEditedSingleList,
 	} = useContext(ListsContextData);
 	const { lang, setLang } = useContext(GlobalContextData);
+	const { getShops, shops } = useContext(ShopsContextData);
 
 	const listUuid = props?.route?.params?.id;
 
@@ -55,6 +57,7 @@ export const FullListWrapper = (props: any) => {
 		if (listUuid) {
 			setIsLoading(true);
 			getList(listUuid);
+			if (shops?.length === 0) getShops();
 		}
 	}, []);
 
@@ -163,6 +166,8 @@ export const FullListWrapper = (props: any) => {
 
 export const FullList = (props: any) => (
 	<ContextProvider>
-		<FullListWrapper {...props} />
+		<ShopContextProvider>
+			<FullListWrapper {...props} />
+		</ShopContextProvider>
 	</ContextProvider>
 );

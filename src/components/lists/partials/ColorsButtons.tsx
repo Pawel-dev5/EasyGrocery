@@ -1,6 +1,4 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { shadowInline } from 'utils/theme/themeDefault';
 import { StyledRadioButtonWrapper, StyledRadioButton } from './Styles';
 
 const buttons = [
@@ -41,29 +39,25 @@ const shadow = {
 
 	elevation: 24,
 };
-export const ColorsButtons = ({ setValue, value }: { setValue: any; value: string | null | undefined }) => {
-	const colorHandler = () => {};
-	console.log(value);
-	return (
-		<StyledRadioButtonWrapper>
-			{buttons?.map(({ id, color }) => (
-				<StyledRadioButton
-					key={id}
-					color={color}
-					// isPressed={color === 'hsl(0, 0%, 90%)'}
-					onPress={() => setValue('color', color)}
-					style={
-						color === value
-							? [
-									shadow,
-									{
-										transform: [{ scale: 1.12 }],
-									},
-							  ]
-							: null
-					}
-				/>
-			))}
-		</StyledRadioButtonWrapper>
-	);
-};
+
+export const ColorsButtons = ({ setValue, value }: { setValue: any; value: string | null | undefined }) => (
+	<StyledRadioButtonWrapper>
+		{buttons?.map(({ id, color }) => (
+			<StyledRadioButton
+				key={id}
+				color={color}
+				onPress={() => setValue('color', color)}
+				style={
+					color === value
+						? [
+								shadow,
+								{
+									transform: [{ scale: 1.12 }],
+								},
+						  ]
+						: null
+				}
+			/>
+		))}
+	</StyledRadioButtonWrapper>
+);

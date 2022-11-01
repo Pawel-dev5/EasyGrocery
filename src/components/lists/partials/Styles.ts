@@ -5,7 +5,7 @@ export const StyledRadioButtonWrapper = styled.View`
 	justify-content: space-between;
 	padding: 16px 0;
 `;
-export const StyledRadioButton = styled.TouchableOpacity<{ color: string; isPressed: boolean }>`
+export const StyledRadioButton = styled.TouchableOpacity<{ color: string }>`
 	width: 50px;
 	height: 50px;
 	border-radius: ${({ theme }) => theme.radius[2]};
@@ -14,12 +14,5 @@ export const StyledRadioButton = styled.TouchableOpacity<{ color: string; isPres
 		color &&
 		css`
 			background: ${color};
-		`}
-
-	${({ isPressed }) =>
-		isPressed &&
-		css`
-			background: red;
-			transform: scale(1);
 		`}
 `;

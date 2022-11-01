@@ -1,5 +1,6 @@
 import { User } from 'config/models';
 import { ItemInterface } from 'components/lists/models/sections';
+import { ShopDataInterface } from 'components/shops/models/hooks';
 
 export interface SingleListInterface {
 	id: string | null;
@@ -11,4 +12,7 @@ export interface SingleListInterface {
 	description: string | null;
 	items: ItemInterface[];
 	color: string | null;
+	shop: {
+		data: ShopDataInterface;
+	};
 }

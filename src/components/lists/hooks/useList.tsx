@@ -193,6 +193,7 @@ export const useList = () => {
 	}, [showDone]);
 
 	const submitEditList = (data: FieldValues) => {
+		console.log(data);
 		if (data && editedSingleList) {
 			setIsUpdating(true);
 			axios
@@ -204,7 +205,7 @@ export const useList = () => {
 					if (singleList) setSingleList({ id, ...attributes });
 					setEditedSingleList(resp?.data?.data);
 				})
-				.catch((error) => console.log(error?.response?.data?.error?.message))
+				.catch((error) => console.log(error?.response?.data))
 				.finally(() => setIsUpdating(false));
 		}
 	};
