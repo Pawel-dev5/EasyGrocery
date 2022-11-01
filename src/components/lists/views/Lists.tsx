@@ -77,9 +77,10 @@ export const ListsWrapper = (props: any) => {
 				routeName={t('general.myLists')}
 				lang={lang}
 				setLang={setLang}
-				setVisible={setVisible}
+				onClose={() => setVisible(false)}
 				visible={visible}
 				isLoading={isLoading}
+				bottomSheetHeader="general.addNewList"
 				floatedItems={floatedItems}
 				bottomSheet={
 					<>

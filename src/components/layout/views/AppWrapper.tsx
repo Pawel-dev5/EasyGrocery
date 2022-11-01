@@ -35,10 +35,11 @@ export const AppWrapper = ({
 	lang,
 	setLang,
 	visible,
-	setVisible,
+	onClose,
 	floatedItems,
 	customPadding,
 	isLoading,
+	bottomSheetHeader,
 }: AppLayoutInterface) => (
 	<StyledAppLayout>
 		<StyledAppNavbar variant={variant}>
@@ -61,14 +62,14 @@ export const AppWrapper = ({
 			<>
 				{children && <StyledChildren customPadding={customPadding}>{children}</StyledChildren>}
 
-				{bottomSheet && visible && setVisible && (
+				{bottomSheet && visible && onClose && (
 					<>
-						<StyledOverlayBottomSheet onPress={() => setVisible(false)} />
+						<StyledOverlayBottomSheet onPress={() => onClose()} />
 						<StyledBottomSheet style={shadowInline}>
-							<StyledBottomSheetClose onPress={() => setVisible(false)} />
+							<StyledBottomSheetClose onPress={() => onClose()} />
 
 							<StyledBottomSheetBody>
-								<StyledBottomSheetHeader>{t<string>('general.addNewList')}</StyledBottomSheetHeader>
+								{bottomSheetHeader && <StyledBottomSheetHeader>{t<string>(bottomSheetHeader)}</StyledBottomSheetHeader>}
 								{bottomSheet}
 							</StyledBottomSheetBody>
 						</StyledBottomSheet>

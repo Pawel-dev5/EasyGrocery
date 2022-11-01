@@ -13,7 +13,9 @@
 		"mostPopular": "Najpopularniejsze",
 		"description": "Opis",
 		"reset": "Resetuj",
-		"cancel": "Anuluj"
+		"cancel": "Anuluj",
+		"entrance": "Wejście",
+		"cash": "Kasa"
 	},
 	"auth": {
 		"logout": "Wyloguj",
@@ -32,6 +34,11 @@
 	"shops": {
 		"shops": "Sklepy",
 		"shop": "Sklep",
-		"myShops": "Moje sklepy"
+		"myShops": "Moje sklepy",
+		"shopCategories": "Kategorie produktów odpowiadające układowi sklepu",
+		"noMyShops": "Brak sklepów na liście.",
+		"addShopCominSoon": "Dodawanie swoich sklepów będzie możliwe wkrótce.",
+		"shopDescription": "Sklepy posiadają kategorie produktów odpowiadające ułożeniu produktów w sklepie.",
+		"shopDescriptionMore": "Dodając sklep do listy oraz kategorie to elementów listy aplikacja sortuje produkty w kolejności od wejścia sklepu do kasy."
 	}
 }

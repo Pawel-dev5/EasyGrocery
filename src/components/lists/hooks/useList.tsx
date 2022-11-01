@@ -209,7 +209,6 @@ export const useList = () => {
 		}
 	};
 
-	console.log(editedSingleList);
 	return {
 		lists,
 		singleList,

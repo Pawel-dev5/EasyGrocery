@@ -26,9 +26,10 @@ export interface AppLayoutInterface {
 	setLang: Dispatch<SetStateAction<string>>;
 	setRefresh?: () => void;
 	bottomSheet?: ReactNode | ReactNode[];
-	setVisible?: (e: boolean) => void;
 	visible?: boolean;
 	floatedItems?: FloatedItem[];
 	customPadding?: string;
 	isLoading?: boolean;
+	bottomSheetHeader?: string;
+	onClose?: () => void;
 }

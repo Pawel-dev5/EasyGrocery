@@ -13,7 +13,9 @@
 		"mostPopular": "Most popular",
 		"description": "description",
 		"reset": "Reset",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"entrance": "Entrance",
+		"cash": "Cash"
 	},
 	"auth": {
 		"logout": "Logout",
@@ -32,6 +34,11 @@
 	"shops": {
 		"shops": "Shops",
 		"shop": "Shop",
-		"myShops": "My shops"
+		"myShops": "My shops",
+		"noMyShops": "No stores listed.",
+		"shopCategories": "Product categories that match the store layout",
+		"addShopCominSoon": "Adding your stores will be possible soon.",
+		"shopDescription": "The stores have product categories that correspond to the arrangement of products in the store.",
+		"shopDescriptionMore": "By adding a store to the list and categories to the list elements, the application sorts the products in the order from the store's entry to the checkout."
 	}
 }

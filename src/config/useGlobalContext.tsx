@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 
@@ -8,13 +8,6 @@ import { ContextProviderProps, UserDataInterface, User } from 'config/models';
 const InitialUserData: UserDataInterface = {
 	jwt: null,
 	user: null,
-};
-
-const getValueFor = async (key: string) => {
-	const result = await SecureStore.getItemAsync(key);
-	if (result) return result;
-
-	return null;
 };
 
 export const useGlobalContext = () => {

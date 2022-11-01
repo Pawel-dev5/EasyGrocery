@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, ScrollView } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
@@ -27,7 +27,9 @@ import {
 	StyledUsersWrapper,
 	StyledListDescription,
 } from 'components/lists/items/Styles';
-import { ItemInterface } from '../models/sections';
+
+// MODELS
+import { ItemInterface } from 'components/lists/models/sections';
 
 export const FullListWrapper = (props: any) => {
 	const {
@@ -36,9 +38,6 @@ export const FullListWrapper = (props: any) => {
 		getList,
 		deleteList,
 		addNewListItem,
-		editSingleListTitle,
-		setIsEdited,
-		setEditedValue,
 		editSingleListItems,
 		setShowDone,
 		filteredItems,
@@ -49,6 +48,7 @@ export const FullListWrapper = (props: any) => {
 		setEditedSingleList,
 	} = useContext(ListsContextData);
 	const { lang, setLang } = useContext(GlobalContextData);
+
 	const listUuid = props?.route?.params?.id;
 
 	useEffect(() => {
@@ -102,10 +102,8 @@ export const FullListWrapper = (props: any) => {
 								</StyledListCardItemElement>
 							</StyledUsersWrapper>
 
-							<StyledListDescription>
-								{description ||
-									'Donec rutrum congue leo eget malesuada. Nulla porttitor accumsan tincidunt. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Nulla quis lorem'}
-							</StyledListDescription>
+							<StyledListDescription>{description}</StyledListDescription>
+
 							<ProgressBar items={items} />
 
 							{(showDone !== 'done' || showDone === null) && (
