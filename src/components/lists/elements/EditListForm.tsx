@@ -1,39 +1,32 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { t } from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { REACT_APP_API } from '@env';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
-import { ColorsButtons } from 'components/lists/partials';
+import { ColorsButtons, ListShops } from 'components/lists/partials';
 import { Loader } from 'components/layout/common';
 
 // STYLES
-import { StyledEditButton, StyledEditButtonsWrapper, StyledShopImage } from 'components/lists/elements/Styles';
-
-// MODELS
-import { ShopDataInterface } from 'components/shops/models/hooks';
-import { ShopsContextData } from 'components/shops/hooks/useShops';
+import { StyledEditButton, StyledEditButtonsWrapper } from 'components/lists/elements/Styles';
 
 const schema = yup
 	.object({
 		title: yup.string().required(),
 		description: yup.string().nullable(),
 		color: yup.string().nullable(),
-		// shop: yup.object().nullable(),
 	})
 	.required();
 
 export const EditListForm = () => {
-	const { isUpdating, editedSingleList, submitEditList, backendError } = useContext(ListsContextData);
+	const { isUpdating, editedSingleList, submitEditList, backendError, setNewShop, newShop } = useContext(ListsContextData);
 	const users = editedSingleList?.users_permissions_users?.data;
-	const { shops } = useContext(ShopsContextData);
 
 	const {
 		control,
@@ -47,11 +40,8 @@ export const EditListForm = () => {
 			title: editedSingleList?.title,
 			description: editedSingleList?.description,
 			color: editedSingleList?.color,
-			// shop: editedSingleList?.shop,
 		},
 	});
-	console.log(editedSingleList);
-	console.log(shops);
 
 	return (
 		<ScrollView>
@@ -96,45 +86,7 @@ export const EditListForm = () => {
 					)}
 				/>
 
-				{/* <Controller
-					name="shop"
-					control={control}
-					render={({ field: { value } }) => (
-						<>
-							<Text>{t<string>('shops.shop')}</Text>
-							<ScrollView contentContainerStyle={styles.scrollView} horizontal>
-								{shops?.map((shop) => {
-									const {
-										id,
-										attributes: {
-											image: {
-												data: {
-													attributes: { url, alternativeText },
-												},
-											},
-										},
-									} = shop;
-
-									const isActiveShop = () => {
-										if (id === value?.data?.id || id === editedSingleList?.shop?.data?.id)
-											return {
-												transform: [{ scale: 1.12 }],
-											};
-									};
-									return (
-										<TouchableOpacity key={id} onPress={() => setValue('shop', { data: shop })}>
-											<StyledShopImage
-												source={{ uri: `${REACT_APP_API}${url.substring(1)}` }}
-												style={[{ resizeMode: 'contain' }, isActiveShop()]}
-												alt={alternativeText}
-											/>
-										</TouchableOpacity>
-									);
-								})}
-							</ScrollView>
-						</>
-					)}
-				/> */}
+				<ListShops />
 
 				<StyledEditButtonsWrapper>
 					{isUpdating ? (
@@ -145,7 +97,14 @@ export const EditListForm = () => {
 								<Text>{t<string>('general.save')}</Text>
 							</StyledEditButton>
 
-							<StyledEditButton variant="delete" onPress={() => reset()} disabled={isUpdating}>
+							<StyledEditButton
+								variant="delete"
+								onPress={() => {
+									setNewShop(null);
+									reset();
+								}}
+								disabled={isUpdating}
+							>
 								<Text>{t<string>('general.cancel')}</Text>
 							</StyledEditButton>
 						</>
@@ -157,13 +116,3 @@ export const EditListForm = () => {
 		</ScrollView>
 	);
 };
-
-const styles = StyleSheet.create({
-	scrollView: {
-		flexDirection: 'row',
-		flexWrap: 'nowrap',
-		minWidth: '100%',
-		justifyContent: 'space-between',
-		paddingVertical: 16,
-	},
-});

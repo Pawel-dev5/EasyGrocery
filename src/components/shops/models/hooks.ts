@@ -20,7 +20,7 @@ export interface ShopDataInterface {
 }
 
 interface OrderInterface {
-	id: number;
+	id: string;
 	value: string;
 	priority: number;
 }

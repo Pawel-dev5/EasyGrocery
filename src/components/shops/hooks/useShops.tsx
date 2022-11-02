@@ -27,7 +27,6 @@ export const useShops = () => {
 		if (singleShop && !visible) return setSingleShop(null);
 		setVisible(false);
 	}, [singleShop, visible]);
-	console.log(singleShop);
 
 	const handleBottomSheetClose = () => {
 		setVisible(false);

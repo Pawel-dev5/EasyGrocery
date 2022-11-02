@@ -59,7 +59,7 @@ export const StyledFullListWrapper = styled.View`
 
 export const StyledItemsWrapper = styled.View`
 	width: 100%;
-	height: 76%;
+	height: 71.2%;
 	border-top-left-radius: 32px;
 	border-top-right-radius: 32px;
 	padding: 24px;

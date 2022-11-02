@@ -21,6 +21,7 @@ import { SingleListInterface } from 'components/lists/models/items';
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
 import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
+import { ShopDataInterface } from 'components/shops/models/hooks';
 
 const schema = yup
 	.object({
@@ -41,6 +42,7 @@ export const useList = () => {
 	const [listsView, setListsView] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUpdating, setIsUpdating] = useState(false);
+	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
 
 	// NEW LIST AL VALUES EDIT
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
@@ -198,12 +200,16 @@ export const useList = () => {
 			setIsUpdating(true);
 			axios
 				.put(`lists/${editedSingleList?.id}`, {
-					data,
+					data: {
+						...data,
+						shop: newShop,
+					},
 				})
 				.then((resp) => {
 					const { id, attributes } = resp?.data?.data;
 					if (singleList) setSingleList({ id, ...attributes });
 					setEditedSingleList(resp?.data?.data);
+					setNewShop(null);
 				})
 				.catch((error) => console.log(error?.response?.data))
 				.finally(() => setIsUpdating(false));
@@ -242,6 +248,8 @@ export const useList = () => {
 		setListsView,
 		editedSingleList,
 		setEditedSingleList,
+		setNewShop,
+		newShop,
 	};
 };
 
