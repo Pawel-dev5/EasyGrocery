@@ -18,6 +18,11 @@ export const StyledItemTitle = styled.Text`
 	margin-left: 10px;
 `;
 
+export const StyledCategory = styled.Text`
+	font-size: 10px;
+	margin-left: 10px;
+`;
+
 export const StyledItemTitleWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
@@ -36,9 +41,6 @@ export const StyledListItemsWrapper = styled.View`
 	justify-content: space-between;
 	width: 100%;
 	margin-bottom: 10px;
-	padding: 10px 0;
-	border-bottom-color: ${({ theme }) => theme.grey200};
-	border-bottom-width: 1px;
 `;
 
 export const StyledEditButton = styled.TouchableOpacity<{ variant: string }>`
@@ -65,4 +67,39 @@ export const StyledEditButtonsWrapper = styled.View`
 	justify-content: space-between;
 	align-items: center;
 	padding: 21px 0;
+`;
+
+export const StyledItemsCategoryWrapper = styled.View`
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	max-width: 70%;
+	margin-top: 10px;
+`;
+
+export const StyledEditInoutWrapper = styled.View`
+	max-width: 100%;
+`;
+export const StyledItemsContainer = styled.View`
+	max-width: 100%;
+	padding: 10px 0;
+	border-bottom-color: ${({ theme }) => theme.grey200};
+	border-bottom-width: 1px;
+`;
+
+export const StyledItemsCategory = styled.TouchableOpacity<{ active: boolean }>`
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	margin-right: 16px;
+	border: 1px solid ${({ theme }) => theme.grey200};
+	border-radius: ${({ theme }) => theme.radius[2]};
+	padding: 4px 8px;
+	background: ${({ theme }) => theme.grey100};
+
+	${({ active }) =>
+		active &&
+		css`
+			background: ${({ theme }) => theme.grey400};
+		`};
 `;

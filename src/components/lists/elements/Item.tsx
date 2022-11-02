@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { TouchableOpacity, ScrollView } from 'react-native';
+import { TouchableOpacity, View, Text, ScrollView, StyleSheet } from 'react-native';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
@@ -13,17 +13,22 @@ import {
 	StyledItemTitleWrapper,
 	StyledListItemsOptions,
 	StyledListItemsWrapper,
+	StyledCategory,
+	StyledItemsCategory,
+	StyledEditInoutWrapper,
+	StyledItemsContainer,
 } from 'components/lists/elements/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
 
-export const Item = ({ id, value, done }: ItemInterface) => {
-	const [editableItem, setEditableItem] = useState<string | null>(null);
-	const { editSingleListItems } = useContext(ListsContextData);
+export const Item = ({ id, value, done, category, withCategories }: ItemInterface) => {
+	const [editableItem, setEditableItem] = useState<{ title?: string; category?: string | null } | null>(null);
+	const { editSingleListItems, singleList } = useContext(ListsContextData);
 
+	const categories = singleList?.shop?.data?.attributes?.orders;
 	return (
-		<ScrollView>
+		<StyledItemsContainer>
 			<StyledListItemsWrapper key={id}>
 				<StyledItemTitleWrapper>
 					<TouchableOpacity onPress={() => editSingleListItems('updateDone', id)}>
@@ -31,15 +36,20 @@ export const Item = ({ id, value, done }: ItemInterface) => {
 					</TouchableOpacity>
 
 					{editableItem !== null ? (
-						<Input
-							value={editableItem!}
-							name="title"
-							placeholder="title"
-							textContentType="nickname"
-							onChange={(text) => setEditableItem(text as unknown as string)}
-						/>
+						<StyledEditInoutWrapper>
+							<Input
+								value={editableItem.title!}
+								name="title"
+								placeholder="title"
+								textContentType="nickname"
+								onChange={(text) => setEditableItem({ ...editableItem, title: text as unknown as string })}
+							/>
+						</StyledEditInoutWrapper>
 					) : (
-						<StyledItemTitle>{value}</StyledItemTitle>
+						<View>
+							<StyledItemTitle>{value}</StyledItemTitle>
+							{withCategories && <StyledCategory>{category}</StyledCategory>}
+						</View>
 					)}
 				</StyledItemTitleWrapper>
 
@@ -47,14 +57,14 @@ export const Item = ({ id, value, done }: ItemInterface) => {
 					{editableItem !== null ? (
 						<TouchableOpacity
 							onPress={() => {
-								editSingleListItems('updateTitle', id, editableItem);
+								editSingleListItems('updateItem', id, editableItem);
 								setEditableItem(null);
 							}}
 						>
 							<Icon name="check" size={20} />
 						</TouchableOpacity>
 					) : (
-						<TouchableOpacity onPress={() => setEditableItem(value)}>
+						<TouchableOpacity onPress={() => setEditableItem({ title: value, category })}>
 							<Icon name="edit" size={20} />
 						</TouchableOpacity>
 					)}
@@ -63,6 +73,30 @@ export const Item = ({ id, value, done }: ItemInterface) => {
 					</TouchableOpacity>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
-		</ScrollView>
+
+			{editableItem !== null && categories && categories?.length > 0 && (
+				<ScrollView contentContainerStyle={styles.scrollView} horizontal>
+					{categories?.map(({ id, value }) => (
+						<StyledItemsCategory
+							key={id}
+							onPress={() => setEditableItem({ ...editableItem, category: value })}
+							active={(value === category && editableItem === null) || editableItem?.category === value}
+						>
+							<Text>{value}</Text>
+						</StyledItemsCategory>
+					))}
+				</ScrollView>
+			)}
+		</StyledItemsContainer>
 	);
 };
+
+const styles = StyleSheet.create({
+	scrollView: {
+		flexDirection: 'row',
+		flexWrap: 'nowrap',
+		minWidth: '100%',
+		justifyContent: 'space-between',
+		paddingVertical: 16,
+	},
+});

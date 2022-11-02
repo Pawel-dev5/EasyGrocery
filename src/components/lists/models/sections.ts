@@ -10,6 +10,8 @@ export interface ItemInterface {
 	uuid: string;
 	value: string;
 	done: boolean;
+	category: string | null;
+	withCategories?: boolean;
 }
 
 export interface ListInterface {

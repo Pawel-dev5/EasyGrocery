@@ -127,9 +127,16 @@ export const StyledUsersWrapper = styled.View`
 export const StyledUsersCounter = styled.Text`
 	font-size: 16px;
 `;
+
 export const StyledListDescription = styled.Text`
 	font-size: 16px;
 	margin-bottom: 14px;
+`;
+
+export const StyledSortedCategoryTitle = styled.Text`
+	font-size: 16px;
+	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+	margin-top: 14px;
 `;
 
 // ========= END FULL LIST ===========

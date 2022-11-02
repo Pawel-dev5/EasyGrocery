@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
@@ -43,6 +43,7 @@ export const useList = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUpdating, setIsUpdating] = useState(false);
 	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
+	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
 
 	// NEW LIST AL VALUES EDIT
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
@@ -142,7 +143,11 @@ export const useList = () => {
 		}
 	};
 
-	const editSingleListItems = (variant: 'add' | 'delete' | 'updateDone' | 'clear', id?: string) => {
+	const editSingleListItems = (
+		variant: 'add' | 'delete' | 'updateDone' | 'clear' | 'updateItem',
+		id?: string,
+		item?: any,
+	) => {
 		if (singleList?.items) {
 			let newData;
 			if (variant === 'add') newData = [...singleList?.items, singleListEditable.value.newItem];
@@ -150,6 +155,10 @@ export const useList = () => {
 			if (variant === 'updateDone' && id)
 				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
 					updateObject(todo, { done: !todo.done }),
+				);
+			if (variant === 'updateItem' && id && item)
+				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
+					updateObject(todo, { value: item.title, category: item.category }),
 				);
 			if (variant === 'clear') newData = [];
 
@@ -195,7 +204,6 @@ export const useList = () => {
 	}, [showDone]);
 
 	const submitEditList = (data: FieldValues) => {
-		console.log(data);
 		if (data && editedSingleList) {
 			setIsUpdating(true);
 			axios
@@ -215,6 +223,26 @@ export const useList = () => {
 				.finally(() => setIsUpdating(false));
 		}
 	};
+
+	const sortItemsByCategories = () => {
+		const itemsToSort = singleList?.items;
+		const categories = singleList?.shop.data?.attributes?.orders;
+		const newListItems: any = [];
+		if (categories && categories?.length > 0 && itemsToSort && itemsToSort?.length > 0) {
+			categories.forEach(({ value }) => {
+				const newCategoryItems = {
+					category: value,
+					items: itemsToSort?.filter(({ category }) => category === value),
+				};
+				if (newCategoryItems) newListItems.push(newCategoryItems);
+			});
+		}
+		if (newListItems?.length > 0) setSortedListItemsByCategories(newListItems);
+	};
+
+	useEffect(() => {
+		if (sortedListItemsByCategories) sortItemsByCategories();
+	}, [singleList]);
 
 	return {
 		lists,
@@ -250,6 +278,9 @@ export const useList = () => {
 		setEditedSingleList,
 		setNewShop,
 		newShop,
+		sortItemsByCategories,
+		sortedListItemsByCategories,
+		setSortedListItemsByCategories,
 	};
 };
 

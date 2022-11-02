@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, ScrollView, View } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
@@ -27,10 +27,12 @@ import {
 	StyledUsersCounter,
 	StyledUsersWrapper,
 	StyledListDescription,
+	StyledSortedCategoryTitle,
 } from 'components/lists/items/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
+import { StyledEditInoutWrapper } from '../elements/Styles';
 
 export const FullListWrapper = (props: any) => {
 	const {
@@ -47,6 +49,9 @@ export const FullListWrapper = (props: any) => {
 		setIsLoading,
 		editedSingleList,
 		setEditedSingleList,
+		sortItemsByCategories,
+		sortedListItemsByCategories,
+		setSortedListItemsByCategories,
 	} = useContext(ListsContextData);
 	const { lang, setLang } = useContext(GlobalContextData);
 	const { getShops, shops } = useContext(ShopsContextData);
@@ -62,7 +67,7 @@ export const FullListWrapper = (props: any) => {
 	}, []);
 
 	if (singleList) {
-		const { id, title, users_permissions_users, items, description, color } = singleList;
+		const { id, title, users_permissions_users, items, description, color, shop } = singleList;
 		const listItems = filteredItems || items;
 
 		return (
@@ -126,6 +131,16 @@ export const FullListWrapper = (props: any) => {
 									<Text>Pokaż wszystko</Text>
 								</TouchableOpacity>
 							)}
+
+							{shop?.data !== null && (
+								<TouchableOpacity
+									onPress={() =>
+										sortedListItemsByCategories ? setSortedListItemsByCategories(null) : sortItemsByCategories()
+									}
+								>
+									{sortedListItemsByCategories ? <Text>Wróć do widoku listy</Text> : <Text>Sortuj wg kategorii sklepu</Text>}
+								</TouchableOpacity>
+							)}
 						</StyledFullListWrapper>
 
 						<StyledItemsWrapper>
@@ -133,26 +148,41 @@ export const FullListWrapper = (props: any) => {
 								<EditListForm />
 							) : (
 								<>
-									<StyledAddNewItem>
-										<Input
-											value={singleListEditable?.value?.newItem.value!}
-											name="title"
-											placeholder="Add"
-											textContentType="nickname"
-											onKeyPress={(e) => console.log(e.nativeEvent)}
-											onChange={(text) => addNewListItem(text)}
-										/>
+									{sortedListItemsByCategories?.length > 0 ? (
+										<ScrollView>
+											{sortedListItemsByCategories?.map((item: any) => (
+												<View key={item?.category}>
+													<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
+													{item?.items?.map((item: ItemInterface) => (
+														<Item key={item?.id} {...item} />
+													))}
+												</View>
+											))}
+										</ScrollView>
+									) : (
+										<StyledEditInoutWrapper>
+											<StyledAddNewItem>
+												<Input
+													value={singleListEditable?.value?.newItem.value!}
+													name="title"
+													placeholder="Add"
+													textContentType="nickname"
+													onKeyPress={(e) => console.log(e.nativeEvent)}
+													onChange={(text) => addNewListItem(text)}
+												/>
 
-										<StyledAddItemButton onPress={() => editSingleListItems('add')}>
-											<Icon name="plus" size={20} />
-										</StyledAddItemButton>
-									</StyledAddNewItem>
+												<StyledAddItemButton onPress={() => editSingleListItems('add')}>
+													<Icon name="plus" size={20} />
+												</StyledAddItemButton>
+											</StyledAddNewItem>
 
-									<ScrollView>
-										{listItems?.map((item: ItemInterface) => (
-											<Item key={item?.id} {...item} />
-										))}
-									</ScrollView>
+											<ScrollView>
+												{listItems?.map((item: ItemInterface) => (
+													<Item key={item?.id} {...item} withCategories />
+												))}
+											</ScrollView>
+										</StyledEditInoutWrapper>
+									)}
 								</>
 							)}
 						</StyledItemsWrapper>
