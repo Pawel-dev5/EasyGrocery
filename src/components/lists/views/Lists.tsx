@@ -18,7 +18,7 @@ import { ControllerWrapper } from 'components/auth/sections';
 import { Icon } from 'components/layout/common';
 
 // STYLES
-import { StyledGridList, StyledListsScrollView } from 'components/lists/views/Styles';
+import { StyledGridList, StyledListsScrollView, StyledAddListWrapper } from 'components/lists/views/Styles';
 import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 
 export const ListsWrapper = (props: any) => {
@@ -84,13 +84,15 @@ export const ListsWrapper = (props: any) => {
 				floatedItems={floatedItems}
 				bottomSheet={
 					<>
-						<ControllerWrapper
-							name="title"
-							placeholder={t('general.title')}
-							textContentType="nickname"
-							control={control}
-							errors={errors}
-						/>
+						<StyledAddListWrapper>
+							<ControllerWrapper
+								name="title"
+								placeholder={t('general.title')}
+								textContentType="nickname"
+								control={control}
+								errors={errors}
+							/>
+						</StyledAddListWrapper>
 
 						<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
 							<Icon name="plus" size={20} variant="white" />

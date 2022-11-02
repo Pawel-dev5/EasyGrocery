@@ -13,6 +13,9 @@ import { GlobalContextData } from 'config/useGlobalContext';
 import { ControllerWrapper } from 'components/auth/sections';
 import { AppWrapper } from 'components/layout';
 
+// STYLES
+import { StyledLoginContainer, StyledInputWrapper } from 'components/user/views/Styles';
+
 const schema = yup
 	.object({
 		username: yup.string(),
@@ -47,27 +50,32 @@ export const Profile = (props: any) => {
 	return (
 		<AppWrapper routeName={t('profile.profile')} {...props} lang={lang} setLang={setLang}>
 			<SafeAreaView>
-				<ControllerWrapper
-					name="username"
-					placeholder="username"
-					keyboardType="default"
-					textContentType="nickname"
-					control={control}
-					errors={errors}
-				/>
+				<StyledLoginContainer>
+					<StyledInputWrapper>
+						<ControllerWrapper
+							name="username"
+							placeholder="username"
+							keyboardType="default"
+							textContentType="nickname"
+							control={control}
+							errors={errors}
+						/>
+					</StyledInputWrapper>
+					<StyledInputWrapper>
+						<ControllerWrapper
+							name="email"
+							placeholder="Email"
+							keyboardType="email-address"
+							textContentType="emailAddress"
+							autoComplete="email"
+							control={control}
+							errors={errors}
+						/>
+					</StyledInputWrapper>
 
-				<ControllerWrapper
-					name="email"
-					placeholder="Email"
-					keyboardType="email-address"
-					textContentType="emailAddress"
-					autoComplete="email"
-					control={control}
-					errors={errors}
-				/>
+					<Button title={t<string>('general.save')} onPress={handleSubmit(updateProfile)} />
+				</StyledLoginContainer>
 			</SafeAreaView>
-
-			<Button title={t<string>('general.save')} onPress={handleSubmit(updateProfile)} />
 		</AppWrapper>
 	);
 };

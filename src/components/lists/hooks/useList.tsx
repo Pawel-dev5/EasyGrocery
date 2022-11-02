@@ -232,7 +232,7 @@ export const useList = () => {
 			categories.forEach(({ value }) => {
 				const newCategoryItems = {
 					category: value,
-					items: itemsToSort?.filter(({ category }) => category === value),
+					items: itemsToSort?.filter(({ category }) => category?.toLowerCase() === value?.toLowerCase()),
 				};
 				if (newCategoryItems) newListItems.push(newCategoryItems);
 			});

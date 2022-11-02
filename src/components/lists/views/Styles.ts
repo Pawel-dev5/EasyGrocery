@@ -10,3 +10,7 @@ export const StyledGridList = styled.View`
 	justify-content: space-between;
 	flex-wrap: wrap;
 `;
+
+export const StyledAddListWrapper = styled.View`
+	padding-bottom: 16px;
+`;
