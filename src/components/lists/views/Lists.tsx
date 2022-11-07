@@ -109,6 +109,7 @@ export const ListsWrapper = (props: any) => {
 							keyExtractor={(item) => item?.id}
 							refreshing={refreshing}
 							onRefresh={onRefresh}
+							ListEmptyComponent={() => null}
 							renderItem={({ item }) => {
 								const props = {
 									list: item,

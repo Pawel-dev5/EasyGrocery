@@ -17,7 +17,10 @@
 		"entrance": "Wejście",
 		"cash": "Kasa",
 		"users": "Użytkownicy",
-		"color": "Kolor"
+		"color": "Kolor",
+		"delete": "Usuń",
+		"deleteList": "Na pewno chcesz usunąć tą listę?",
+		"deleteAllItems": "Na pewno chcesz usunąć wszytkie elementy listy?"
 	},
 	"auth": {
 		"logout": "Wyloguj",

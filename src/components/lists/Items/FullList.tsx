@@ -10,7 +10,7 @@ import { ContextProvider as ShopContextProvider, ShopsContextData } from 'compon
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
 import { Icon, Input, ProgressBar } from 'components/layout/common';
-import { EditListForm, Item } from 'components/lists/elements';
+import { EditListForm, Item, SubmitAlert } from 'components/lists/elements';
 
 // STYLES
 import {
@@ -90,11 +90,33 @@ export const FullListWrapper = (props: any) => {
 										<Icon name={editedSingleList !== null ? 'list' : 'edit'} size={20} />
 									</StyledActionButton>
 
-									<StyledActionButton onPress={() => editSingleListItems('clear', id!)}>
+									<StyledActionButton
+										onPress={() =>
+											SubmitAlert({
+												okPressed: () => editSingleListItems('clear', id!),
+												okText: t('general.delete'),
+												cancelText: t('general.cancel'),
+												cancelPressed: () => {},
+												alertTitle: singleList.title ?? '',
+												alertMessage: t('general.deleteAllItems'),
+											})
+										}
+									>
 										<Icon name="broom" size={20} />
 									</StyledActionButton>
 
-									<StyledActionButton onPress={() => deleteList(id!)}>
+									<StyledActionButton
+										onPress={() =>
+											SubmitAlert({
+												okPressed: () => deleteList(id!),
+												okText: t('general.delete'),
+												cancelText: t('general.cancel'),
+												cancelPressed: () => {},
+												alertTitle: singleList.title ?? '',
+												alertMessage: t('general.deleteList'),
+											})
+										}
+									>
 										<Icon name="trash" size={20} />
 									</StyledActionButton>
 								</StyledListOptionWrapper>
@@ -110,7 +132,7 @@ export const FullListWrapper = (props: any) => {
 								</StyledListCardItemElement>
 							</StyledUsersWrapper>
 
-							<StyledListDescription>{description}</StyledListDescription>
+							{description && <StyledListDescription>{description}</StyledListDescription>}
 
 							<ProgressBar items={items} />
 

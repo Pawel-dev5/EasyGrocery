@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { t } from 'i18next';
+import axios from 'axios';
 
 // ROUTING
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { auth, lists, profile, shops } from 'routes/AppRoutes';
-import axios from 'axios';
 
 // CONFIG
 import 'src/config/i18nConfig';
@@ -19,7 +19,6 @@ import { ContextProvider } from 'config/useGlobalContext';
 // STYLES
 import { ThemeProvider } from 'styled-components';
 import theme from 'utils/theme/themeDefault';
-import { Lists } from 'components/lists';
 
 // COMPONENTS
 import { StatusBar } from 'expo-status-bar';
@@ -27,6 +26,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { Login, Register } from 'components/auth';
 import { Profile } from 'components/user';
 import { ListVariant } from 'components/lists/models/sections';
+import { Lists } from 'components/lists';
 import { List } from 'components/lists/sections';
 import { Shops } from 'components/shops';
 

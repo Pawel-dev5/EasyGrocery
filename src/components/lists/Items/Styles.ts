@@ -14,7 +14,7 @@ export const StyledListCard = styled.View<{ type: string; color: string | null }
 	${({ type }) =>
 		type === 'grid' &&
 		css`
-			max-width: 179px;
+			max-width: 170px;
 		`}
 
 	${({ color }) =>
@@ -58,8 +58,11 @@ export const StyledFullListWrapper = styled.View`
 `;
 
 export const StyledItemsWrapper = styled.View`
+	position: absolute;
+	bottom: 0;
 	width: 100%;
-	height: 71.2%;
+	min-height: 400px;
+	max-height: 520px;
 	border-top-left-radius: 32px;
 	border-top-right-radius: 32px;
 	padding: 24px;
@@ -77,7 +80,7 @@ export const StyledListBackground = styled.View<{ color: string | null }>`
 	width: 100%;
 	flex: 1;
 	background: ${({ theme }) => theme.grey200};
-
+	position: relative;
 	${({ color }) =>
 		color &&
 		css`

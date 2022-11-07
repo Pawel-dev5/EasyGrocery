@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Manager, Socket } from 'socket.io-client';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -45,7 +46,7 @@ export const useList = () => {
 	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
 	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
 
-	// NEW LIST AL VALUES EDIT
+	// NEW LIST ALL VALUES EDITITED
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
 
 	const {
@@ -56,6 +57,23 @@ export const useList = () => {
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
+
+	// SOCKET.IO CONFIG
+	const [socket, setSocket] = useState<Socket<any, any> | null>(null);
+	if (socket) {
+		socket.off('listUpdate').once('listUpdate', (data: any) => {
+			const { id, attributes } = data;
+			if (singleList) setSingleList({ id, ...attributes });
+			setIsUpdating(false);
+		});
+	}
+	useEffect(() => {
+		const manager = new Manager('http://192.168.0.129:1337', {
+			reconnectionDelayMax: 10000,
+		});
+		const socket = manager.socket('/');
+		setSocket(socket);
+	}, []);
 
 	const getLists = () => {
 		if (user?.id)
@@ -118,31 +136,6 @@ export const useList = () => {
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
-	const setIsEdited = (title: string | null) =>
-		setSingleListEditable({ isEdited: 'title', value: { ...singleListEditable.value, title } });
-
-	const setEditedValue = (title: string) =>
-		setSingleListEditable({ ...singleListEditable, value: { ...singleListEditable.value, title } });
-
-	const editSingleListTitle = () => {
-		if (singleList) {
-			if (singleList?.title !== singleListEditable?.value?.title) {
-				axios
-					.put(`lists/${singleList?.id}`, {
-						data: {
-							title: singleListEditable.value.title,
-						},
-					})
-					.then((resp) => {
-						const { id, attributes } = resp?.data?.data;
-						if (singleList) setSingleList({ id, ...attributes });
-						setSingleListEditable(SingleListEditableInitial);
-					})
-					.catch((error) => console.log(error?.response?.data?.error?.message));
-			} else setSingleListEditable(SingleListEditableInitial);
-		}
-	};
-
 	const editSingleListItems = (
 		variant: 'add' | 'delete' | 'updateDone' | 'clear' | 'updateItem',
 		id?: string,
@@ -170,9 +163,14 @@ export const useList = () => {
 						},
 					})
 					.then((resp) => {
-						const { id, attributes } = resp?.data?.data;
-						if (singleList) setSingleList({ id, ...attributes });
-						setSingleListEditable(SingleListEditableInitial);
+						// SOCKET UPDATE STATES BELOW
+						if (socket)
+							socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
+								if (error) {
+									alert(error);
+								}
+								setSingleListEditable(SingleListEditableInitial);
+							});
 					})
 					.catch((error) => console.log(error?.response?.data?.error?.message));
 		}
@@ -210,17 +208,19 @@ export const useList = () => {
 				.put(`lists/${editedSingleList?.id}`, {
 					data: {
 						...data,
-						shop: newShop,
+						shop: newShop || data.shop,
 					},
 				})
 				.then((resp) => {
-					const { id, attributes } = resp?.data?.data;
-					if (singleList) setSingleList({ id, ...attributes });
-					setEditedSingleList(resp?.data?.data);
-					setNewShop(null);
+					// SOCKET UPDATE STATES BELOW
+					if (socket)
+						socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
+							if (error) {
+								alert(error);
+							}
+						});
 				})
-				.catch((error) => console.log(error?.response?.data))
-				.finally(() => setIsUpdating(false));
+				.catch((error) => console.log(error?.response?.data));
 		}
 	};
 
@@ -263,10 +263,7 @@ export const useList = () => {
 		getList,
 		deleteList,
 		setNewList,
-		setIsEdited,
-		editSingleListTitle,
 		editSingleListItems,
-		setEditedValue,
 		addNewListItem,
 		setShowDone,
 		handleKeyboardItems,
