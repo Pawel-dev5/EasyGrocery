@@ -20,7 +20,12 @@
 		"color": "Color",
 		"delete": "Delete",
 		"deleteList": "Are you sure you want to delete this list?",
-		"deleteAllItems": "Are you sure you want to delete all list items?"
+		"deleteAllItems": "Are you sure you want to delete all list items?",
+		"showOnlyDone": "Show only done",
+		"showOnlyUnDone": "Show onlu undone",
+		"showAll": "Show all",
+		"backToListView": "Back to list view",
+		"sortByShopCategory": "Sort by shop categories"
 	},
 	"auth": {
 		"logout": "Logout",

@@ -138,19 +138,19 @@ export const FullListWrapper = (props: any) => {
 
 							{(showDone !== 'done' || showDone === null) && (
 								<TouchableOpacity onPress={() => setShowDone('done')}>
-									<Text>Pokaż tylko zrobione</Text>
+									<Text>{t<string>('general.showOnlyDone')}</Text>
 								</TouchableOpacity>
 							)}
 
 							{(showDone !== 'unDone' || showDone === null) && (
 								<TouchableOpacity onPress={() => setShowDone('unDone')}>
-									<Text>Pokaż tylko niezrobione</Text>
+									<Text>{t<string>('general.showOnlyUnDone')}</Text>
 								</TouchableOpacity>
 							)}
 
 							{showDone !== null && (
 								<TouchableOpacity onPress={() => setShowDone(null)}>
-									<Text>Pokaż wszystko</Text>
+									<Text>{t<string>('general.showAll')}</Text>
 								</TouchableOpacity>
 							)}
 
@@ -160,7 +160,9 @@ export const FullListWrapper = (props: any) => {
 										sortedListItemsByCategories ? setSortedListItemsByCategories(null) : sortItemsByCategories()
 									}
 								>
-									{sortedListItemsByCategories ? <Text>Wróć do widoku listy</Text> : <Text>Sortuj wg kategorii sklepu</Text>}
+									<Text>
+										{t<string>(sortedListItemsByCategories ? 'general.backToListView' : 'general.sortByShopCategory')}
+									</Text>
 								</TouchableOpacity>
 							)}
 						</StyledFullListWrapper>

@@ -20,7 +20,12 @@
 		"color": "Kolor",
 		"delete": "Usuń",
 		"deleteList": "Na pewno chcesz usunąć tą listę?",
-		"deleteAllItems": "Na pewno chcesz usunąć wszytkie elementy listy?"
+		"deleteAllItems": "Na pewno chcesz usunąć wszytkie elementy listy?",
+		"showOnlyDone": "Pokaż tylko zrobione",
+		"showOnlyUnDone": "Pokaż tylko niezrobione",
+		"showAll": "Pokaż wszystko",
+		"backToListView": "Wróć do widoku listy",
+		"sortByShopCategory": "Sortuj wg kategorii sklepu"
 	},
 	"auth": {
 		"logout": "Wyloguj",
