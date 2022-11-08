@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Manager, Socket } from 'socket.io-client';
+import { REACT_APP_API } from '@env';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -68,7 +69,7 @@ export const useList = () => {
 		});
 	}
 	useEffect(() => {
-		const manager = new Manager('http://192.168.0.129:1337', {
+		const manager = new Manager(REACT_APP_API, {
 			reconnectionDelayMax: 10000,
 		});
 		const socket = manager.socket('/');
