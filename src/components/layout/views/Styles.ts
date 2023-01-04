@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components/native';
 // MODELS
 import { VariantType } from 'components/layout/models/common';
 
-export const StyledChildren = styled.View<{ customPadding: string }>`
+export const StyledChildren = styled.View<{ customPadding?: string }>`
 	height: 89%;
 	width: 100%;
 	background-color: ${({ theme }) => theme.white};

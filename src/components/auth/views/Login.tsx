@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Text, SafeAreaView } from 'react-native';
 import { t } from 'i18next';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ import { useAuth } from 'components/auth/hooks/useAuth';
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
 import { AppWrapper } from 'components/layout';
+import { Loader } from 'components/layout/common';
 
 // STYLES
 import { StyledLoginContainer, StyledInputWrapper } from 'components/auth/views/Styles';
@@ -25,7 +26,11 @@ const schema = yup
 
 export const Login = (props: any) => {
 	const { signIn, lang, setLang } = useContext(GlobalContextData);
-	const { submitLogin, backendError } = useAuth(signIn);
+	const { submitLogin, backendError, loginStoredUser, loginStatus } = useAuth(signIn);
+
+	useEffect(() => {
+		loginStoredUser();
+	}, []);
 
 	const {
 		control,
@@ -33,45 +38,45 @@ export const Login = (props: any) => {
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
-		defaultValues: {
-			email: 'p.nowecki@gmail.com',
-			password: 'Pawel6503!',
-		},
 	});
 
-	return (
-		<AppWrapper routeName={t('auth.login')} {...props} lang={lang} setLang={setLang}>
-			<SafeAreaView>
-				<StyledLoginContainer>
-					<StyledInputWrapper>
-						<ControllerWrapper
-							name="email"
-							placeholder="Email"
-							keyboardType="email-address"
-							textContentType="emailAddress"
-							autoComplete="email"
-							control={control}
-							errors={errors}
-						/>
-					</StyledInputWrapper>
+	if (loginStatus === 'PANDING' || loginStatus === 'LOGGED') {
+		return <Loader size={100} />;
+	} else {
+		return (
+			<AppWrapper routeName={t('auth.login')} {...props} lang={lang} setLang={setLang}>
+				<SafeAreaView>
+					<StyledLoginContainer>
+						<StyledInputWrapper>
+							<ControllerWrapper
+								name="email"
+								placeholder="Email"
+								keyboardType="email-address"
+								textContentType="emailAddress"
+								autoComplete="email"
+								control={control}
+								errors={errors}
+							/>
+						</StyledInputWrapper>
 
-					<StyledInputWrapper>
-						<ControllerWrapper
-							name="password"
-							placeholder={t('auth.password')}
-							textContentType="password"
-							autoComplete="password"
-							control={control}
-							errors={errors}
-							type="password"
-						/>
-					</StyledInputWrapper>
+						<StyledInputWrapper>
+							<ControllerWrapper
+								name="password"
+								placeholder={t('auth.password')}
+								textContentType="password"
+								autoComplete="password"
+								control={control}
+								errors={errors}
+								type="password"
+							/>
+						</StyledInputWrapper>
 
-					<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
+						<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
 
-					{backendError && <Text>{backendError}</Text>}
-				</StyledLoginContainer>
-			</SafeAreaView>
-		</AppWrapper>
-	);
+						{backendError && <Text>{backendError}</Text>}
+					</StyledLoginContainer>
+				</SafeAreaView>
+			</AppWrapper>
+		);
+	}
 };

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { t } from 'i18next';
 import axios from 'axios';
+import 'expo-dev-client';
 
 // ROUTING
 import { NavigationContainer } from '@react-navigation/native';
@@ -40,7 +41,7 @@ const AppComponent = () => {
 	return (
 		<NavigationContainer>
 			<Navigator
-				initialRouteName={t('general.myLists')}
+				initialRouteName={t<string>('general.myLists')}
 				screenOptions={{
 					headerShown: false,
 				}}

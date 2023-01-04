@@ -9,7 +9,7 @@ import { ContextProvider as ShopContextProvider, ShopsContextData } from 'compon
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { Icon, Input, ProgressBar } from 'components/layout/common';
+import { Icon, Input, Loader, ProgressBar } from 'components/layout/common';
 import { EditListForm, Item, SubmitAlert } from 'components/lists/elements';
 
 // STYLES
@@ -97,7 +97,7 @@ export const FullListWrapper = (props: any) => {
 												okText: t('general.delete'),
 												cancelText: t('general.cancel'),
 												cancelPressed: () => {},
-												alertTitle: singleList.title ?? '',
+												alertTitle: singleList?.title ?? '',
 												alertMessage: t('general.deleteAllItems'),
 											})
 										}
@@ -112,7 +112,7 @@ export const FullListWrapper = (props: any) => {
 												okText: t('general.delete'),
 												cancelText: t('general.cancel'),
 												cancelPressed: () => {},
-												alertTitle: singleList.title ?? '',
+												alertTitle: singleList?.title ?? '',
 												alertMessage: t('general.deleteList'),
 											})
 										}
@@ -215,7 +215,7 @@ export const FullListWrapper = (props: any) => {
 			</>
 		);
 	}
-	return null;
+	return <Loader size={100} />;
 };
 
 export const FullList = (props: any) => (

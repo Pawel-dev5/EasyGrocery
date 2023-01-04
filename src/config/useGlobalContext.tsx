@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // CONTEXT
 import { ContextProviderProps, UserDataInterface, User } from 'config/models';
@@ -29,25 +30,13 @@ export const useGlobalContext = () => {
 				setUserData(InitialUserData);
 				setIsAuth(false);
 			});
+		AsyncStorage.removeItem('userPassword');
+		AsyncStorage.removeItem('userEmail');
 	};
 
 	const setUser = (user: User) => setUserData({ ...userData, user });
 
 	if (userData?.jwt) axios.defaults.headers.common['Authorization'] = `Bearer ${userData.jwt}`;
-
-	// AUTORIZATION HANDLER
-	// useEffect(() => {
-	// 	const checkAuth = async () => {
-	// 		const cachedToken = await getValueFor('token');
-
-	// 		if (cachedToken) {
-	// 			setIsAuth(true);
-
-	// 			if (!userData.jwt) setUserData({ ...userData, jwt: cachedToken });
-	// 		} else setIsAuth(false);
-	// 	};
-	// 	checkAuth();
-	// }, [userData.jwt]);
 
 	return {
 		lang,

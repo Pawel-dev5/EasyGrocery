@@ -18,17 +18,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.EasyGrocery.ios.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package":"com.EasyGrocery.app"
+      "package": "com.EasyGrocery.android.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-community-flipper"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ee54dc30-953d-4da0-a54b-7557a0a8a096"
+      }
     }
   }
 }
