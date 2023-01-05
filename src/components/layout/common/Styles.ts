@@ -46,11 +46,13 @@ export const StyledIcon = styled(FontAwesome5)<{ variant?: VariantType }>`
 `;
 
 export const StyledInput = styled.TextInput`
-	width: 250px;
+	width: 100%;
 	height: 44px;
 	border: 1px solid ${({ theme }) => theme.grey200};
 	border-radius: ${({ theme }) => theme.radius[2]};
 	padding: 12px;
+	color: ${({ theme }) => theme.black};
+	background-color: ${({ theme }) => theme.white};
 `;
 
 export const StyledProgressBarContainer = styled.View`
@@ -59,7 +61,7 @@ export const StyledProgressBarContainer = styled.View`
 	position: relative;
 `;
 
-export const StyledProgressBarBaseBox = styled.View`
+export const StyledProgressBarBaseBox = styled.View<{ percent?: number }>`
 	height: 100%;
 	position: absolute;
 	left: 0;
@@ -98,4 +100,25 @@ export const StyledLoaderContainer = styled.View`
 	flex-direction: row;
 	align-items: center;
 	padding: 10px;
+`;
+
+// =========  LANG SWITCHER  ===========
+export const StyledLangSwitcher = styled.Image`
+	width: 24px;
+	height: 16px;
+	margin-left: 6px;
+`;
+
+export const StyledLangWrapper = styled.View`
+	margin-top: 8px;
+	padding: 0 6px;
+	width: 100%;
+	flex-direction: row;
+	align-items: flex-end;
+	justify-content: space-between;
+`;
+
+export const StyledLangTitle = styled.Text`
+	font-size: 16px;
+	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 `;

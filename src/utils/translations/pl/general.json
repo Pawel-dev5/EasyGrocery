@@ -25,7 +25,9 @@
 		"showOnlyUnDone": "Pokaż tylko niezrobione",
 		"showAll": "Pokaż wszystko",
 		"backToListView": "Wróć do widoku listy",
-		"sortByShopCategory": "Sortuj wg kategorii sklepu"
+		"sortByShopCategory": "Sortuj wg kategorii sklepu",
+		"addUser": "Dodaj użytkownika",
+		"searchUser": "Wyszukaj użytkownika"
 	},
 	"auth": {
 		"logout": "Wyloguj",
@@ -35,7 +37,11 @@
 		"required": "jest wymagane.",
 		"register": "Zarejestruj się",
 		"password": "Hasło",
-		"cofirmPassword": "Potwierdź hasło"
+		"cofirmPassword": "Potwierdź hasło",
+		"forgotPassword": "Zapomniałeś hasło?",
+		"resetPassword": "Resetuj hasło",
+		"dontHaveAccount": "Nie masz jeszcze konta?",
+		"haveAccount": "Masz już konto?"
 	},
 	"profile": {
 		"profile": "Profil",

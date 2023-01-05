@@ -24,11 +24,11 @@ import { EditItemInterface } from 'components/lists/models/elements';
 import { updateObject } from 'utils/helpers/objectHelpers';
 import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { ShopDataInterface } from 'components/shops/models/hooks';
+import { useDebounce } from 'utils/helpers/useDebounce';
 
 const schema = yup
 	.object({
 		title: yup.string().required(),
-		// description: yup.string(),
 	})
 	.required();
 
@@ -47,8 +47,15 @@ export const useList = () => {
 	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
 	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
 
+	const [searchUsersValue, setSearchUsersValue] = useState<string | null>(null);
+	const [searchedUsers, setSearchedUsers] = useState([]);
+	const searchUsersValueDebounced = useDebounce(searchUsersValue || '', 500);
+
 	// NEW LIST ALL VALUES EDITITED
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
+
+	// LOADERS
+	const [addNewLoader, setAddNewLoader] = useState(false);
 
 	const {
 		control,
@@ -102,6 +109,33 @@ export const useList = () => {
 		});
 	}
 
+	// SEARCH USERS ON EDIT FORM
+	const setSearchIcons = (value: string) => setSearchUsersValue(value);
+
+	useEffect(() => {
+		if (searchUsersValue !== null) {
+			const searchQuery = qs.stringify(
+				{
+					filters: {
+						username: {
+							$contains: searchUsersValue,
+							$ne: user?.username,
+						},
+					},
+				},
+				{
+					encodeValuesOnly: true,
+				},
+			);
+
+			axios
+				.get(`users/?${searchQuery}`)
+				.then((resp) => setSearchedUsers(resp?.data))
+				.catch((error) => setBackendError(error?.response?.data?.error?.message));
+		}
+	}, [searchUsersValueDebounced]);
+
+	// FETCHES
 	const getLists = () => {
 		if (user?.id)
 			axios
@@ -175,6 +209,7 @@ export const useList = () => {
 		}
 	};
 
+	// UPDATING LIST
 	const sendSingleListPutRequest = (data: ItemInterface[] | [], query?: string, callbackOnSuccess?: () => void) => {
 		const putQuery = query ? `?${query}` : '';
 		if (data)
@@ -198,20 +233,27 @@ export const useList = () => {
 					};
 					updateListAfterSingleChange(newListToUpdate);
 				})
-				.catch((error) => console.log(error?.response?.data?.error?.message));
+				.catch((error) => {
+					if (callbackOnSuccess) callbackOnSuccess();
+					console.log(error?.response?.data?.error?.message);
+				});
 	};
 
 	const addNewSingleListItem = () => {
+		setAddNewLoader(true);
 		if (singleList?.items) {
 			const newData = [...singleList?.items, singleListEditable?.value?.newItem];
-			sendSingleListPutRequest(newData as ItemInterface[], basePuSingleListtQuery, () => addNewListItem(''));
+			sendSingleListPutRequest(newData as ItemInterface[], basePuSingleListtQuery, () => {
+				addNewListItem('');
+				setAddNewLoader(false);
+			});
 		}
 	};
 
-	const deleteSingleListItem = (id: string) => {
+	const deleteSingleListItem = (id: string, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = removeObjectFromArray(singleList?.items, 'id', id);
-			sendSingleListPutRequest(newData, basePuSingleListtQuery);
+			sendSingleListPutRequest(newData, basePuSingleListtQuery, callback);
 		}
 	};
 
@@ -219,31 +261,28 @@ export const useList = () => {
 		if (singleList?.items) sendSingleListPutRequest([]);
 	};
 
-	const updateSingleListItemStatus = (id: string) => {
+	const updateSingleListItemStatus = (id: string, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
 				updateObject(todo, { done: !todo?.done }),
 			);
-			sendSingleListPutRequest(newData, basePuSingleListtQuery);
+			sendSingleListPutRequest(newData, basePuSingleListtQuery, callback);
 		}
 	};
 
-	const updateSingleListItemName = (id: string, item: EditItemInterface) => {
+	const updateSingleListItemName = (id: string, item: EditItemInterface, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
 				updateObject(todo, { value: item?.title }),
 			);
-			sendSingleListPutRequest(newData, basePuSingleListtQuery);
+			sendSingleListPutRequest(newData, basePuSingleListtQuery, callback);
 		}
 	};
 
 	const addNewListItem = (title: ChangeEvent<HTMLInputElement> | string) => {
 		const newItem = {
-			id: null,
-			value: title as unknown as string,
-			uuid: null,
+			value: title as string,
 			done: false,
-			category: null,
 		};
 		setSingleListEditable({
 			isEdited: 'items',
@@ -255,7 +294,7 @@ export const useList = () => {
 		if (singleList?.items) {
 			const baseItems = [...singleList?.items];
 			const filter = showDone === 'done' ?? true;
-			if (baseItems && showDone !== null) return baseItems.filter(({ done }) => done === filter);
+			if (baseItems && showDone !== null) return baseItems?.filter(({ done }) => done === filter);
 			if (showDone === null) return null;
 		}
 	}, [showDone]);
@@ -264,10 +303,10 @@ export const useList = () => {
 		if (data && editedSingleList) {
 			setIsUpdating(true);
 			axios
-				.put(`lists/${editedSingleList?.id}`, {
+				.put(`lists/${editedSingleList?.id}?${basePuSingleListtQuery}`, {
 					data: {
 						...data,
-						shop: newShop || data.shop,
+						shop: newShop || data?.shop,
 					},
 				})
 				.then((resp) => {
@@ -320,6 +359,8 @@ export const useList = () => {
 		editedSingleList,
 		newShop,
 		sortedListItemsByCategories,
+		addNewLoader,
+		searchedUsers,
 		addNewSingleListItem,
 		deleteSingleListItem,
 		clearSingleListItems,
@@ -341,6 +382,7 @@ export const useList = () => {
 		sortItemsByCategories,
 		setSortedListItemsByCategories,
 		setSocket,
+		setSearchIcons,
 	};
 };
 

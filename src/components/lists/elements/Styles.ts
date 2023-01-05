@@ -26,7 +26,7 @@ export const StyledEditButtonsWrapper = styled.View`
 	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
-	padding: 21px 0;
+	padding: 8px 0;
 `;
 
 export const StyledItemsCategoryWrapper = styled.View`
@@ -40,17 +40,65 @@ export const StyledItemsCategoryWrapper = styled.View`
 export const StyledAddItemButton = styled(StyledActionButton)`
 	height: 42px;
 	border: 1px solid ${({ theme }) => theme.grey200};
+	margin-left: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
 
 export const StyledAddNewItem = styled.View`
-	width: 100%;
+	width: 88%;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+	margin-bottom: 10px;
 `;
 
 export const StyledSortedCategoryTitle = styled.Text`
 	font-size: 16px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 	margin-top: 14px;
+`;
+
+export const StyledUsersWrapper = styled.View`
+	width: 100%;
+	flex-direction: row;
+	align-items: flex-start;
+`;
+
+export const StyledUserTitle = styled.Text`
+	margin-right: 8px;
+	padding: 4px 8px;
+	border-radius: ${({ theme }) => theme.radius[1]};
+	border: 1px solid ${({ theme }) => theme.grey400};
+`;
+
+export const StyledEditFormWrapper = styled.SafeAreaView`
+	margin: 8px 0;
+`;
+
+export const StyledEditFormWrapperTitle = styled.Text`
+	margin-bottom: 8px;
+	font-size: 16px;
+`;
+
+export const StyledAddUserButton = styled.TouchableOpacity<{ active: boolean }>`
+	border-radius: 50%;
+	width: 27px;
+	height: 27px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	border-radius: ${({ theme }) => theme.radius[1]};
+	border: 1px solid ${({ theme }) => theme.grey400};
+	${({ active }) =>
+		active &&
+		css`
+			background-color: ${({ theme }) => theme.grey400};
+		`}
+`;
+
+export const StyledAddUserWrapper = styled.View`
+	margin-top: 8px;
 `;

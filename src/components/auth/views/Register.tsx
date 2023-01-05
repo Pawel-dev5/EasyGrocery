@@ -1,20 +1,28 @@
 import React, { useContext } from 'react';
 import { t } from 'i18next';
-import { SafeAreaView, Button, Text } from 'react-native';
+import { Button, Text, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+// ROUTER
+import { auth } from 'routes/AppRoutes';
 
 // CONTEXT
 import { useAuth } from 'components/auth/hooks/useAuth';
 import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
-import { ControllerWrapper } from 'components/auth/sections';
+import { ControllerWrapper, ScreenWrapper } from 'components/auth/sections';
 import { AppWrapper } from 'components/layout';
 
 // STYLES
-import { StyledLoginContainer, StyledInputWrapper } from 'components/auth/views/Styles';
+import {
+	StyledLoginContainer,
+	StyledInputWrapper,
+	StyledLoginButtonsWrapper,
+	StyledRegister,
+} from 'components/auth/views/Styles';
 
 const schema = yup
 	.object({
@@ -29,6 +37,8 @@ export const Register = (props: any) => {
 	const { signIn, lang, setLang } = useContext(GlobalContextData);
 	const { submitRegister, backendError } = useAuth(signIn);
 
+	const { navigation } = props;
+
 	const {
 		control,
 		handleSubmit,
@@ -38,8 +48,8 @@ export const Register = (props: any) => {
 	});
 
 	return (
-		<AppWrapper routeName={t('auth.register')} {...props} lang={lang} setLang={setLang}>
-			<SafeAreaView>
+		<AppWrapper routeName={t('auth.register')} {...props} lang={lang} setLang={setLang} customPadding="0">
+			<ScreenWrapper props={props}>
 				<StyledLoginContainer>
 					<StyledInputWrapper>
 						<ControllerWrapper
@@ -86,11 +96,19 @@ export const Register = (props: any) => {
 							errors={errors}
 						/>
 					</StyledInputWrapper>
+
 					<Button title={t<string>('auth.register')} onPress={handleSubmit(submitRegister)} />
+					<StyledLoginButtonsWrapper>
+						<Text>{t<string>('auth.haveAccount')}</Text>
+
+						<TouchableOpacity onPress={() => navigation.navigate(auth.login)}>
+							<StyledRegister>{t<string>('auth.login')}</StyledRegister>
+						</TouchableOpacity>
+					</StyledLoginButtonsWrapper>
 
 					{backendError && <Text>{backendError}</Text>}
 				</StyledLoginContainer>
-			</SafeAreaView>
+			</ScreenWrapper>
 		</AppWrapper>
 	);
 };

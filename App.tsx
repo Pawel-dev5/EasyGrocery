@@ -24,7 +24,7 @@ import theme from 'utils/theme/themeDefault';
 // COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { MenuProvider } from 'react-native-popup-menu';
-import { Login, Register } from 'components/auth';
+import { Forgot, Login, Register } from 'components/auth';
 import { Profile } from 'components/user';
 import { ListVariant } from 'components/lists/models/sections';
 import { Lists } from 'components/lists';
@@ -59,6 +59,7 @@ const AppComponent = () => {
 					<>
 						<Screen name={auth.login}>{(props) => <Login {...props} />}</Screen>
 						<Screen name={auth.register}>{(props) => <Register {...props} />}</Screen>
+						<Screen name={auth.passwordForgot}>{(props) => <Forgot {...props} />}</Screen>
 					</>
 				)}
 			</Navigator>

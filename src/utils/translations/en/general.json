@@ -25,7 +25,9 @@
 		"showOnlyUnDone": "Show onlu undone",
 		"showAll": "Show all",
 		"backToListView": "Back to list view",
-		"sortByShopCategory": "Sort by shop categories"
+		"sortByShopCategory": "Sort by shop categories",
+		"addUser": "Add user",
+		"searchUser": "Search user"
 	},
 	"auth": {
 		"logout": "Logout",
@@ -35,7 +37,11 @@
 		"register": "Sign up",
 		"required": "is required.",
 		"password": "Password",
-		"cofirmPassword": "Confirm password"
+		"cofirmPassword": "Confirm password",
+		"forgotPassword": "Forgot password?",
+		"resetPassword": "Reset password",
+		"dontHaveAccount": "Dont't have an account?",
+		"haveAccount": "Have an account?"
 	},
 	"profile": {
 		"profile": "Profile",

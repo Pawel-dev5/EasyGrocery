@@ -2,8 +2,9 @@ import styled, { css } from 'styled-components/native';
 
 export const StyledRadioButtonWrapper = styled.View`
 	flex-direction: row;
-	justify-content: space-between;
-	padding: 16px 0;
+	justify-content: space-around;
+	align-items: flex-start;
+	padding: 10px;
 `;
 
 export const StyledRadioButton = styled.TouchableOpacity<{ color: string }>`
@@ -38,18 +39,23 @@ export const StyledListShopCategories = styled.Text`
 `;
 
 export const StyledItemTitle = styled.Text`
-	font-size: 16px;
+	max-width: 90%;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	margin-left: 10px;
 `;
 
 export const StyledCategory = styled.Text`
-	font-size: 10px;
-	margin-left: 10px;
+	font-size: 14px;
+	margin-left: 5px;
 `;
 
 export const StyledItemTitleWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
+	width: 80%;
 `;
 
 export const StyledListItemsOptions = styled.View`
@@ -82,7 +88,7 @@ export const StyledEditInoutWrapper = styled.View`
 
 export const StyledItemsContainer = styled.View`
 	max-width: 100%;
-	padding: 10px 0;
+	padding: 10px;
 	border-bottom-color: ${({ theme }) => theme.grey200};
 	border-bottom-width: 1px;
 `;
@@ -92,7 +98,7 @@ export const StyledListItemsWrapper = styled.View`
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	margin-bottom: 10px;
+	max-width: 100%;
 `;
 
 export const StyledRightSwipeDelete = styled.TouchableOpacity`
@@ -106,4 +112,16 @@ export const StyledRightSwipeDelete = styled.TouchableOpacity`
 	border-bottom-left-radius: 0;
 	border: 1px solid ${({ theme }) => theme.grey200};
 	background: ${({ theme }) => theme.danger};
+`;
+
+export const StyledCheckButton = styled.TouchableOpacity`
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;
+
+export const StyledEditInputWrapper = styled.View`
+	width: 90%;
 `;

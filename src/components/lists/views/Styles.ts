@@ -13,4 +13,5 @@ export const StyledGridList = styled.View`
 
 export const StyledAddListWrapper = styled.View`
 	padding-bottom: 16px;
+	width: 300px;
 `;

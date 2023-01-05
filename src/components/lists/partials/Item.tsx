@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { TouchableOpacity, View, Text, ScrollView, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, ScrollView, StyleSheet } from 'react-native';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
-import { Icon, Input } from 'components/layout/common';
+import { Icon, Input, Loader } from 'components/layout/common';
 
 // STYLES
 import {
@@ -15,8 +15,9 @@ import {
 	StyledListItemsWrapper,
 	StyledCategory,
 	StyledItemsCategory,
-	StyledEditInoutWrapper,
 	StyledItemsContainer,
+	StyledCheckButton,
+	StyledEditInputWrapper,
 } from 'components/lists/partials/Styles';
 
 // MODELS
@@ -28,17 +29,28 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 	const { updateSingleListItemName, deleteSingleListItem, updateSingleListItemStatus, singleList } =
 		useContext(ListsContextData);
 
+	// LOADERS STATES
+	const [doneLoading, setDoneLoading] = useState(false);
+	const [trashLoading, setTrashLoading] = useState(false);
+	const [editLoading, setEditLoading] = useState(false);
+
 	const categories = singleList?.shop?.data?.attributes?.orders;
+
 	return (
 		<StyledItemsContainer>
 			<StyledListItemsWrapper key={id}>
 				<StyledItemTitleWrapper>
-					<TouchableOpacity onPress={() => updateSingleListItemStatus(id)}>
-						<Icon variant={done ? 'done' : 'unDone'} name="check-circle" size={30} />
-					</TouchableOpacity>
+					<StyledCheckButton
+						onPress={() => {
+							setDoneLoading(true);
+							updateSingleListItemStatus(id, () => setDoneLoading(false));
+						}}
+					>
+						{doneLoading ? <Loader size={30} /> : <Icon variant={done ? 'done' : 'unDone'} name="check-circle" size={30} />}
+					</StyledCheckButton>
 
 					{editableItem !== null ? (
-						<StyledEditInoutWrapper>
+						<StyledEditInputWrapper>
 							<Input
 								value={editableItem.title!}
 								name="title"
@@ -46,12 +58,9 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 								textContentType="nickname"
 								onChange={(text) => setEditableItem({ ...editableItem, title: text as unknown as string })}
 							/>
-						</StyledEditInoutWrapper>
+						</StyledEditInputWrapper>
 					) : (
-						<View>
-							<StyledItemTitle>{value}</StyledItemTitle>
-							{withCategories && <StyledCategory>{category}</StyledCategory>}
-						</View>
+						<StyledItemTitle>{value}</StyledItemTitle>
 					)}
 				</StyledItemTitleWrapper>
 
@@ -59,19 +68,27 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 					{editableItem !== null ? (
 						<TouchableOpacity
 							onPress={() => {
-								updateSingleListItemName(id, editableItem);
-								setEditableItem(null);
+								setEditLoading(true);
+								updateSingleListItemName(id, editableItem, () => {
+									setEditableItem(null);
+									setEditLoading(false);
+								});
 							}}
 						>
-							<Icon name="check" size={20} />
+							{editLoading ? <Loader size={20} /> : <Icon name="check" size={20} />}
 						</TouchableOpacity>
 					) : (
 						<TouchableOpacity onPress={() => setEditableItem({ title: value, category })}>
 							<Icon name="edit" size={20} />
 						</TouchableOpacity>
 					)}
-					<TouchableOpacity onPress={() => deleteSingleListItem(id)}>
-						<Icon name="trash" size={20} />
+					<TouchableOpacity
+						onPress={() => {
+							setTrashLoading(true);
+							deleteSingleListItem(id, () => setTrashLoading(false));
+						}}
+					>
+						{trashLoading ? <Loader size={20} /> : <Icon name="trash" size={20} />}
 					</TouchableOpacity>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
@@ -89,6 +106,8 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 					))}
 				</ScrollView>
 			)}
+
+			{withCategories && <StyledCategory>{category}</StyledCategory>}
 		</StyledItemsContainer>
 	);
 };

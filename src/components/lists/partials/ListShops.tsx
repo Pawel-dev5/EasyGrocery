@@ -17,7 +17,6 @@ export const ListShops = () => {
 
 	return (
 		<>
-			<Text>{t<string>('shops.shop')}</Text>
 			<ScrollView contentContainerStyle={styles.scrollView} horizontal>
 				{shops?.map((shop) => {
 					const {

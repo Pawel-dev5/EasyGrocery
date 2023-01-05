@@ -38,5 +38,6 @@ export const Input = ({
 		onSubmitEditing={onSubmitEditing}
 		clearButtonMode="while-editing"
 		returnKeyType="search"
+		placeholderTextColor="grey"
 	/>
 );

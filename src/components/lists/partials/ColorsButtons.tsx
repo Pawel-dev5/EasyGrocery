@@ -28,19 +28,25 @@ const buttons = [
 	},
 ];
 
-const shadow = {
-	shadowColor: '#000',
-	shadowOffset: {
-		width: 0,
-		height: 12,
-	},
-	shadowOpacity: 0.58,
-	shadowRadius: 16.0,
+// const shadow = {
+// 	shadowColor: '#000',
+// 	shadowOffset: {
+// 		width: 0,
+// 		height: 0,
+// 	},
+// 	shadowOpacity: 0.58,
+// 	shadowRadius: 16.0,
 
-	elevation: 24,
-};
+// 	elevation: 24,
+// };
 
-export const ColorsButtons = ({ setValue, value }: { setValue: any; value: string | null | undefined }) => (
+export const ColorsButtons = ({
+	setValue,
+	value,
+}: {
+	setValue: (arg0: 'color' | 'title', arg1: string) => void;
+	value: string | null | undefined;
+}) => (
 	<StyledRadioButtonWrapper>
 		{buttons?.map(({ id, color }) => (
 			<StyledRadioButton
@@ -50,7 +56,7 @@ export const ColorsButtons = ({ setValue, value }: { setValue: any; value: strin
 				style={
 					color === value
 						? [
-								shadow,
+								// shadow,
 								{
 									transform: [{ scale: 1.12 }],
 								},

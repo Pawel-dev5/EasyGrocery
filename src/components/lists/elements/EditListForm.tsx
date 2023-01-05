@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, Text, SafeAreaView, ScrollView } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Text, SafeAreaView, ScrollView } from 'react-native';
 import { t } from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -11,10 +11,20 @@ import { ListsContextData } from 'components/lists/hooks/useList';
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
 import { ColorsButtons, ListShops } from 'components/lists/partials';
-import { Loader } from 'components/layout/common';
+import { Icon, Loader } from 'components/layout/common';
+import { Search } from 'components/layout/elements';
 
 // STYLES
-import { StyledEditButton, StyledEditButtonsWrapper } from 'components/lists/elements/Styles';
+import {
+	StyledEditButton,
+	StyledEditButtonsWrapper,
+	StyledEditFormWrapper,
+	StyledEditFormWrapperTitle,
+	StyledUsersWrapper,
+	StyledUserTitle,
+	StyledAddUserButton,
+	StyledAddUserWrapper,
+} from 'components/lists/elements/Styles';
 
 const schema = yup
 	.object({
@@ -25,8 +35,13 @@ const schema = yup
 	.required();
 
 export const EditListForm = () => {
-	const { isUpdating, editedSingleList, submitEditList, backendError, setNewShop } = useContext(ListsContextData);
-	const users = editedSingleList?.users_permissions_users?.data;
+	const { isUpdating, editedSingleList, user, searchedUsers, submitEditList, setSearchIcons, backendError, setNewShop } =
+		useContext(ListsContextData);
+	const users = editedSingleList?.users_permissions_users?.data?.filter(
+		(permissedUser) => permissedUser?.attributes?.email !== user?.email,
+	);
+
+	const [showMoreAdd, setShowMoreAdd] = useState(false);
 
 	const {
 		control,
@@ -46,47 +61,66 @@ export const EditListForm = () => {
 	return (
 		<ScrollView>
 			<SafeAreaView>
-				<Text>{t<string>('general.title')}</Text>
+				<StyledEditFormWrapper>
+					<StyledEditFormWrapperTitle>{t<string>('general.title')}</StyledEditFormWrapperTitle>
+					<ControllerWrapper
+						name="title"
+						placeholder={t('general.title')}
+						textContentType="nickname"
+						control={control}
+						errors={errors}
+					/>
+				</StyledEditFormWrapper>
 
-				<ControllerWrapper
-					name="title"
-					placeholder={t('general.title')}
-					textContentType="nickname"
-					control={control}
-					errors={errors}
-				/>
-				<Text>{t<string>('general.description')}</Text>
+				<StyledEditFormWrapper>
+					<StyledEditFormWrapperTitle>{t<string>('general.description')}</StyledEditFormWrapperTitle>
+					<ControllerWrapper
+						name="description"
+						placeholder={t('general.description')}
+						textContentType="none"
+						control={control}
+						errors={errors}
+					/>
+				</StyledEditFormWrapper>
 
-				<ControllerWrapper
-					name="description"
-					placeholder={t('general.description')}
-					textContentType="none"
-					control={control}
-					errors={errors}
-				/>
+				<StyledEditFormWrapper>
+					<StyledEditFormWrapperTitle>{t<string>('general.users')}</StyledEditFormWrapperTitle>
+					<StyledUsersWrapper>
+						{users?.map((user) => (
+							<StyledUserTitle key={user?.id}>{user?.attributes?.username}</StyledUserTitle>
+						))}
 
-				<View>
-					<Text>{t<string>('general.users')}</Text>
-					{users?.map((user) => (
-						<View key={user?.id}>
-							<Text>{user?.attributes?.username}</Text>
-						</View>
-					))}
-				</View>
+						<StyledAddUserButton onPress={() => setShowMoreAdd(!showMoreAdd)} active={showMoreAdd}>
+							<Icon size={15} name="plus" />
+						</StyledAddUserButton>
+					</StyledUsersWrapper>
 
-				<Text>{t<string>('general.color')}</Text>
+					<StyledAddUserWrapper>
+						{showMoreAdd && (
+							<Search
+								setSearchIcons={setSearchIcons}
+								name={t('general.searchUser')}
+								placeholder={t('general.searchUser')}
+								textContentType="none"
+								results={searchedUsers}
+							/>
+						)}
+					</StyledAddUserWrapper>
+				</StyledEditFormWrapper>
 
-				<Controller
-					name="color"
-					control={control}
-					render={({ field: { value } }) => (
-						<>
-							<ColorsButtons setValue={setValue} value={value} />
-						</>
-					)}
-				/>
+				<StyledEditFormWrapper>
+					<StyledEditFormWrapperTitle>{t<string>('general.color')}</StyledEditFormWrapperTitle>
+					<Controller
+						name="color"
+						control={control}
+						render={({ field: { value } }) => <ColorsButtons setValue={setValue} value={value} />}
+					/>
+				</StyledEditFormWrapper>
 
-				<ListShops />
+				<StyledEditFormWrapper>
+					<StyledEditFormWrapperTitle>{t<string>('shops.shop')}</StyledEditFormWrapperTitle>
+					<ListShops />
+				</StyledEditFormWrapper>
 
 				<StyledEditButtonsWrapper>
 					{isUpdating ? (

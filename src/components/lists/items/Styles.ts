@@ -65,7 +65,7 @@ export const StyledItemsWrapper = styled.View`
 	max-height: 520px;
 	border-top-left-radius: 32px;
 	border-top-right-radius: 32px;
-	padding: 24px;
+	padding: 18px;
 	margin-top: 16px;
 	background: ${({ theme }) => theme.white};
 `;

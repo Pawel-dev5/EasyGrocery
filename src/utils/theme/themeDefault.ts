@@ -19,7 +19,7 @@ export const colors = {
 	appBgColor: '#F5F5F5',
 
 	base1: '#272437',
-	base2: '#6A6682',
+	base2: '#209653',
 	base3: '#6220EE',
 	accent1: '#7E52DC',
 	accent2: '#40e34e',

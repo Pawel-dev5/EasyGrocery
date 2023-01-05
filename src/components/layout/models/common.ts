@@ -30,3 +30,11 @@ export interface InputInterface {
 	onKeyPress?: (e: ChangeEvent<HTMLInputElement>) => void;
 	type?: 'password' | 'text' | 'number' | 'checkbox' | 'radio' | 'submit' | ' button' | 'date' | 'image';
 }
+
+export interface SearchInterface {
+	name: string;
+	placeholder: string;
+	textContentType: string;
+	setSearchIcons: (arg0: string) => void;
+	results: any;
+}

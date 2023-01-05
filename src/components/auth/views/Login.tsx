@@ -1,21 +1,29 @@
 import React, { useContext, useEffect } from 'react';
-import { Button, Text, SafeAreaView } from 'react-native';
+import { Button, Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+// ROUTER
+import { auth } from 'routes/AppRoutes';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
 import { useAuth } from 'components/auth/hooks/useAuth';
 
 // COMPONENTS
-import { ControllerWrapper } from 'components/auth/sections';
+import { ControllerWrapper, ScreenWrapper } from 'components/auth/sections';
 import { AppWrapper } from 'components/layout';
 import { Loader } from 'components/layout/common';
 
 // STYLES
-import { StyledLoginContainer, StyledInputWrapper } from 'components/auth/views/Styles';
+import {
+	StyledLoginContainer,
+	StyledInputWrapper,
+	StyledLoginButtonsWrapper,
+	StyledRegister,
+} from 'components/auth/views/Styles';
 
 const schema = yup
 	.object({
@@ -27,6 +35,8 @@ const schema = yup
 export const Login = (props: any) => {
 	const { signIn, lang, setLang } = useContext(GlobalContextData);
 	const { submitLogin, backendError, loginStoredUser, loginStatus } = useAuth(signIn);
+
+	const { navigation } = props;
 
 	useEffect(() => {
 		loginStoredUser();
@@ -44,8 +54,8 @@ export const Login = (props: any) => {
 		return <Loader size={100} />;
 	} else {
 		return (
-			<AppWrapper routeName={t('auth.login')} {...props} lang={lang} setLang={setLang}>
-				<SafeAreaView>
+			<AppWrapper routeName={t('auth.login')} {...props} lang={lang} setLang={setLang} customPadding="0">
+				<ScreenWrapper props={props}>
 					<StyledLoginContainer>
 						<StyledInputWrapper>
 							<ControllerWrapper
@@ -73,9 +83,21 @@ export const Login = (props: any) => {
 
 						<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
 
+						<StyledLoginButtonsWrapper>
+							<Text>{t<string>('auth.dontHaveAccount')}</Text>
+
+							<TouchableOpacity onPress={() => navigation.navigate(auth.register)}>
+								<StyledRegister>{t<string>('auth.register')}</StyledRegister>
+							</TouchableOpacity>
+						</StyledLoginButtonsWrapper>
+
+						<TouchableOpacity onPress={() => navigation.navigate(auth.passwordForgot)}>
+							<Text>{t<string>('auth.forgotPassword')}</Text>
+						</TouchableOpacity>
+
 						{backendError && <Text>{backendError}</Text>}
 					</StyledLoginContainer>
-				</SafeAreaView>
+				</ScreenWrapper>
 			</AppWrapper>
 		);
 	}

@@ -56,5 +56,9 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
-	return { submitLogin, submitRegister, loginStoredUser, backendError, loginStatus };
+	const submitResetPassword = () => {
+		console.log('reset password');
+	};
+
+	return { submitLogin, submitRegister, loginStoredUser, submitResetPassword, backendError, loginStatus };
 };
