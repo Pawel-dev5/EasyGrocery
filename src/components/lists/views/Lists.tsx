@@ -126,7 +126,7 @@ export const ListsWrapper = (props: any) => {
 					) : (
 						<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 							<StyledGridList>
-								{lists.map((item) => {
+								{lists?.map((item) => {
 									const props = {
 										list: item,
 										navigation,

@@ -96,21 +96,9 @@ export const StyledActionButton = styled.TouchableOpacity`
 	justify-content: center;
 `;
 
-export const StyledAddItemButton = styled(StyledActionButton)`
-	height: 42px;
-	border: 1px solid ${({ theme }) => theme.grey200};
-`;
-
 export const StyledListTitle = styled.Text`
 	font-size: 42px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
-`;
-
-export const StyledAddNewItem = styled.View`
-	width: 100%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
 `;
 
 export const StyledListOptionWrapper = styled.View`
@@ -134,12 +122,6 @@ export const StyledUsersCounter = styled.Text`
 export const StyledListDescription = styled.Text`
 	font-size: 16px;
 	margin-bottom: 14px;
-`;
-
-export const StyledSortedCategoryTitle = styled.Text`
-	font-size: 16px;
-	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
-	margin-top: 14px;
 `;
 
 // ========= END FULL LIST ===========

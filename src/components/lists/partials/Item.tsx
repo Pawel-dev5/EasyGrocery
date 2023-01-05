@@ -17,7 +17,7 @@ import {
 	StyledItemsCategory,
 	StyledEditInoutWrapper,
 	StyledItemsContainer,
-} from 'components/lists/elements/Styles';
+} from 'components/lists/partials/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';

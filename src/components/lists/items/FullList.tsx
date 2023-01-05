@@ -12,8 +12,8 @@ import { ContextProvider as ShopContextProvider, ShopsContextData } from 'compon
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
 import { Icon, Loader, ProgressBar } from 'components/layout/common';
-import { EditListForm, SubmitAlert } from 'components/lists/elements';
-import { ListItems } from 'components/lists/partials';
+import { SubmitAlert } from 'components/lists/partials';
+import { ListItems, EditListForm } from 'components/lists/elements';
 
 // STYLES
 import {

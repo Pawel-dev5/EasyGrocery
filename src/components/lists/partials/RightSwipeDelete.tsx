@@ -4,7 +4,7 @@ import React from 'react';
 import { Icon } from 'components/layout/common';
 
 // STYLES
-import { StyledRightSwipeDelete } from 'components/lists/elements/Styles';
+import { StyledRightSwipeDelete } from 'components/lists/partials/Styles';
 
 // MODELS
 import { SwipeRigheDeleteInerface } from 'components/lists/models/elements';

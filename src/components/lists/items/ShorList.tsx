@@ -11,7 +11,7 @@ import { lists as listRoute } from 'routes/AppRoutes';
 
 // COMPONENTS
 import { Icon, ProgressBar } from 'components/layout/common';
-import { RightSwipeDelete } from 'components/lists/elements';
+import { RightSwipeDelete } from 'components/lists/partials';
 
 // STYLES
 import {

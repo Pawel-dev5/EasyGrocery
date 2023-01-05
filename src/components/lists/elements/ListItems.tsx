@@ -6,14 +6,14 @@ import { ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
 import { Icon, Input } from 'components/layout/common';
-import { Item } from 'components/lists/elements';
+import { Item } from 'components/lists/partials';
 
 // STYLES
-import { StyledAddItemButton, StyledAddNewItem, StyledSortedCategoryTitle } from 'components/lists/items/Styles';
+import { StyledAddItemButton, StyledAddNewItem, StyledSortedCategoryTitle } from 'components/lists/elements/Styles';
+import { StyledEditInoutWrapper } from 'components/lists/partials/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
-import { StyledEditInoutWrapper } from 'components/lists/elements/Styles';
 import { ListItemInterface } from 'components/lists/models/partials';
 
 export const ListItems = ({ listItems }: ListItemInterface) => {
@@ -40,7 +40,7 @@ export const ListItems = ({ listItems }: ListItemInterface) => {
 							name="title"
 							placeholder="Add"
 							textContentType="nickname"
-							onKeyPress={(e) => e.nativeEvent?.key === 'Enter' && addNewSingleListItem()}
+							// onKeyPress={(e) => e.nativeEvent?.key === 'Enter' && addNewSingleListItem()}
 							onChange={(text) => addNewListItem(text)}
 						/>
 
