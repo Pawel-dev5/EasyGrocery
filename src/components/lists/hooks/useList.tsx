@@ -1,12 +1,11 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Manager, Socket } from 'socket.io-client';
-import { REACT_APP_API } from '@env';
+import { Socket } from 'socket.io-client';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -19,6 +18,7 @@ import {
 	SingleListEditableInitialInterface,
 } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
+import { EditItemInterface } from 'components/lists/models/elements';
 
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
@@ -59,6 +59,39 @@ export const useList = () => {
 		resolver: yupResolver(schema),
 	});
 
+	// SPECIFY QUERIES TO GET NEEDED DATA AND PROTECT REQUEST FOR BEING TOO BIG IN SIZE AND TIME
+	const qs = require('qs');
+	const userQuery = qs.stringify(
+		{
+			populate: {
+				lists: {
+					populate: ['items'],
+				},
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);
+
+	const listQuery = qs.stringify(
+		{
+			populate: ['items', 'shops', 'users_permissions_users'],
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);
+
+	const basePuSingleListtQuery = qs.stringify(
+		{
+			populate: ['items', 'users_permissions_users'],
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);
+
 	// SOCKET.IO CONFIG
 	const [socket, setSocket] = useState<Socket<any, any> | null>(null);
 	if (socket) {
@@ -68,21 +101,14 @@ export const useList = () => {
 			setIsUpdating(false);
 		});
 	}
-	useEffect(() => {
-		const manager = new Manager(REACT_APP_API, {
-			reconnectionDelayMax: 10000,
-		});
-		const socket = manager.socket('/');
-		setSocket(socket);
-	}, []);
 
 	const getLists = () => {
 		if (user?.id)
 			axios
-				.get(`users/${user?.id}`)
+				.get(`users/${user?.id}?${userQuery}`)
 				.then((resp) => {
 					setIsLoading(false);
-					setLists(resp.data.lists);
+					setLists(resp?.data?.lists);
 				})
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
@@ -90,7 +116,7 @@ export const useList = () => {
 	const getList = (id: string) => {
 		if (id)
 			axios
-				.get(`lists/${id}`)
+				.get(`lists/${id}?${listQuery}`)
 				.then((resp) => {
 					setIsLoading(false);
 					setSingleList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes });
@@ -137,55 +163,87 @@ export const useList = () => {
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
-	const editSingleListItems = (
-		variant: 'add' | 'delete' | 'updateDone' | 'clear' | 'updateItem',
-		id?: string,
-		item?: any,
-	) => {
-		if (singleList?.items) {
-			let newData;
-			if (variant === 'add') newData = [...singleList?.items, singleListEditable.value.newItem];
-			if (variant === 'delete' && id) newData = removeObjectFromArray(singleList.items, 'id', id);
-			if (variant === 'updateDone' && id)
-				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
-					updateObject(todo, { done: !todo.done }),
-				);
-			if (variant === 'updateItem' && id && item)
-				newData = updateObjectInArray(singleList.items, 'id', id, (todo: ItemInterface) =>
-					updateObject(todo, { value: item.title, category: item.category }),
-				);
-			if (variant === 'clear') newData = [];
-
-			if (newData)
-				axios
-					.put(`lists/${singleList?.id}`, {
-						data: {
-							items: newData,
-						},
-					})
-					.then((resp) => {
-						// SOCKET UPDATE STATES BELOW
-						if (socket)
-							socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
-								if (error) {
-									alert(error);
-								}
-								setSingleListEditable(SingleListEditableInitial);
-							});
-					})
-					.catch((error) => console.log(error?.response?.data?.error?.message));
+	// TODO
+	const updateListAfterSingleChange = (toUpdate: ListInterface) => {
+		console.log(toUpdate);
+		if (toUpdate) {
+			const newLists = updateObjectInArray(lists, 'id', toUpdate?.id, (todo: ListInterface) =>
+				updateObject(todo, { ...toUpdate }),
+			);
+			// setLists(newLists);
+			console.log(newLists);
 		}
 	};
 
-	const handleKeyboardItems = (nativeEvent: any) => {
-		console.log(nativeEvent);
-		if (nativeEvent?.key === 'Enter') editSingleListItems('add');
+	const sendSingleListPutRequest = (data: ItemInterface[] | [], query?: string, callbackOnSuccess?: () => void) => {
+		const putQuery = query ? `?${query}` : '';
+		if (data)
+			axios
+				.put(`lists/${singleList?.id}${putQuery}`, {
+					data: {
+						items: data,
+					},
+				})
+				.then((resp) => {
+					// SOCKET UPDATE STATES BELOW
+					if (socket)
+						socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
+							if (error) alert(error);
+							setSingleListEditable(SingleListEditableInitial);
+						});
+					if (callbackOnSuccess) callbackOnSuccess();
+					const newListToUpdate = {
+						id: resp.data.data?.id,
+						...resp.data.data?.attributes,
+					};
+					updateListAfterSingleChange(newListToUpdate);
+				})
+				.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
-	const addNewListItem = (title: any) => {
+	const addNewSingleListItem = () => {
+		if (singleList?.items) {
+			const newData = [...singleList?.items, singleListEditable?.value?.newItem];
+			sendSingleListPutRequest(newData as ItemInterface[], basePuSingleListtQuery, () => addNewListItem(''));
+		}
+	};
+
+	const deleteSingleListItem = (id: string) => {
+		if (singleList?.items) {
+			const newData = removeObjectFromArray(singleList?.items, 'id', id);
+			sendSingleListPutRequest(newData, basePuSingleListtQuery);
+		}
+	};
+
+	const clearSingleListItems = () => {
+		if (singleList?.items) sendSingleListPutRequest([]);
+	};
+
+	const updateSingleListItemStatus = (id: string) => {
+		if (singleList?.items) {
+			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
+				updateObject(todo, { done: !todo?.done }),
+			);
+			sendSingleListPutRequest(newData, basePuSingleListtQuery);
+		}
+	};
+
+	const updateSingleListItemName = (id: string, item: EditItemInterface) => {
+		if (singleList?.items) {
+			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
+				updateObject(todo, { value: item?.title }),
+			);
+			sendSingleListPutRequest(newData, basePuSingleListtQuery);
+		}
+	};
+
+	const addNewListItem = (title: ChangeEvent<HTMLInputElement> | string) => {
 		const newItem = {
-			value: title,
+			id: null,
+			value: title as unknown as string,
+			uuid: null,
 			done: false,
+			category: null,
 		};
 		setSingleListEditable({
 			isEdited: 'items',
@@ -227,7 +285,7 @@ export const useList = () => {
 
 	const sortItemsByCategories = () => {
 		const itemsToSort = singleList?.items;
-		const categories = singleList?.shop.data?.attributes?.orders;
+		const categories = singleList?.shop?.data?.attributes?.orders;
 		const newListItems: any = [];
 		if (categories && categories?.length > 0 && itemsToSort && itemsToSort?.length > 0) {
 			categories.forEach(({ value }) => {
@@ -259,26 +317,30 @@ export const useList = () => {
 		listsView,
 		isLoading,
 		isUpdating,
+		editedSingleList,
+		newShop,
+		sortedListItemsByCategories,
+		addNewSingleListItem,
+		deleteSingleListItem,
+		clearSingleListItems,
+		updateSingleListItemStatus,
+		updateSingleListItemName,
 		submitEditList,
 		getLists,
 		getList,
 		deleteList,
 		setNewList,
-		editSingleListItems,
 		addNewListItem,
 		setShowDone,
-		handleKeyboardItems,
 		setVisible,
 		handleSubmit,
 		setIsLoading,
 		setListsView,
-		editedSingleList,
 		setEditedSingleList,
 		setNewShop,
-		newShop,
 		sortItemsByCategories,
-		sortedListItemsByCategories,
 		setSortedListItemsByCategories,
+		setSocket,
 	};
 };
 

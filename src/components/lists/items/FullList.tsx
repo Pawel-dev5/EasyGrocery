@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import { Text, TouchableOpacity, ScrollView, View } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
+import { Manager } from 'socket.io-client';
+import { REACT_APP_API } from '@env';
 
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
@@ -9,14 +11,13 @@ import { ContextProvider as ShopContextProvider, ShopsContextData } from 'compon
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { Icon, Input, Loader, ProgressBar } from 'components/layout/common';
-import { EditListForm, Item, SubmitAlert } from 'components/lists/elements';
+import { Icon, Loader, ProgressBar } from 'components/layout/common';
+import { EditListForm, SubmitAlert } from 'components/lists/elements';
+import { ListItems } from 'components/lists/partials';
 
 // STYLES
 import {
 	StyledActionButton,
-	StyledAddItemButton,
-	StyledAddNewItem,
 	StyledFullListWrapper,
 	StyledInputTitleWrapper,
 	StyledItemsWrapper,
@@ -27,21 +28,14 @@ import {
 	StyledUsersCounter,
 	StyledUsersWrapper,
 	StyledListDescription,
-	StyledSortedCategoryTitle,
 } from 'components/lists/items/Styles';
-
-// MODELS
-import { ItemInterface } from 'components/lists/models/sections';
-import { StyledEditInoutWrapper } from '../elements/Styles';
 
 export const FullListWrapper = (props: any) => {
 	const {
 		singleList,
-		singleListEditable,
 		getList,
 		deleteList,
-		addNewListItem,
-		editSingleListItems,
+		clearSingleListItems,
 		setShowDone,
 		filteredItems,
 		showDone,
@@ -51,6 +45,7 @@ export const FullListWrapper = (props: any) => {
 		setEditedSingleList,
 		sortItemsByCategories,
 		sortedListItemsByCategories,
+		setSocket,
 		setSortedListItemsByCategories,
 	} = useContext(ListsContextData);
 	const { lang, setLang } = useContext(GlobalContextData);
@@ -64,6 +59,15 @@ export const FullListWrapper = (props: any) => {
 			getList(listUuid);
 			if (shops?.length === 0) getShops();
 		}
+	}, []);
+
+	// SOCKET.IO START
+	useEffect(() => {
+		const manager = new Manager(REACT_APP_API, {
+			reconnectionDelayMax: 10000,
+		});
+		const socket = manager.socket('/');
+		setSocket(socket);
 	}, []);
 
 	if (singleList) {
@@ -93,7 +97,7 @@ export const FullListWrapper = (props: any) => {
 									<StyledActionButton
 										onPress={() =>
 											SubmitAlert({
-												okPressed: () => editSingleListItems('clear', id!),
+												okPressed: () => clearSingleListItems(),
 												okText: t('general.delete'),
 												cancelText: t('general.cancel'),
 												cancelPressed: () => {},
@@ -168,47 +172,7 @@ export const FullListWrapper = (props: any) => {
 						</StyledFullListWrapper>
 
 						<StyledItemsWrapper>
-							{editedSingleList ? (
-								<EditListForm />
-							) : (
-								<>
-									{sortedListItemsByCategories?.length > 0 ? (
-										<ScrollView>
-											{sortedListItemsByCategories?.map((item: any) => (
-												<View key={item?.category}>
-													<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
-													{item?.items?.map((item: ItemInterface) => (
-														<Item key={item?.id} {...item} />
-													))}
-												</View>
-											))}
-										</ScrollView>
-									) : (
-										<StyledEditInoutWrapper>
-											<StyledAddNewItem>
-												<Input
-													value={singleListEditable?.value?.newItem.value!}
-													name="title"
-													placeholder="Add"
-													textContentType="nickname"
-													onKeyPress={(e) => console.log(e.nativeEvent)}
-													onChange={(text) => addNewListItem(text)}
-												/>
-
-												<StyledAddItemButton onPress={() => editSingleListItems('add')}>
-													<Icon name="plus" size={20} />
-												</StyledAddItemButton>
-											</StyledAddNewItem>
-
-											<ScrollView>
-												{listItems?.map((item: ItemInterface) => (
-													<Item key={item?.id} {...item} withCategories />
-												))}
-											</ScrollView>
-										</StyledEditInoutWrapper>
-									)}
-								</>
-							)}
+							{editedSingleList ? <EditListForm /> : <ListItems listItems={listItems} />}
 						</StyledItemsWrapper>
 					</StyledListBackground>
 				</AppWrapper>

@@ -25,7 +25,7 @@ const schema = yup
 	.required();
 
 export const EditListForm = () => {
-	const { isUpdating, editedSingleList, submitEditList, backendError, setNewShop, newShop } = useContext(ListsContextData);
+	const { isUpdating, editedSingleList, submitEditList, backendError, setNewShop } = useContext(ListsContextData);
 	const users = editedSingleList?.users_permissions_users?.data;
 
 	const {

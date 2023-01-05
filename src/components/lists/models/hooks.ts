@@ -11,6 +11,9 @@ export interface SingleListEditableInitialInterface {
 		newItem: {
 			value: string | null;
 			done: boolean;
+			category: string | null;
+			uuid: string | null;
+			id: number | null;
 		};
 	};
 }
@@ -21,6 +24,9 @@ export const SingleListEditableInitial: SingleListEditableInitialInterface = {
 		newItem: {
 			value: null,
 			done: false,
+			category: null,
+			uuid: null,
+			id: null,
 		},
 	},
 };

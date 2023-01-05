@@ -43,7 +43,7 @@ export const StyledListItemsWrapper = styled.View`
 	margin-bottom: 10px;
 `;
 
-export const StyledEditButton = styled.TouchableOpacity<{ variant: string }>`
+export const StyledEditButton = styled.TouchableOpacity<{ variant?: string }>`
 	width: 48%;
 	margin: 10px 0;
 	align-items: center;

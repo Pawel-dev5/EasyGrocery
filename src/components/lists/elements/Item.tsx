@@ -21,17 +21,19 @@ import {
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
+import { EditItemInterface } from 'components/lists/models/elements';
 
 export const Item = ({ id, value, done, category, withCategories }: ItemInterface) => {
-	const [editableItem, setEditableItem] = useState<{ title?: string; category?: string | null } | null>(null);
-	const { editSingleListItems, singleList } = useContext(ListsContextData);
+	const [editableItem, setEditableItem] = useState<EditItemInterface | null>(null);
+	const { updateSingleListItemName, deleteSingleListItem, updateSingleListItemStatus, singleList } =
+		useContext(ListsContextData);
 
 	const categories = singleList?.shop?.data?.attributes?.orders;
 	return (
 		<StyledItemsContainer>
 			<StyledListItemsWrapper key={id}>
 				<StyledItemTitleWrapper>
-					<TouchableOpacity onPress={() => editSingleListItems('updateDone', id)}>
+					<TouchableOpacity onPress={() => updateSingleListItemStatus(id)}>
 						<Icon variant={done ? 'done' : 'unDone'} name="check-circle" size={30} />
 					</TouchableOpacity>
 
@@ -57,7 +59,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 					{editableItem !== null ? (
 						<TouchableOpacity
 							onPress={() => {
-								editSingleListItems('updateItem', id, editableItem);
+								updateSingleListItemName(id, editableItem);
 								setEditableItem(null);
 							}}
 						>
@@ -68,7 +70,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							<Icon name="edit" size={20} />
 						</TouchableOpacity>
 					)}
-					<TouchableOpacity onPress={() => editSingleListItems('delete', id)}>
+					<TouchableOpacity onPress={() => deleteSingleListItem(id)}>
 						<Icon name="trash" size={20} />
 					</TouchableOpacity>
 				</StyledListItemsOptions>
