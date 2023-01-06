@@ -11,14 +11,14 @@ import { Item } from 'components/lists/partials';
 
 // STYLES
 import { StyledAddItemButton, StyledAddNewItem, StyledSortedCategoryTitle } from 'components/lists/elements/Styles';
-import { StyledEditInoutWrapper } from 'components/lists/partials/Styles';
+import { StyledEditInoutWrapper, StyledItemsWrapper } from 'components/lists/partials/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
 import { ListItemInterface } from 'components/lists/models/partials';
 
 export const ListItems = ({ listItems }: ListItemInterface) => {
-	const { singleListEditable, addNewListItem, addNewSingleListItem, addNewLoader, sortedListItemsByCategories } =
+	const { singleListEditable, addNewListItem, addNewSingleListItem, addNewListItemLoader, sortedListItemsByCategories } =
 		useContext(ListsContextData);
 
 	return (
@@ -46,7 +46,7 @@ export const ListItems = ({ listItems }: ListItemInterface) => {
 							onChange={(text) => addNewListItem(text)}
 						/>
 
-						{addNewLoader ? (
+						{addNewListItemLoader ? (
 							<StyledAddItemButton onPress={() => {}}>
 								<Loader size={20} />
 							</StyledAddItemButton>
@@ -57,11 +57,11 @@ export const ListItems = ({ listItems }: ListItemInterface) => {
 						)}
 					</StyledAddNewItem>
 
-					<ScrollView>
+					<StyledItemsWrapper>
 						{listItems?.map((item: ItemInterface) => (
 							<Item key={item?.id} {...item} withCategories={item?.category !== null ?? true} />
 						))}
-					</ScrollView>
+					</StyledItemsWrapper>
 				</StyledEditInoutWrapper>
 			)}
 		</>

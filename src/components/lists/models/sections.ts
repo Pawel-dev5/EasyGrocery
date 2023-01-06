@@ -1,4 +1,5 @@
 import { User } from 'config/models';
+import { Dispatch, SetStateAction } from 'react';
 
 export enum ListVariant {
 	PREVIEW = 'Preview',
@@ -31,5 +32,5 @@ export interface ListWrapperInterface {
 	list?: ListInterface;
 	navigation: any;
 	lists?: ListInterface[];
-	type?: string;
+	setLists: Dispatch<SetStateAction<ListInterface[]>>;
 }

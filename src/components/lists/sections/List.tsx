@@ -11,15 +11,15 @@ import { ListVariant, ListWrapperInterface } from 'components/lists/models/secti
 
 export const ListWrapper = (props: ListWrapperInterface) => {
 	const { lists } = useContext(ListsContextData);
-	const { list, variant, type } = props;
+	const { list, variant, lists: actualList, setLists } = props;
 
 	switch (variant) {
 		case ListVariant.PREVIEW:
-			if (list) return <ShortList {...list} type={type} />;
+			if (list) return <ShortList {...list} lists={actualList} setLists={setLists} />;
 
 			return null;
 		case ListVariant.FULL:
-			return <FullList {...props} lists={lists} />;
+			return <FullList {...props} lists={lists} actualList={actualList} setLists={setLists} />;
 		default:
 			return null;
 	}

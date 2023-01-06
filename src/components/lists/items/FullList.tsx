@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useEffect } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
 import { Manager } from 'socket.io-client';
@@ -29,8 +29,12 @@ import {
 	StyledUsersWrapper,
 	StyledListDescription,
 } from 'components/lists/items/Styles';
+import { ListInterface } from '../models/sections';
 
-export const FullListWrapper = (props: any) => {
+export const FullListWrapper = (
+	props: any,
+	{ actualList, setLists }: { actualList: ListInterface[]; setLists: Dispatch<SetStateAction<ListInterface[]>> },
+) => {
 	const {
 		singleList,
 		getList,
@@ -87,7 +91,7 @@ export const FullListWrapper = (props: any) => {
 					<StyledListBackground color={color}>
 						<StyledFullListWrapper>
 							<StyledInputTitleWrapper>
-								<StyledListTitle>{editedSingleList?.title || title}</StyledListTitle>
+								<StyledListTitle>{title}</StyledListTitle>
 
 								<StyledListOptionWrapper>
 									<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
@@ -112,7 +116,7 @@ export const FullListWrapper = (props: any) => {
 									<StyledActionButton
 										onPress={() =>
 											SubmitAlert({
-												okPressed: () => deleteList(id!),
+												okPressed: () => deleteList(id!, actualList, setLists, props?.navigation),
 												okText: t('general.delete'),
 												cancelText: t('general.cancel'),
 												cancelPressed: () => {},

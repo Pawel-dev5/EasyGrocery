@@ -24,13 +24,17 @@ import {
 import { shadowInline } from 'utils/theme/themeDefault';
 
 export const ShortList = (props: any) => {
-	const { deleteList } = useContext(ListsContextData);
-	const { navigation, title, users_permissions_users, items, id, type, color } = props;
+	const { deleteList, deleteListLoader } = useContext(ListsContextData);
+	const { navigation, title, users_permissions_users, items, id, color, lists, setLists } = props;
 
 	return (
-		<Swipeable renderRightActions={() => <RightSwipeDelete onClick={() => deleteList(id)} />}>
+		<Swipeable
+			renderRightActions={() => (
+				<RightSwipeDelete onClick={() => deleteList(id, lists, setLists)} loader={deleteListLoader} />
+			)}
+		>
 			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard type={type} style={shadowInline} color={color}>
+				<StyledListCard style={shadowInline} color={color}>
 					<StyledListCardTitleWrapper>
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 
@@ -38,6 +42,7 @@ export const ShortList = (props: any) => {
 							<StyledListCardItemElement>
 								<Icon name="users" size={15} />
 							</StyledListCardItemElement>
+
 							<StyledListCardItemElement>
 								<Text>{users_permissions_users?.length}</Text>
 							</StyledListCardItemElement>

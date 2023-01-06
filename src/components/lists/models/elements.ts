@@ -1,5 +1,6 @@
 export interface SwipeRigheDeleteInerface {
 	onClick: () => void;
+	loader: boolean;
 }
 
 export interface EditItemInterface {

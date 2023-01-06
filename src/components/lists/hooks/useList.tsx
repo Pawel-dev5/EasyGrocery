@@ -1,4 +1,13 @@
-import React, { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+	ChangeEvent,
+	createContext,
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react';
 import axios from 'axios';
 import { FieldValues } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,6 +15,9 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Socket } from 'socket.io-client';
+
+// ROUTER
+import { lists as listRoute } from 'routes/AppRoutes';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -55,7 +67,9 @@ export const useList = () => {
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
 
 	// LOADERS
-	const [addNewLoader, setAddNewLoader] = useState(false);
+	const [addNewListItemLoader, setAddNewListItemLoader] = useState(false);
+	const [addNewListLoader, setAddNewListLoader] = useState(false);
+	const [deleteListLoader, setDeleteListLoader] = useState(false);
 
 	const {
 		control,
@@ -158,26 +172,46 @@ export const useList = () => {
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 	};
 
-	const deleteList = (id: string) => {
-		if (id)
+	const deleteList = (
+		id: string,
+		actualist: ListInterface[],
+		setActualList: Dispatch<SetStateAction<ListInterface[]>>,
+		navigation?: any,
+	) => {
+		if (id) {
+			setDeleteListLoader(true);
 			axios
 				.delete(`lists/${id}`)
 				.then((resp) => {
-					// const newList: ListInterface[] = [...lists];
-					// if (lists) newList = removeObjectFromArray(newList, 'id', resp?.data?.data?.id);
-					// console.log(newList);
-					// const tmp = removeObjectFromArray(newList, 'id', resp?.data?.data?.id);
-					// setLists(tmp);
+					let newList: ListInterface[] = [];
+					if (actualist && actualist?.length > 0) newList = removeObjectFromArray(actualist, 'id', resp?.data?.data?.id);
+					// RESET LISTS
+					setActualList([]);
+					// SET UPDATED LISTS
+					setActualList(newList);
+					// RESET SINGLE LIST
 					setSingleList(null);
-					// TMP
-					getLists();
+					setDeleteListLoader(false);
+
+					// DONT WORK DONT KNOW WHY
+					console.log(navigation);
+					if (navigation) {
+						console.log('elo');
+						navigation?.navigate(listRoute.lists);
+					}
 				})
-				.catch((error) => setBackendError(error?.response?.data?.error?.message));
+				.catch((error) => {
+					setDeleteListLoader(false);
+					setBackendError(error?.response?.data?.error?.message);
+				});
+		}
 	};
 
 	const setNewList = (data: FieldValues) => {
+		setAddNewListLoader(true);
+
 		axios
-			.post(`lists`, {
+			.post(`lists/?${listQuery}`, {
 				data: {
 					...data,
 					items: [],
@@ -193,8 +227,12 @@ export const useList = () => {
 				setLists([...lists, newList]);
 				setVisible(!visible);
 				reset();
+				setAddNewListLoader(false);
 			})
-			.catch((error) => setBackendError(error?.response?.data?.error?.message));
+			.catch((error) => {
+				setAddNewListLoader(false);
+				setBackendError(error?.response?.data?.error?.message);
+			});
 	};
 
 	// TODO
@@ -240,12 +278,12 @@ export const useList = () => {
 	};
 
 	const addNewSingleListItem = () => {
-		setAddNewLoader(true);
+		setAddNewListItemLoader(true);
 		if (singleList?.items) {
 			const newData = [...singleList?.items, singleListEditable?.value?.newItem];
 			sendSingleListPutRequest(newData as ItemInterface[], basePuSingleListtQuery, () => {
 				addNewListItem('');
-				setAddNewLoader(false);
+				setAddNewListItemLoader(false);
 			});
 		}
 	};
@@ -359,8 +397,11 @@ export const useList = () => {
 		editedSingleList,
 		newShop,
 		sortedListItemsByCategories,
-		addNewLoader,
+		addNewListItemLoader,
+		addNewListLoader,
 		searchedUsers,
+		deleteListLoader,
+		setLists,
 		addNewSingleListItem,
 		deleteSingleListItem,
 		clearSingleListItems,

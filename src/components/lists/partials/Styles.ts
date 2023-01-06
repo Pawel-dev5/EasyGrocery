@@ -104,6 +104,7 @@ export const StyledListItemsWrapper = styled.View`
 export const StyledRightSwipeDelete = styled.TouchableOpacity`
 	margin: 10px 0;
 	padding: 12px;
+	max-width: 40px;
 	align-items: center;
 	justify-content: center;
 	border-top-right-radius: ${({ theme }) => theme.radius[2]};
@@ -124,4 +125,8 @@ export const StyledCheckButton = styled.TouchableOpacity`
 
 export const StyledEditInputWrapper = styled.View`
 	width: 90%;
+`;
+
+export const StyledItemsWrapper = styled.ScrollView`
+	height: 93%;
 `;

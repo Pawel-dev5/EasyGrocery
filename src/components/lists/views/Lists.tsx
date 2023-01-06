@@ -15,7 +15,7 @@ import { AppWrapper } from 'components/layout';
 import { ListVariant } from 'components/lists/models/sections';
 import { List } from 'components/lists/sections';
 import { ControllerWrapper } from 'components/auth/sections';
-import { Icon } from 'components/layout/common';
+import { Icon, Loader } from 'components/layout/common';
 
 // STYLES
 import { StyledGridList, StyledListsScrollView, StyledAddListWrapper } from 'components/lists/views/Styles';
@@ -24,6 +24,7 @@ import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 export const ListsWrapper = (props: any) => {
 	const {
 		lists,
+		setLists,
 		getLists,
 		setNewList,
 		backendError,
@@ -36,11 +37,14 @@ export const ListsWrapper = (props: any) => {
 		setListsView,
 		setIsLoading,
 		isLoading,
+		addNewListLoader,
 	} = useContext(ListsContextData);
 
-	const [refreshing, setRefreshing] = useState(false);
-	const { navigation } = props;
 	const { lang, setLang } = useContext(GlobalContextData);
+
+	const [refreshing, setRefreshing] = useState(false);
+
+	const { navigation } = props;
 
 	const onRefresh = useCallback(async () => {
 		await setRefreshing(true);
@@ -94,9 +98,15 @@ export const ListsWrapper = (props: any) => {
 							/>
 						</StyledAddListWrapper>
 
-						<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
-							<Icon name="plus" size={20} variant="white" />
-						</StyledBottomAddListButton>
+						{addNewListLoader ? (
+							<StyledBottomAddListButton>
+								<Loader size={20} />
+							</StyledBottomAddListButton>
+						) : (
+							<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
+								<Icon name="plus" size={20} variant="white" />
+							</StyledBottomAddListButton>
+						)}
 
 						{backendError && <Text>{backendError}</Text>}
 					</>
@@ -115,6 +125,8 @@ export const ListsWrapper = (props: any) => {
 									list: item,
 									navigation,
 									variant: ListVariant.PREVIEW,
+									lists: lists,
+									setLists: setLists,
 								};
 								return (
 									<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
@@ -131,10 +143,12 @@ export const ListsWrapper = (props: any) => {
 										list: item,
 										navigation,
 										variant: ListVariant.PREVIEW,
-										type: 'grid',
+										lists: lists,
+										setLists: setLists,
 									};
 									return (
 										<TouchableOpacity
+											style={{ width: '50%' }}
 											key={item?.id}
 											onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}
 										>
