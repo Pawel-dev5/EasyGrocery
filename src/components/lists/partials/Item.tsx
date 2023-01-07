@@ -75,7 +75,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 								});
 							}}
 						>
-							{editLoading ? <Loader size={20} /> : <Icon name="check" size={20} />}
+							{editLoading ? <Loader size={15} /> : <Icon name="check" size={20} />}
 						</TouchableOpacity>
 					) : (
 						<TouchableOpacity onPress={() => setEditableItem({ title: value, category })}>

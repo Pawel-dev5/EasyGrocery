@@ -1,3 +1,4 @@
+import { User } from 'config/models';
 import { ChangeEvent } from 'react';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 export type VariantType = 'white' | 'grey' | 'transparent' | 'done' | 'unDone';
@@ -37,4 +38,6 @@ export interface SearchInterface {
 	textContentType: string;
 	setSearchIcons: (arg0: string) => void;
 	results: any;
+	actualUsers?: User[];
+	optionOnClick: (user: User) => void;
 }

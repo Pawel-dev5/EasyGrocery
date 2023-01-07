@@ -66,11 +66,27 @@ export const StyledUsersWrapper = styled.View`
 	align-items: flex-start;
 `;
 
-export const StyledUserTitle = styled.Text`
+export const StyledUserTitle = styled.Text<{ colorType?: string }>`
 	margin-right: 8px;
 	padding: 4px 8px;
 	border-radius: ${({ theme }) => theme.radius[1]};
-	border: 1px solid ${({ theme }) => theme.grey400};
+
+	${({ colorType }) => {
+		switch (colorType) {
+			case 'FULL':
+				return css`
+					border: 2px solid ${({ theme }) => theme.base2};
+				`;
+			case 'PENDING':
+				return css`
+					border: 2px solid ${({ theme }) => theme.warning};
+				`;
+			default:
+				return css`
+					border: 2px solid ${({ theme }) => theme.grey400};
+				`;
+		}
+	}}
 `;
 
 export const StyledEditFormWrapper = styled.SafeAreaView`

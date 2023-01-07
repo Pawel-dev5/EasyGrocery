@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView } from 'react-native';
 import { t } from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
@@ -26,6 +26,12 @@ import {
 	StyledAddUserWrapper,
 } from 'components/lists/elements/Styles';
 
+// MODELS
+import { User } from 'config/models';
+
+// HELPERS
+import { findObjectInArray, removeObjectFromArray } from 'utils/helpers/arrayHelpers';
+
 const schema = yup
 	.object({
 		title: yup.string().required(),
@@ -35,13 +41,58 @@ const schema = yup
 	.required();
 
 export const EditListForm = () => {
-	const { isUpdating, editedSingleList, user, searchedUsers, submitEditList, setSearchIcons, backendError, setNewShop } =
-		useContext(ListsContextData);
+	const {
+		isUpdating,
+		editedSingleList,
+		user,
+		searchedUsers,
+		submitEditList,
+		setSearchIcons,
+		backendError,
+		setNewShop,
+		listUsers,
+		setListUsers,
+	} = useContext(ListsContextData);
+
+	const [showMoreAdd, setShowMoreAdd] = useState(false);
+
 	const users = editedSingleList?.users_permissions_users?.data?.filter(
 		(permissedUser) => permissedUser?.attributes?.email !== user?.email,
 	);
+	const invitedUsers = editedSingleList?.invitations;
+	console.log(invitedUsers);
 
-	const [showMoreAdd, setShowMoreAdd] = useState(false);
+	useEffect(() => {
+		if (users) {
+			const newArr: any = [];
+			users?.forEach((user) => {
+				const newObject = {
+					id: user?.id,
+					...user?.attributes,
+					access: 'FULL',
+				};
+				newArr.push(newObject);
+			});
+			invitedUsers?.forEach((user) => {
+				const newObject = {
+					id: user?.uuid,
+					...user,
+					access: 'PENDING',
+				};
+				newArr.push(newObject);
+			});
+			setListUsers([...newArr]);
+		}
+	}, []);
+
+	const addNewUser = (user: User) => {
+		const find = findObjectInArray(listUsers, 'id', user?.id);
+
+		if (listUsers?.includes(user) || find) {
+			const newArr = removeObjectFromArray(listUsers, 'id', user?.id);
+			setListUsers([...newArr]);
+		} else setListUsers([...listUsers, { ...user, access: 'PENDING' }]);
+	};
 
 	const {
 		control,
@@ -83,11 +134,13 @@ export const EditListForm = () => {
 					/>
 				</StyledEditFormWrapper>
 
-				<StyledEditFormWrapper>
+				<StyledEditFormWrapper style={{ zIndex: 2 }}>
 					<StyledEditFormWrapperTitle>{t<string>('general.users')}</StyledEditFormWrapperTitle>
 					<StyledUsersWrapper>
-						{users?.map((user) => (
-							<StyledUserTitle key={user?.id}>{user?.attributes?.username}</StyledUserTitle>
+						{listUsers?.map((user) => (
+							<StyledUserTitle key={user?.id} colorType={user?.access}>
+								{user?.attributes?.username || user?.username}
+							</StyledUserTitle>
 						))}
 
 						<StyledAddUserButton onPress={() => setShowMoreAdd(!showMoreAdd)} active={showMoreAdd}>
@@ -103,12 +156,14 @@ export const EditListForm = () => {
 								placeholder={t('general.searchUser')}
 								textContentType="none"
 								results={searchedUsers}
+								actualUsers={listUsers}
+								optionOnClick={addNewUser}
 							/>
 						)}
 					</StyledAddUserWrapper>
 				</StyledEditFormWrapper>
 
-				<StyledEditFormWrapper>
+				<StyledEditFormWrapper style={{ zIndex: 1 }}>
 					<StyledEditFormWrapperTitle>{t<string>('general.color')}</StyledEditFormWrapperTitle>
 					<Controller
 						name="color"

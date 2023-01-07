@@ -31,11 +31,12 @@ import {
 } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
+import { User } from 'config/models';
+import { ShopDataInterface } from 'components/shops/models/hooks';
 
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
-import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
-import { ShopDataInterface } from 'components/shops/models/hooks';
+import { findObjectInArray, removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { useDebounce } from 'utils/helpers/useDebounce';
 
 const schema = yup
@@ -58,8 +59,10 @@ export const useList = () => {
 	const [isUpdating, setIsUpdating] = useState(false);
 	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
 	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
+	const [listUsers, setListUsers] = useState<User[]>([]);
 
-	const [searchUsersValue, setSearchUsersValue] = useState<string | null>(null);
+	// SEARCH VALUES
+	const [searchUsersValue, setSearchUsersValue] = useState<string>('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const searchUsersValueDebounced = useDebounce(searchUsersValue || '', 500);
 
@@ -97,16 +100,27 @@ export const useList = () => {
 
 	const listQuery = qs.stringify(
 		{
-			populate: ['items', 'shops', 'users_permissions_users'],
+			populate: ['items', 'users_permissions_users', 'shop.orders', 'shop.image', 'invitations'],
 		},
 		{
 			encodeValuesOnly: true,
 		},
 	);
 
-	const basePuSingleListtQuery = qs.stringify(
+	const notificationQuery = qs.stringify(
 		{
-			populate: ['items', 'users_permissions_users'],
+			populate: {
+				list: {
+					populate: '*',
+				},
+				users_permissions_user: {
+					data: {
+						attributes: {
+							populate: '*',
+						},
+					},
+				},
+			},
 		},
 		{
 			encodeValuesOnly: true,
@@ -127,7 +141,7 @@ export const useList = () => {
 	const setSearchIcons = (value: string) => setSearchUsersValue(value);
 
 	useEffect(() => {
-		if (searchUsersValue !== null) {
+		if (searchUsersValue !== '') {
 			const searchQuery = qs.stringify(
 				{
 					filters: {
@@ -146,7 +160,7 @@ export const useList = () => {
 				.get(`users/?${searchQuery}`)
 				.then((resp) => setSearchedUsers(resp?.data))
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
-		}
+		} else setSearchedUsers([]);
 	}, [searchUsersValueDebounced]);
 
 	// FETCHES
@@ -206,7 +220,6 @@ export const useList = () => {
 				});
 		}
 	};
-
 	const setNewList = (data: FieldValues) => {
 		setAddNewListLoader(true);
 
@@ -281,7 +294,7 @@ export const useList = () => {
 		setAddNewListItemLoader(true);
 		if (singleList?.items) {
 			const newData = [...singleList?.items, singleListEditable?.value?.newItem];
-			sendSingleListPutRequest(newData as ItemInterface[], basePuSingleListtQuery, () => {
+			sendSingleListPutRequest(newData as ItemInterface[], listQuery, () => {
 				addNewListItem('');
 				setAddNewListItemLoader(false);
 			});
@@ -291,7 +304,7 @@ export const useList = () => {
 	const deleteSingleListItem = (id: string, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = removeObjectFromArray(singleList?.items, 'id', id);
-			sendSingleListPutRequest(newData, basePuSingleListtQuery, callback);
+			sendSingleListPutRequest(newData, listQuery, callback);
 		}
 	};
 
@@ -304,16 +317,16 @@ export const useList = () => {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
 				updateObject(todo, { done: !todo?.done }),
 			);
-			sendSingleListPutRequest(newData, basePuSingleListtQuery, callback);
+			sendSingleListPutRequest(newData, listQuery, callback);
 		}
 	};
 
 	const updateSingleListItemName = (id: string, item: EditItemInterface, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
-				updateObject(todo, { value: item?.title }),
+				updateObject(todo, { value: item?.title, category: item?.category }),
 			);
-			sendSingleListPutRequest(newData, basePuSingleListtQuery, callback);
+			sendSingleListPutRequest(newData, listQuery, callback);
 		}
 	};
 
@@ -338,13 +351,70 @@ export const useList = () => {
 	}, [showDone]);
 
 	const submitEditList = (data: FieldValues) => {
+		const newListUsers = (type?: string) => {
+			const newArr: any = [];
+			listUsers?.map((user) => {
+				const find = findObjectInArray(editedSingleList?.users_permissions_users?.data!, 'id', user?.id);
+				if (find === null) {
+					const newUser = {
+						uuid: user?.id,
+						email: user?.email,
+						username: user?.username,
+					};
+					if (type === 'invitations') {
+						newArr.push(newUser);
+					} else newArr.push(user);
+				}
+			});
+			return newArr;
+		};
+
+		if (newListUsers()) {
+			newListUsers()?.forEach((newUser: any) => {
+				axios
+					.post(`notifications/?${notificationQuery}`, {
+						data: {
+							type: 'invitation',
+							list: {
+								id: singleList?.id,
+								attributes: {
+									...singleList,
+								},
+							},
+							users_permissions_user: [newUser],
+							sender: [user],
+						},
+					})
+					.then((resp) => {
+						// SOCKET UPDATE STATES BELOW
+						// if (socket)
+						// 	socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
+						// 		if (error) {
+						// 			alert(error);
+						// 		}
+						// 	});
+						console.log(user);
+						console.log(resp.data.dsata);
+					})
+					.catch((error) => console.log(error?.response?.data));
+			});
+		}
+		const deleteUser = () => {
+			if (listUsers?.length === 0) {
+				return [user];
+			}
+			return [editedSingleList?.users_permissions_users, ...listUsers];
+		};
+
 		if (data && editedSingleList) {
 			setIsUpdating(true);
 			axios
-				.put(`lists/${editedSingleList?.id}?${basePuSingleListtQuery}`, {
+				.put(`lists/${editedSingleList?.id}?${listQuery}`, {
 					data: {
 						...data,
 						shop: newShop || data?.shop,
+						users_permission_users: deleteUser(),
+						invitations: newListUsers('invitations'),
 					},
 				})
 				.then((resp) => {
@@ -401,6 +471,8 @@ export const useList = () => {
 		addNewListLoader,
 		searchedUsers,
 		deleteListLoader,
+		listUsers,
+		setListUsers,
 		setLists,
 		addNewSingleListItem,
 		deleteSingleListItem,

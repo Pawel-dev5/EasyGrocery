@@ -49,7 +49,7 @@ export const StyledItemTitle = styled.Text`
 
 export const StyledCategory = styled.Text`
 	font-size: 14px;
-	margin-left: 5px;
+	margin-left: 50px;
 `;
 
 export const StyledItemTitleWrapper = styled.View`

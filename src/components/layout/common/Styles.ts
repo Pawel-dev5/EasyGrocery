@@ -48,6 +48,7 @@ export const StyledIcon = styled(FontAwesome5)<{ variant?: VariantType }>`
 export const StyledInput = styled.TextInput`
 	width: 100%;
 	height: 44px;
+	z-index: 5001;
 	border: 1px solid ${({ theme }) => theme.grey200};
 	border-radius: ${({ theme }) => theme.radius[2]};
 	padding: 12px;

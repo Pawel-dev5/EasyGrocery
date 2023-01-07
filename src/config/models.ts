@@ -16,6 +16,7 @@ export interface User {
 	updatedAt: string | null;
 	username: string | null;
 	lists: ListInterface[];
+	access?: string;
 }
 
 export interface UserDataInterface {
