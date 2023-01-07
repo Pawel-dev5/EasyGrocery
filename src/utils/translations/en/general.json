@@ -56,5 +56,8 @@
 		"addShopCominSoon": "Adding your stores will be possible soon.",
 		"shopDescription": "The stores have product categories that correspond to the arrangement of products in the store.",
 		"shopDescriptionMore": "By adding a store to the list and categories to the list elements, the application sorts the products in the order from the store's entry to the checkout."
+	},
+	"notifications": {
+		"title": "Powiadomienia"
 	}
 }

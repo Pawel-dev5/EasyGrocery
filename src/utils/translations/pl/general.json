@@ -56,5 +56,8 @@
 		"addShopCominSoon": "Dodawanie swoich sklepów będzie możliwe wkrótce.",
 		"shopDescription": "Sklepy posiadają kategorie produktów odpowiadające ułożeniu produktów w sklepie.",
 		"shopDescriptionMore": "Dodając sklep do listy oraz kategorie to elementów listy aplikacja sortuje produkty w kolejności od wejścia sklepu do kasy."
+	},
+	"notifications": {
+		"title": "Powiadomienia"
 	}
 }

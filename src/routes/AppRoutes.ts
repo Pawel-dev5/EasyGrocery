@@ -24,3 +24,7 @@ export const shops = {
 	shops: '/shops',
 	singleShop: '/shop/:id',
 };
+
+export const notifications = {
+	notifications: '/notifications',
+};
