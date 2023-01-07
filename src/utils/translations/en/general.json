@@ -27,7 +27,9 @@
 		"backToListView": "Back to list view",
 		"sortByShopCategory": "Sort by shop categories",
 		"addUser": "Add user",
-		"searchUser": "Search user"
+		"searchUser": "Search user",
+		"accept": "Accept",
+		"reject": "Reject"
 	},
 	"auth": {
 		"logout": "Logout",
@@ -58,6 +60,6 @@
 		"shopDescriptionMore": "By adding a store to the list and categories to the list elements, the application sorts the products in the order from the store's entry to the checkout."
 	},
 	"notifications": {
-		"title": "Powiadomienia"
+		"title": "Notifications"
 	}
 }

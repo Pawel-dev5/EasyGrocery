@@ -22,11 +22,12 @@ export const ListShops = () => {
 					const {
 						id,
 						attributes: {
-							image: {
-								data: {
-									attributes: { url, alternativeText },
-								},
-							},
+							title,
+							// image: {
+							// 	data: {
+							// 		attributes: { url, alternativeText },
+							// 	},
+							// },
 						},
 					} = shop;
 
@@ -42,11 +43,12 @@ export const ListShops = () => {
 					};
 					return (
 						<TouchableOpacity key={id} onPress={() => setNewShop(shop)}>
-							<StyledShopImage
+							{/* <StyledShopImage
 								source={{ uri: `${REACT_APP_API}${url.substring(1)}` }}
 								style={[{ resizeMode: 'contain' }, isActiveShop()]}
 								alt={alternativeText}
-							/>
+							/> */}
+							<Text style={[isActiveShop()]}>{title}</Text>
 						</TouchableOpacity>
 					);
 				})}

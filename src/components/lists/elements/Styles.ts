@@ -9,10 +9,9 @@ export const StyledEditButton = styled.TouchableOpacity<{ variant?: string }>`
 	align-items: center;
 	padding: 16px;
 	min-height: 50px;
-	color: red;
 	border-radius: ${({ theme }) => theme.radius[2]};
-	border: 1px solid ${({ theme }) => theme.grey400};
-	background: ${({ theme }) => theme.grey400};
+	border: 1px solid ${({ theme }) => theme.grey200};
+	background: ${({ theme }) => theme.grey200};
 
 	${({ variant }) =>
 		variant === 'delete' &&

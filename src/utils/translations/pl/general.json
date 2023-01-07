@@ -27,7 +27,9 @@
 		"backToListView": "Wróć do widoku listy",
 		"sortByShopCategory": "Sortuj wg kategorii sklepu",
 		"addUser": "Dodaj użytkownika",
-		"searchUser": "Wyszukaj użytkownika"
+		"searchUser": "Wyszukaj użytkownika",
+		"accept": "Akceptuj",
+		"reject": "Odrzuć"
 	},
 	"auth": {
 		"logout": "Wyloguj",

@@ -60,7 +60,6 @@ export const EditListForm = () => {
 		(permissedUser) => permissedUser?.attributes?.email !== user?.email,
 	);
 	const invitedUsers = editedSingleList?.invitations;
-	console.log(invitedUsers);
 
 	useEffect(() => {
 		if (users) {

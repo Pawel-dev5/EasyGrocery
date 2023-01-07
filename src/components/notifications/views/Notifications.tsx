@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { t } from 'i18next';
-import { View, Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -10,30 +10,60 @@ import { useNotifications } from 'components/notifications/hooks/useNotification
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
+import { Notification } from 'components/notifications/sections';
+
+// MODELS
+import { NotificationInterface } from 'components/notifications/models/views';
+
+// STYLES
+import { StyledNotificationsWrapper, StyledFiltersWrapper } from 'components/notifications/views/Styles';
 
 export const Notifications = (props: any) => {
 	const { user, lang, setLang } = useContext(GlobalContextData);
 
-	const { notifications, getNotifications } = useNotifications({ user });
+	const {
+		notifications,
+		showAll,
+		filteredNotifications,
+		loadingNotifications,
+		getNotifications,
+		filterNotifications,
+		setShowAll,
+		updateRead,
+		acceptNotification,
+	} = useNotifications({ user });
 
 	useEffect(() => {
 		getNotifications();
 	}, []);
 
 	return (
-		<AppWrapper routeName={t('notifications.title')} {...props} lang={lang} setLang={setLang}>
+		<AppWrapper
+			routeName={t('notifications.title')}
+			{...props}
+			lang={lang}
+			setLang={setLang}
+			isLoading={loadingNotifications}
+		>
+			<StyledFiltersWrapper>
+				<TouchableOpacity
+					onPress={() => {
+						filterNotifications();
+						setShowAll(!showAll);
+					}}
+				>
+					{showAll ? <Text>Show all</Text> : <Text>Show unread</Text>}
+				</TouchableOpacity>
+
+				<Text>Mark all as read</Text>
+			</StyledFiltersWrapper>
+
 			{notifications && notifications?.length > 0 && (
-				<View>
-					{notifications?.map(({ id, attributes }) => (
-						<View key={id}>
-							<Text>Zaproszenie do listy</Text>
-							<Text>{attributes?.list?.data?.attributes?.title}</Text>
-							<Text>Wysłane przez</Text>
-							<Text>{attributes?.sender?.data?.attributes?.email}</Text>
-							<Text>{attributes?.sender?.data?.attributes?.username}</Text>
-						</View>
+				<StyledNotificationsWrapper>
+					{filteredNotifications?.map((item: NotificationInterface) => (
+						<Notification key={item?.id} item={item} updateRead={updateRead} acceptNotification={acceptNotification} />
 					))}
-				</View>
+				</StyledNotificationsWrapper>
 			)}
 		</AppWrapper>
 	);

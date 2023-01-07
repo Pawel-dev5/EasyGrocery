@@ -4,10 +4,10 @@ import React from 'react';
 import { Icon, Loader } from 'components/layout/common';
 
 // STYLES
-import { StyledRightSwipeDelete } from 'components/lists/partials/Styles';
+import { StyledRightSwipeDelete } from 'components/layout/elements/Styles';
 
 // MODELS
-import { SwipeRigheDeleteInerface } from 'components/lists/models/elements';
+import { SwipeRigheDeleteInerface } from 'components/layout/models/elements';
 
 export const RightSwipeDelete = ({ onClick, loader }: SwipeRigheDeleteInerface) => (
 	<>
