@@ -43,7 +43,8 @@
 		"forgotPassword": "Forgot password?",
 		"resetPassword": "Reset password",
 		"dontHaveAccount": "Dont't have an account?",
-		"haveAccount": "Have an account?"
+		"haveAccount": "Have an account?",
+		"confirmSignOut": "Are you sure you want to log out?"
 	},
 	"profile": {
 		"profile": "Profile",
@@ -63,6 +64,9 @@
 		"title": "Notifications",
 		"allUnRead": "Show unread",
 		"showAll": "Show all",
-		"allRead": "Mark all as read"
+		"allRead": "Mark all as read",
+		"invitationReject": "Rejected",
+		"invitationAccepted": "Accepted",
+		"invitationList": "Invitation"
 	}
 }

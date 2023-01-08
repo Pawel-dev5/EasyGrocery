@@ -25,7 +25,7 @@ export const StyledEditButtonsWrapper = styled.View`
 	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
-	padding: 8px 0;
+	padding: 0;
 `;
 
 export const StyledItemsCategoryWrapper = styled.View`

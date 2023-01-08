@@ -10,6 +10,7 @@ import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { Icon, MenuOption, LangSwitcher, LangSwitcherExpanded } from 'components/layout/common';
+import { SubmitAlert } from 'components/lists/partials';
 
 // STYLES
 import { StyledMenuTrigger } from 'components/layout/sections/Styles';
@@ -39,7 +40,19 @@ export const Menu = ({ variant, navigation }: MenuInterface) => {
 						/>
 						<MenuOption onSelect={() => navigation?.navigate(profile.profile)} text={t('profile.profile')} icon="user" />
 						<MenuOption onSelect={() => navigation?.navigate(shops.shops)} text={t('shops.shops')} icon="shopping-basket" />
-						<MenuOption onSelect={() => signOut()} text={t('auth.logout')} icon="sign-out" />
+						<MenuOption
+							onSelect={() =>
+								SubmitAlert({
+									okPressed: () => signOut(),
+									okText: t('auth.logout'),
+									cancelText: t('general.cancel'),
+									cancelPressed: () => {},
+									alertTitle: t('auth.confirmSignOut'),
+								})
+							}
+							text={t('auth.logout')}
+							icon="sign-out"
+						/>
 
 						<LangSwitcherExpanded />
 					</MenuOptions>

@@ -114,7 +114,6 @@ export const StyledUsersCounter = styled.Text`
 
 export const StyledListDescription = styled.Text`
 	font-size: 16px;
-	margin-bottom: 14px;
 `;
 
 // ========= END FULL LIST ===========

@@ -33,9 +33,11 @@ export const Notification = ({
 	updateRead,
 	acceptNotification,
 	rejectNotification,
+	deleteNotification,
 }: NotificationComponentInterface) => {
 	const [loadingRead, setLoadingRead] = useState(false);
 	const [loadingUpdate, setLoadingUpdate] = useState(false);
+	const [loadingDelete, setLoadingDelete] = useState(false);
 
 	const variantHandler = (read: boolean, sendRequest: boolean, type: string) => {
 		if (!read && !sendRequest) return 'UNREAD';
@@ -64,14 +66,40 @@ export const Notification = ({
 			}
 		};
 
+		const titleHandler = () => {
+			switch (type) {
+				case 'reject':
+					return t('notifications.invitationReject');
+				case 'accept':
+					return t('notifications.invitationAccepted');
+				case 'invitation':
+					return t('notifications.invitationList');
+				default:
+					return null;
+			}
+		};
+
 		return (
-			<Swipeable renderRightActions={() => sendRequest && <RightSwipeDelete onClick={() => {}} loader={false} />}>
+			<Swipeable
+				renderRightActions={() =>
+					sendRequest && (
+						<RightSwipeDelete
+							onClick={() => deleteNotification(id, (status) => setLoadingDelete(status))}
+							loader={loadingDelete}
+						/>
+					)
+				}
+			>
 				<StyledNotificationWrapper variant={variantHandler(read, sendRequest, type)} style={shadowInline}>
 					<StyledNotification read={variantHandler(read, sendRequest, type)}>
 						<StyledNotificationBody>
 							{imgHandler()}
 
 							<View>
+								<StyledNotificationInfoWrapper title>
+									<StyledNotificationInfoTitle title>{titleHandler()}</StyledNotificationInfoTitle>
+								</StyledNotificationInfoWrapper>
+
 								<StyledNotificationInfoWrapper>
 									<Icon name="user" size={15} />
 									<StyledNotificationInfoTitle>{sender?.data?.attributes?.username}</StyledNotificationInfoTitle>
@@ -96,7 +124,7 @@ export const Notification = ({
 								{loadingRead ? (
 									<Loader size={10} />
 								) : (
-									<>{read ? <Icon name="eye-slash" size={15} /> : <Icon name="eye" size={15} />}</>
+									<>{!read ? <Icon name="eye-slash" size={15} /> : <Icon name="eye" size={15} />}</>
 								)}
 							</StyledReadWrapper>
 						</StyledNotificationBody>

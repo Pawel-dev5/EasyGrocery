@@ -106,7 +106,7 @@ export const FullListWrapper = (
 												cancelText: t('general.cancel'),
 												cancelPressed: () => {},
 												alertTitle: singleList?.title ?? '',
-												alertMessage: t('general.deleteAllItems'),
+												alertMessage: t<string>('general.deleteAllItems'),
 											})
 										}
 									>
@@ -121,7 +121,7 @@ export const FullListWrapper = (
 												cancelText: t('general.cancel'),
 												cancelPressed: () => {},
 												alertTitle: singleList?.title ?? '',
-												alertMessage: t('general.deleteList'),
+												alertMessage: t<string>('general.deleteList'),
 											})
 										}
 									>

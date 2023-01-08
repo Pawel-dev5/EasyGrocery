@@ -43,7 +43,8 @@
 		"forgotPassword": "Zapomniałeś hasło?",
 		"resetPassword": "Resetuj hasło",
 		"dontHaveAccount": "Nie masz jeszcze konta?",
-		"haveAccount": "Masz już konto?"
+		"haveAccount": "Masz już konto?",
+		"confirmSignOut": "Na pewno chcesz się wylogować?"
 	},
 	"profile": {
 		"profile": "Profil",
@@ -63,6 +64,9 @@
 		"title": "Powiadomienia",
 		"allUnRead": "Pokaż nieprzeczytane",
 		"showAll": "Pokaż wszystko",
-		"allRead": "Wszystkie jako przeczytane"
+		"allRead": "Wszystkie jako przeczytane",
+		"invitationReject": "Odrzucone",
+		"invitationAccepted": "Zaakceptowane",
+		"invitationList": "Zaproszenie"
 	}
 }

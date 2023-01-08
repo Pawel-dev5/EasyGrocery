@@ -52,6 +52,7 @@ export const EditListForm = () => {
 		setNewShop,
 		listUsers,
 		setListUsers,
+		setEditedSingleList,
 	} = useContext(ListsContextData);
 
 	const [showMoreAdd, setShowMoreAdd] = useState(false);
@@ -190,6 +191,7 @@ export const EditListForm = () => {
 								onPress={() => {
 									setNewShop(null);
 									reset();
+									setEditedSingleList(null);
 								}}
 								disabled={isUpdating}
 							>

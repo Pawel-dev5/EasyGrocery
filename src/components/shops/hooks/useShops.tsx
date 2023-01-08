@@ -5,6 +5,9 @@ import { ContextProviderProps } from 'config/models';
 import { ShopDataInterface } from 'components/shops/models/hooks';
 import axios from 'axios';
 
+// UTILS
+import { shopQuery } from 'utils/queries';
+
 export const useShops = () => {
 	const [visible, setVisible] = useState(false);
 	const [shops, setShops] = useState<ShopDataInterface[] | []>([]);
@@ -14,7 +17,7 @@ export const useShops = () => {
 
 	const getShops = () => {
 		axios
-			.get('shops')
+			.get(`shops?${shopQuery}`)
 			.then((resp) => {
 				setIsLoading(false);
 				setShops(resp?.data?.data);
@@ -32,6 +35,7 @@ export const useShops = () => {
 		setVisible(false);
 		setSingleShop(null);
 	};
+
 	return {
 		visible,
 

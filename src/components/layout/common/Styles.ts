@@ -17,6 +17,9 @@ export const StyledText = styled.Text<{ color?: ColorsKeys }>`
 `;
 
 export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
+	width: 20px;
+	height: 100%;
+	text-align: center;
 	font-size: 16px;
 	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
 `;

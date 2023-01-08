@@ -40,10 +40,10 @@ export const Search = ({
 						<TouchableOpacity style={{ width: '100%' }} key={user?.id} onPress={() => optionOnClick(user)}>
 							<StyledUserWrapper
 								notLast={index + 1 !== results.length}
-								colorType={findObjectInArray(actualUsers!, 'id', user?.id)?.access}
+								colorType={findObjectInArray(actualUsers!, 'email', user?.email)?.access}
 							>
 								{user?.username}
-								{findObjectInArray(actualUsers!, 'id', user?.id) && <Icon name="trash" />}
+								{findObjectInArray(actualUsers!, 'email', user?.email) && <Icon name="trash" />}
 							</StyledUserWrapper>
 						</TouchableOpacity>
 					))}

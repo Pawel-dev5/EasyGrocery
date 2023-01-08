@@ -35,6 +35,7 @@ const NotificationsWrapper = (props: any) => {
 		updateRead,
 		acceptNotification,
 		rejectNotification,
+		deleteNotification,
 	} = useNotifications({ user, addNewListFromNofitication });
 
 	useEffect(() => {
@@ -71,6 +72,7 @@ const NotificationsWrapper = (props: any) => {
 							updateRead={updateRead}
 							acceptNotification={acceptNotification}
 							rejectNotification={rejectNotification}
+							deleteNotification={deleteNotification}
 						/>
 					))}
 				</StyledNotificationsWrapper>

@@ -46,7 +46,11 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							updateSingleListItemStatus(id, () => setDoneLoading(false));
 						}}
 					>
-						{doneLoading ? <Loader size={30} /> : <Icon variant={done ? 'done' : 'unDone'} name="check-circle" size={30} />}
+						{doneLoading ? (
+							<Loader size={30} />
+						) : (
+							<Icon variant={done ? 'done' : 'unDone'} name={done ? 'check-circle' : 'circle'} size={30} />
+						)}
 					</StyledCheckButton>
 
 					{editableItem !== null ? (

@@ -1,13 +1,7 @@
 import { Alert } from 'react-native';
 
-interface SubmitAlertInterface {
-	okPressed: any;
-	cancelPressed: any;
-	okText: string;
-	cancelText: string;
-	alertTitle: string;
-	alertMessage: string;
-}
+// MODELS
+import { SubmitAlertInterface } from 'components/lists/models/partials';
 
 export const SubmitAlert = ({
 	okPressed,

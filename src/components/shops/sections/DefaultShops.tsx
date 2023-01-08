@@ -10,32 +10,17 @@ import { StyledShopImage, StyledShopsWrapper } from 'components/shops/sections/S
 
 export const DefaultShops = () => {
 	const { shops, setSingleShop } = useContext(ShopsContextData);
+
 	return (
 		<StyledShopsWrapper>
-			{shops?.map((shop) => {
-				console.log(shop);
-				const {
-					id,
-					attributes: {
-						title,
-						// image: {
-						// 	data: {
-						// 		attributes: { url, alternativeText },
-						// 	},
-						// },
-					},
-				} = shop;
-				return (
-					<TouchableOpacity key={id} onPress={() => setSingleShop(shop)}>
-						{/* <StyledShopImage
-							source={{ uri: `${REACT_APP_API}${url.substring(1)}` }}
-							style={{ resizeMode: 'contain' }}
-							alt={alternativeText}
-						/> */}
-						<Text>{title}</Text>
-					</TouchableOpacity>
-				);
-			})}
+			{shops?.map((shop) => (
+				<TouchableOpacity key={shop?.id} onPress={() => setSingleShop(shop)}>
+					<StyledShopImage
+						source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
+						style={{ resizeMode: 'contain' }}
+					/>
+				</TouchableOpacity>
+			))}
 		</StyledShopsWrapper>
 	);
 };

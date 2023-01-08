@@ -53,6 +53,7 @@ export const StyledNotification = styled.View<{ read: string | null }>`
 export const StyledNotificationBody = styled.View`
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 `;
 
 export const StyledInviteImg = styled.Image`
@@ -61,16 +62,31 @@ export const StyledInviteImg = styled.Image`
 	margin-left: -13px;
 `;
 
-export const StyledNotificationInfoWrapper = styled.View`
+export const StyledNotificationInfoWrapper = styled.View<{ title?: boolean }>`
 	padding: 6px 0;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+
+	${({ title }) =>
+		title &&
+		css`
+			margin-top: 0;
+			padding-top: 0;
+		`}
 `;
 
-export const StyledNotificationInfoTitle = styled.Text`
+export const StyledNotificationInfoTitle = styled.Text<{ title?: boolean }>`
 	margin-left: 10px;
 	font-size: 16px;
+
+	${({ title }) =>
+		title &&
+		css`
+			margin-left: 0px;
+			font-size: 18px;
+			font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+		`}
 `;
 
 export const StyledReadWrapper = styled.TouchableOpacity`

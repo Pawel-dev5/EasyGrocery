@@ -98,6 +98,7 @@ export const useList = ({
 			const { id, attributes } = data;
 			if (singleList) setSingleList({ id, ...attributes });
 			setIsUpdating(false);
+			setEditedSingleList(null);
 		});
 	}
 
@@ -160,11 +161,7 @@ export const useList = ({
 					setDeleteListLoader(false);
 
 					// DONT WORK DONT KNOW WHY
-					console.log(navigation);
-					if (navigation) {
-						console.log('elo');
-						navigation?.navigate(listRoute.lists);
-					}
+					if (navigation) navigation?.navigate(listRoute.lists);
 				})
 				.catch((error) => {
 					setDeleteListLoader(false);
@@ -332,39 +329,36 @@ export const useList = ({
 
 		if (newListUsers()) {
 			newListUsers()?.forEach((newUser: any) => {
-				axios
-					.post(`notifications/?${listNotificationQuery}`, {
-						data: {
-							type: 'invitation',
-							list: {
-								id: singleList?.id,
-								attributes: {
-									...singleList,
+				const find = findObjectInArray(editedSingleList?.invitations!, 'id' as never, newUser?.id);
+
+				if (find === null)
+					axios
+						.post(`notifications/?${listNotificationQuery}`, {
+							data: {
+								type: 'invitation',
+								list: {
+									id: singleList?.id,
+									attributes: {
+										...singleList,
+									},
 								},
+								users_permissions_user: [newUser],
+								sender: [user],
 							},
-							users_permissions_user: [newUser],
-							sender: [user],
-						},
-					})
-					.then(() => {})
-					.catch((error) => console.log(error?.response?.data));
+						})
+						.then(() => {})
+						.catch((error) => console.log(error?.response?.data));
 			});
 		}
-		const deleteUser = () => {
-			if (listUsers?.length === 0) {
-				return [user];
-			}
-			return [editedSingleList?.users_permissions_users, ...listUsers];
-		};
 
 		if (data && editedSingleList) {
 			setIsUpdating(true);
+
 			axios
 				.put(`lists/${editedSingleList?.id}?${listQuery}`, {
 					data: {
 						...data,
 						shop: newShop || data?.shop,
-						users_permission_users: deleteUser(),
 						invitations: newListUsers('invitations'),
 					},
 				})
@@ -372,9 +366,7 @@ export const useList = ({
 					// SOCKET UPDATE STATES BELOW
 					if (socket)
 						socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
-							if (error) {
-								alert(error);
-							}
+							if (error) alert(error);
 						});
 				})
 				.catch((error) => console.log(error?.response?.data));

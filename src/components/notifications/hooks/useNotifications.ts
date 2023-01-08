@@ -60,6 +60,21 @@ export const useNotifications = ({
 			});
 	};
 
+	const deleteNotification = (id: number, statusCallback: (arg0: boolean) => void) => {
+		statusCallback(true);
+
+		axios
+			.delete(`notifications/${id}?${notificatioQuery}`)
+			.then((resp) => {
+				const newArr = notifications?.filter((item) => item?.id !== resp?.data?.data?.id);
+				setNotifications(newArr);
+			})
+			.catch((error) => {
+				statusCallback(false);
+				console.log(error?.response?.data?.error?.message);
+			});
+	};
+
 	const acceptNotification = (notification: NotificationInterface, statusCallback: (arg0: boolean) => void) => {
 		statusCallback(true);
 
@@ -241,5 +256,6 @@ export const useNotifications = ({
 		updateRead,
 		acceptNotification,
 		rejectNotification,
+		deleteNotification,
 	};
 };

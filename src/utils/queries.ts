@@ -50,3 +50,12 @@ export const notificatioQuery = qs.stringify(
 		encodeValuesOnly: true, // prettify URL
 	},
 );
+
+export const shopQuery = qs.stringify(
+	{
+		populate: ['image', 'orders'],
+	},
+	{
+		encodeValuesOnly: true, // prettify URL
+	},
+);

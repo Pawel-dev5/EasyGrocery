@@ -19,36 +19,22 @@ export const ListShops = () => {
 		<>
 			<ScrollView contentContainerStyle={styles.scrollView} horizontal>
 				{shops?.map((shop) => {
-					const {
-						id,
-						attributes: {
-							title,
-							// image: {
-							// 	data: {
-							// 		attributes: { url, alternativeText },
-							// 	},
-							// },
-						},
-					} = shop;
-
 					const isActiveShop = () => {
-						if (id === newShop?.id)
+						if (shop?.id === newShop?.id)
 							return {
 								transform: [{ scale: 1.12 }],
 							};
-						if (id === editedSingleList?.shop?.data?.id && newShop === null)
+						if (shop?.id === editedSingleList?.shop?.data?.id && newShop === null)
 							return {
 								transform: [{ scale: 1.12 }],
 							};
 					};
 					return (
-						<TouchableOpacity key={id} onPress={() => setNewShop(shop)}>
-							{/* <StyledShopImage
-								source={{ uri: `${REACT_APP_API}${url.substring(1)}` }}
+						<TouchableOpacity key={shop?.id} onPress={() => setNewShop(shop)}>
+							<StyledShopImage
+								source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
 								style={[{ resizeMode: 'contain' }, isActiveShop()]}
-								alt={alternativeText}
-							/> */}
-							<Text style={[isActiveShop()]}>{title}</Text>
+							/>
 						</TouchableOpacity>
 					);
 				})}
@@ -71,7 +57,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'nowrap',
 		minWidth: '100%',
-		justifyContent: 'space-between',
-		paddingVertical: 16,
+		paddingVertical: 8,
+		paddingHorizontal: 5,
 	},
 });
