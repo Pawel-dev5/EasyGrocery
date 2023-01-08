@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
+
+import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { Menu } from 'components/layout/sections';
@@ -32,60 +34,66 @@ export const AppWrapper = ({
 	variant = 'grey',
 	navigation,
 	bottomSheet,
-	lang,
-	setLang,
 	visible,
 	onClose,
 	floatedItems,
 	customPadding,
 	isLoading,
 	bottomSheetHeader,
-}: AppLayoutInterface) => (
-	<StyledAppLayout>
-		<StyledAppNavbar variant={variant}>
-			<View style={{ width: 45, aspectRatio: 1 }}>
-				{navigation?.canGoBack() && (
-					<StyledButton onPress={() => navigation?.goBack()}>
-						<Icon variant={variant} name="angle-left" size={30} />
-					</StyledButton>
-				)}
-			</View>
+}: AppLayoutInterface) => {
+	const { isAuth, lang, setLang, notificationsCounter, getNotificationsCounter } = useContext(GlobalContextData);
 
-			<StyledText variant={variant}>{routeName}</StyledText>
+	useEffect(() => {
+		if (isAuth) getNotificationsCounter();
+	}, []);
 
-			<Menu variant={variant} navigation={navigation} lang={lang} setLang={setLang} />
-		</StyledAppNavbar>
+	return (
+		<StyledAppLayout>
+			<StyledAppNavbar variant={variant}>
+				<View style={{ width: 45, aspectRatio: 1 }}>
+					{navigation?.canGoBack() && (
+						<StyledButton onPress={() => navigation?.goBack()}>
+							<Icon variant={variant} name="angle-left" size={30} />
+						</StyledButton>
+					)}
+				</View>
 
-		{isLoading ? (
-			<Loader size={100} />
-		) : (
-			<>
-				{children && <StyledChildren customPadding={customPadding}>{children}</StyledChildren>}
+				<StyledText variant={variant}>{routeName}</StyledText>
 
-				{bottomSheet && visible && onClose && (
-					<>
-						<StyledOverlayBottomSheet onPress={() => onClose()} />
-						<StyledBottomSheet style={shadowInline}>
-							<StyledBottomSheetClose onPress={() => onClose()} />
+				<Menu variant={variant} navigation={navigation} lang={lang} setLang={setLang} />
+			</StyledAppNavbar>
 
-							<StyledBottomSheetBody>
-								{bottomSheetHeader && <StyledBottomSheetHeader>{t<string>(bottomSheetHeader)}</StyledBottomSheetHeader>}
-								{bottomSheet}
-							</StyledBottomSheetBody>
-						</StyledBottomSheet>
-					</>
-				)}
+			{isLoading ? (
+				<Loader size={100} />
+			) : (
+				<>
+					{children && <StyledChildren customPadding={customPadding}>{children}</StyledChildren>}
 
-				{floatedItems && (
-					<StyledFloatingAddListButtonWrapper>
-						{floatedItems?.map(({ id, icon, variant, size, onPress }) => (
-							<StyledBottomAddListButton key={id} onPress={onPress} style={shadowInline}>
-								<Icon name={icon} size={size} variant={variant} />
-							</StyledBottomAddListButton>
-						))}
-					</StyledFloatingAddListButtonWrapper>
-				)}
-			</>
-		)}
-	</StyledAppLayout>
-);
+					{bottomSheet && visible && onClose && (
+						<>
+							<StyledOverlayBottomSheet onPress={() => onClose()} />
+							<StyledBottomSheet style={shadowInline}>
+								<StyledBottomSheetClose onPress={() => onClose()} />
+
+								<StyledBottomSheetBody>
+									{bottomSheetHeader && <StyledBottomSheetHeader>{t<string>(bottomSheetHeader)}</StyledBottomSheetHeader>}
+									{bottomSheet}
+								</StyledBottomSheetBody>
+							</StyledBottomSheet>
+						</>
+					)}
+
+					{floatedItems && (
+						<StyledFloatingAddListButtonWrapper>
+							{floatedItems?.map(({ id, icon, variant, size, onPress }) => (
+								<StyledBottomAddListButton key={id} onPress={onPress} style={shadowInline}>
+									<Icon name={icon} size={size} variant={variant} />
+								</StyledBottomAddListButton>
+							))}
+						</StyledFloatingAddListButtonWrapper>
+					)}
+				</>
+			)}
+		</StyledAppLayout>
+	);
+};

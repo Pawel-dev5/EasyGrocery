@@ -36,7 +36,7 @@ export const ListsWrapper = (props: any) => {
 		addNewListLoader,
 	} = useContext(ListsContextData);
 
-	const { lang, setLang, getLists, listIsLoading, lists, setLists } = useContext(GlobalContextData);
+	const { getLists, listIsLoading, lists, setLists } = useContext(GlobalContextData);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -75,8 +75,6 @@ export const ListsWrapper = (props: any) => {
 			<AppWrapper
 				{...props}
 				routeName={t('general.myLists')}
-				lang={lang}
-				setLang={setLang}
 				onClose={() => setVisible(false)}
 				visible={visible}
 				isLoading={listIsLoading}

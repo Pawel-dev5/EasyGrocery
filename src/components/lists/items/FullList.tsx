@@ -6,7 +6,6 @@ import { REACT_APP_API } from '@env';
 
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
-import { GlobalContextData } from 'config/useGlobalContext';
 import { ContextProvider as ShopContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
 
 // COMPONENTS
@@ -52,7 +51,6 @@ export const FullListWrapper = (
 		isLoading,
 		setIsLoading,
 	} = useContext(ListsContextData);
-	const { lang, setLang } = useContext(GlobalContextData);
 	const { getShops, shops } = useContext(ShopsContextData);
 
 	const listUuid = props?.route?.params?.id;
@@ -80,14 +78,7 @@ export const FullListWrapper = (
 
 		return (
 			<>
-				<AppWrapper
-					{...props}
-					isLoading={isLoading}
-					routeName={t('general.myLists')}
-					lang={lang}
-					setLang={setLang}
-					customPadding="0"
-				>
+				<AppWrapper {...props} isLoading={isLoading} routeName={t('general.myLists')} customPadding="0">
 					<StyledListBackground color={color}>
 						<StyledFullListWrapper>
 							<StyledInputTitleWrapper>

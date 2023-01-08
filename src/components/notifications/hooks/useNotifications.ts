@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // MODELS
-import { User } from 'config/models';
 import { NotificationInterface } from 'components/notifications/models/views';
-import { ListInterface } from 'components/lists/models/sections';
+import { UseNotificationInterface } from 'components/notifications/models/hooks';
 
 // UTILS
 import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
@@ -16,11 +15,9 @@ const qs = require('qs');
 export const useNotifications = ({
 	user,
 	addNewListFromNofitication,
-}: {
-	user: User | null;
-	addNewListFromNofitication: (arg0: ListInterface) => void;
-}) => {
-	const [notifications, setNotifications] = useState<NotificationInterface[]>([]);
+	notifications,
+	setNotifications,
+}: UseNotificationInterface) => {
 	const [filteredNotifications, setFilteredNotifications] = useState<NotificationInterface[]>([]);
 	const [showAll, setShowAll] = useState(true);
 
@@ -30,6 +27,45 @@ export const useNotifications = ({
 	useEffect(() => {
 		setFilteredNotifications(notifications);
 	}, [notifications]);
+
+	const getNotifications = () => {
+		setLoadingNotifications(true);
+
+		const query = qs.stringify(
+			{
+				populate: {
+					list: {
+						populate: ['invitations', 'users_permissions_users'],
+					},
+					sender: {
+						populate: '*',
+					},
+				},
+				filters: {
+					users_permissions_user: {
+						email: {
+							$eq: user?.email,
+						},
+					},
+				},
+				sort: ['createdAt:desc'],
+			},
+			{
+				encodeValuesOnly: true, // prettify URL
+			},
+		);
+
+		axios
+			.get(`notifications/?${query}`)
+			.then((resp) => {
+				setNotifications(resp?.data?.data);
+				setLoadingNotifications(false);
+			})
+			.catch((error) => {
+				setLoadingNotifications(false);
+				console.log(error?.response?.data?.error?.message);
+			});
+	};
 
 	const filterNotifications = () => {
 		if (filteredNotifications?.length === notifications?.length) {
@@ -202,45 +238,6 @@ export const useNotifications = ({
 			.then((resp) => statusCallback(false))
 			.catch((error) => {
 				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
-	};
-
-	const getNotifications = () => {
-		setLoadingNotifications(true);
-
-		const query = qs.stringify(
-			{
-				populate: {
-					list: {
-						populate: ['invitations', 'users_permissions_users'],
-					},
-					sender: {
-						populate: '*',
-					},
-				},
-				filters: {
-					users_permissions_user: {
-						email: {
-							$eq: user?.email,
-						},
-					},
-				},
-				sort: ['createdAt:desc'],
-			},
-			{
-				encodeValuesOnly: true, // prettify URL
-			},
-		);
-
-		axios
-			.get(`notifications/?${query}`)
-			.then((resp) => {
-				setNotifications(resp?.data?.data?.sort((a: any, b: any) => a?.createdAt?.getTime() + b?.createdAt?.getTime()));
-				setLoadingNotifications(false);
-			})
-			.catch((error) => {
-				setLoadingNotifications(false);
 				console.log(error?.response?.data?.error?.message);
 			});
 	};

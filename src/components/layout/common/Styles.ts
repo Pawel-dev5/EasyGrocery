@@ -6,6 +6,7 @@ import { VariantType } from 'components/layout/models/common';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 
 export const StyledMenuOption = styled.View`
+	position: relative;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
@@ -125,4 +126,53 @@ export const StyledLangWrapper = styled.View`
 export const StyledLangTitle = styled.Text`
 	font-size: 16px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+`;
+
+export const StyledNotificationCounter = styled.View<{ variant?: 'small' }>`
+	position: absolute;
+
+	background-color: ${({ theme }) => theme.warning};
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	${({ variant }) => {
+		switch (variant) {
+			case 'small':
+				return css`
+					top: -7px;
+					right: -4px;
+					width: 15px;
+					height: 15px;
+					border-radius: 15px;
+				`;
+
+			default:
+				return css`
+					top: -2px;
+					right: 4px;
+					width: 20px;
+					height: 20px;
+					border-radius: 20px;
+				`;
+		}
+	}}
+`;
+
+export const StyledCounter = styled.Text<{ variant?: 'small' }>`
+	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+
+	${({ variant }) => {
+		switch (variant) {
+			case 'small':
+				return css`
+					font-size: 10px;
+				`;
+
+			default:
+				return css`
+					font-size: 14px;
+				`;
+		}
+	}}
 `;

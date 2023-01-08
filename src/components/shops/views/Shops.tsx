@@ -3,7 +3,6 @@ import { Text, ScrollView } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
 import { ContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
 
 // COMPONENTS
@@ -15,7 +14,6 @@ import { DefaultShops, SingleShop } from 'components/shops/sections';
 import { StyledShopHeader, StyledMyShopsWrapper } from 'components/shops/views/Styles';
 
 export const ShopsWrapper = (props: any) => {
-	const { lang, setLang } = useContext(GlobalContextData);
 	const { getShops, isLoading, handleBottomSheetClose, visible } = useContext(ShopsContextData);
 
 	useEffect(() => {
@@ -28,8 +26,6 @@ export const ShopsWrapper = (props: any) => {
 		<AppWrapper
 			{...props}
 			routeName={t('shops.shops')}
-			lang={lang}
-			setLang={setLang}
 			onClose={handleBottomSheetClose}
 			visible={visible}
 			bottomSheet={<SingleShop />}

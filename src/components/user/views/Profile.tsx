@@ -24,7 +24,7 @@ const schema = yup
 	.required();
 
 export const Profile = (props: any) => {
-	const { user, setUser, lang, setLang } = useContext(GlobalContextData);
+	const { user, setUser } = useContext(GlobalContextData);
 
 	if (!user) return null;
 	const { username, email, id } = user;
@@ -48,7 +48,7 @@ export const Profile = (props: any) => {
 	};
 
 	return (
-		<AppWrapper routeName={t('profile.profile')} {...props} lang={lang} setLang={setLang}>
+		<AppWrapper routeName={t('profile.profile')} {...props}>
 			<SafeAreaView>
 				<StyledLoginContainer>
 					<StyledInputWrapper>

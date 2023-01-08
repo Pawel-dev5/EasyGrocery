@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,9 +8,12 @@ import { ContextProviderProps, UserDataInterface, User } from 'config/models';
 
 // MODELS
 import { ListInterface } from 'components/lists/models/sections';
+import { NotificationInterface } from 'components/notifications/models/views';
 
 // UTILS
 import { userQuery } from 'utils/queries';
+
+const qs = require('qs');
 
 const InitialUserData: UserDataInterface = {
 	jwt: null,
@@ -22,7 +25,18 @@ export const useGlobalContext = () => {
 	const [isAuth, setIsAuth] = useState(false);
 	const [userData, setUserData] = useState<UserDataInterface>(InitialUserData);
 	const [lists, setLists] = useState<ListInterface[]>([]);
+	const [notificationsCounter, setNotificationsCounter] = useState<number>(0);
+	const [notifications, setNotifications] = useState<NotificationInterface[]>([]);
+
+	// LOADERS
 	const [listIsLoading, setListIsLoading] = useState(false);
+
+	const filterUnRead = (data: NotificationInterface[]) => {
+		const unReadNotifications = data?.filter((item: NotificationInterface) => !item?.attributes?.read);
+		return unReadNotifications?.length;
+	};
+
+	useEffect(() => setNotificationsCounter(filterUnRead(notifications)), [notifications]);
 
 	const getLists = () => {
 		setListIsLoading(true);
@@ -34,6 +48,28 @@ export const useGlobalContext = () => {
 					setLists(resp?.data?.lists);
 				})
 				.catch((error) => console.log(error?.response?.data?.error?.message));
+	};
+
+	const getNotificationsCounter = () => {
+		const query = qs.stringify(
+			{
+				filters: {
+					users_permissions_user: {
+						email: {
+							$eq: userData?.user?.email,
+						},
+					},
+				},
+			},
+			{
+				encodeValuesOnly: true, // prettify URL
+			},
+		);
+
+		axios
+			.get(`notifications/?${query}`)
+			.then((resp) => setNotificationsCounter(filterUnRead(resp?.data?.data)))
+			.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
 	const signIn = (data: UserDataInterface) => {
@@ -62,15 +98,20 @@ export const useGlobalContext = () => {
 		lang,
 		isAuth,
 		user: userData?.user,
+		notifications,
+		listIsLoading,
+		notificationsCounter,
+		lists,
 		signIn,
 		signOut,
 		setLang,
 		setUser,
 		getLists,
-		lists,
 		setLists,
 		setListIsLoading,
-		listIsLoading,
+		setNotificationsCounter,
+		getNotificationsCounter,
+		setNotifications,
 	};
 };
 

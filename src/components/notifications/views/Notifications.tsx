@@ -20,12 +20,11 @@ import { NotificationInterface } from 'components/notifications/models/views';
 import { StyledNotificationsWrapper, StyledFiltersWrapper } from 'components/notifications/views/Styles';
 
 const NotificationsWrapper = (props: any) => {
-	const { user, lang, setLang, lists } = useContext(GlobalContextData);
+	const { user, notifications, setNotifications } = useContext(GlobalContextData);
 
 	const { addNewListFromNofitication } = useContext(ListsContextData);
 
 	const {
-		notifications,
 		showAll,
 		filteredNotifications,
 		loadingNotifications,
@@ -36,20 +35,14 @@ const NotificationsWrapper = (props: any) => {
 		acceptNotification,
 		rejectNotification,
 		deleteNotification,
-	} = useNotifications({ user, addNewListFromNofitication });
+	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications });
 
 	useEffect(() => {
 		getNotifications();
 	}, []);
 
 	return (
-		<AppWrapper
-			{...props?.props}
-			routeName={t('notifications.title')}
-			lang={lang}
-			setLang={setLang}
-			isLoading={loadingNotifications}
-		>
+		<AppWrapper {...props?.props} routeName={t('notifications.title')} isLoading={loadingNotifications}>
 			<StyledFiltersWrapper>
 				<TouchableOpacity
 					onPress={() => {

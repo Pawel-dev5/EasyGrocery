@@ -23,7 +23,7 @@ const schema = yup
 	.required();
 
 export const Forgot = (props: any) => {
-	const { signIn, lang, setLang } = useContext(GlobalContextData);
+	const { signIn } = useContext(GlobalContextData);
 	const { submitResetPassword, backendError, loginStatus } = useAuth(signIn);
 
 	const {
@@ -35,7 +35,7 @@ export const Forgot = (props: any) => {
 	});
 
 	return (
-		<AppWrapper routeName={t('auth.login')} {...props} lang={lang} setLang={setLang} customPadding="0">
+		<AppWrapper routeName={t('auth.login')} {...props} customPadding="0">
 			<ScreenWrapper props={props}>
 				<StyledLoginContainer>
 					<StyledInputWrapper>

@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction } from 'react';
+import { ReactNode } from 'react';
 
 // MODELS
 import { VariantType } from 'components/layout/models/common';
@@ -22,8 +22,6 @@ export interface AppLayoutInterface {
 	children: ReactNode | ReactNode[];
 	navigation: any;
 	variant?: VariantType;
-	lang: string;
-	setLang: Dispatch<SetStateAction<string>>;
 	setRefresh?: () => void;
 	bottomSheet?: ReactNode | ReactNode[];
 	visible?: boolean;

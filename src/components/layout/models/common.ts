@@ -14,6 +14,7 @@ export interface MenuOptionInterface {
 	text: string;
 	icon?: string;
 	color?: ColorsKeys;
+	counter?: number;
 }
 
 export interface InputInterface {

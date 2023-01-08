@@ -9,7 +9,7 @@ import { lists, notifications, profile, shops } from 'routes/AppRoutes';
 import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
-import { Icon, MenuOption, LangSwitcher, LangSwitcherExpanded } from 'components/layout/common';
+import { Icon, MenuOption, LangSwitcher, LangSwitcherExpanded, NotificationCounter } from 'components/layout/common';
 import { SubmitAlert } from 'components/lists/partials';
 
 // STYLES
@@ -19,7 +19,7 @@ import { StyledMenuTrigger } from 'components/layout/sections/Styles';
 import { MenuInterface } from 'components/layout/models/sections';
 
 export const Menu = ({ variant, navigation }: MenuInterface) => {
-	const { isAuth, signOut } = useContext(GlobalContextData);
+	const { isAuth, signOut, notificationsCounter } = useContext(GlobalContextData);
 
 	return (
 		<>
@@ -28,6 +28,7 @@ export const Menu = ({ variant, navigation }: MenuInterface) => {
 					<MenuTrigger>
 						<StyledMenuTrigger>
 							<Icon variant={variant} name="ellipsis-v" size={20} />
+							<NotificationCounter counter={notificationsCounter} />
 						</StyledMenuTrigger>
 					</MenuTrigger>
 
@@ -37,6 +38,7 @@ export const Menu = ({ variant, navigation }: MenuInterface) => {
 							onSelect={() => navigation?.navigate(notifications.notifications)}
 							text={t('notifications.title')}
 							icon="bell"
+							counter={notificationsCounter}
 						/>
 						<MenuOption onSelect={() => navigation?.navigate(profile.profile)} text={t('profile.profile')} icon="user" />
 						<MenuOption onSelect={() => navigation?.navigate(shops.shops)} text={t('shops.shops')} icon="shopping-basket" />

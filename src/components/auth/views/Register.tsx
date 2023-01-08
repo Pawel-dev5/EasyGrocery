@@ -34,7 +34,7 @@ const schema = yup
 	.required();
 
 export const Register = (props: any) => {
-	const { signIn, lang, setLang } = useContext(GlobalContextData);
+	const { signIn } = useContext(GlobalContextData);
 	const { submitRegister, backendError } = useAuth(signIn);
 
 	const { navigation } = props;
@@ -48,7 +48,7 @@ export const Register = (props: any) => {
 	});
 
 	return (
-		<AppWrapper routeName={t('auth.register')} {...props} lang={lang} setLang={setLang} customPadding="0">
+		<AppWrapper routeName={t('auth.register')} {...props} customPadding="0">
 			<ScreenWrapper props={props}>
 				<StyledLoginContainer>
 					<StyledInputWrapper>

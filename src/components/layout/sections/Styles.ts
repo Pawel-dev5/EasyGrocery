@@ -7,6 +7,7 @@ export const StyledIcon = styled(FontAwesome)`
 `;
 
 export const StyledMenuTrigger = styled.View`
+	position: relative;
 	width: 45px;
 	height: 45px;
 	justify-content: center;
