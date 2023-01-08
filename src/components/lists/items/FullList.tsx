@@ -43,14 +43,14 @@ export const FullListWrapper = (
 		setShowDone,
 		filteredItems,
 		showDone,
-		isLoading,
-		setIsLoading,
 		editedSingleList,
 		setEditedSingleList,
 		sortItemsByCategories,
 		sortedListItemsByCategories,
 		setSocket,
 		setSortedListItemsByCategories,
+		isLoading,
+		setIsLoading,
 	} = useContext(ListsContextData);
 	const { lang, setLang } = useContext(GlobalContextData);
 	const { getShops, shops } = useContext(ShopsContextData);

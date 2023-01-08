@@ -1,7 +1,12 @@
+import { SetStateAction, Dispatch } from 'react';
+
 import { ContextProviderProps } from 'config/models';
+import { ListInterface } from 'components/lists/models/sections';
 
 export interface ListContextProvider extends ContextProviderProps {
 	navigation?: any;
+	lists?: ListInterface[];
+	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
 }
 
 export interface SingleListEditableInitialInterface {

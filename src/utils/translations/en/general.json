@@ -60,6 +60,9 @@
 		"shopDescriptionMore": "By adding a store to the list and categories to the list elements, the application sorts the products in the order from the store's entry to the checkout."
 	},
 	"notifications": {
-		"title": "Notifications"
+		"title": "Notifications",
+		"allUnRead": "Show unread",
+		"showAll": "Show all",
+		"allRead": "Mark all as read"
 	}
 }

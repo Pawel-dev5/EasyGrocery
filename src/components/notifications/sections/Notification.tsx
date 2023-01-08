@@ -28,28 +28,48 @@ import {
 import { shadowInline } from 'utils/theme/themeDefault';
 import { t } from 'i18next';
 
-export const Notification = ({ item, updateRead, acceptNotification }: NotificationComponentInterface) => {
+export const Notification = ({
+	item,
+	updateRead,
+	acceptNotification,
+	rejectNotification,
+}: NotificationComponentInterface) => {
 	const [loadingRead, setLoadingRead] = useState(false);
 	const [loadingUpdate, setLoadingUpdate] = useState(false);
 
-	const variantHandler = (read: boolean, sendRequest: boolean) => {
+	const variantHandler = (read: boolean, sendRequest: boolean, type: string) => {
 		if (!read && !sendRequest) return 'UNREAD';
 		if (read && !sendRequest) return 'SENDREQUEST';
+		if (type === 'accept' && !read) return 'ACCEPT';
+		if (type === 'reject' && !read) return 'REJECT';
 		return null;
 	};
 
 	if (item?.attributes) {
 		const {
 			id,
-			attributes: { read, sender, list, createdAt, sendRequest },
+			attributes: { read, sender, list, createdAt, sendRequest, type },
 		} = item;
+
+		const imgHandler = () => {
+			switch (type) {
+				case 'reject':
+					return <StyledInviteImg source={require('../../../assets/reject.png')} resizeMode="cover" style={shadowInline} />;
+				case 'accept':
+					return <StyledInviteImg source={require('../../../assets/check.png')} resizeMode="cover" style={shadowInline} />;
+				case 'invitation':
+					return <StyledInviteImg source={require('../../../assets/invite.png')} resizeMode="cover" style={shadowInline} />;
+				default:
+					return null;
+			}
+		};
 
 		return (
 			<Swipeable renderRightActions={() => sendRequest && <RightSwipeDelete onClick={() => {}} loader={false} />}>
-				<StyledNotificationWrapper variant={variantHandler(read, sendRequest)} style={shadowInline}>
-					<StyledNotification read={variantHandler(read, sendRequest)}>
+				<StyledNotificationWrapper variant={variantHandler(read, sendRequest, type)} style={shadowInline}>
+					<StyledNotification read={variantHandler(read, sendRequest, type)}>
 						<StyledNotificationBody>
-							<StyledInviteImg source={require('../../../assets/invite.png')} resizeMode="cover" style={shadowInline} />
+							{imgHandler()}
 
 							<View>
 								<StyledNotificationInfoWrapper>
@@ -63,7 +83,7 @@ export const Notification = ({ item, updateRead, acceptNotification }: Notificat
 								</StyledNotificationInfoWrapper>
 
 								<StyledNotificationInfoWrapper>
-									<Icon name="calendar" size={15} />
+									<Icon name="calendar-alt" size={15} />
 									<StyledNotificationInfoTitle>{format(new Date(createdAt), 'd-MM-yyy HH:mm')}</StyledNotificationInfoTitle>
 								</StyledNotificationInfoWrapper>
 							</View>
@@ -91,7 +111,10 @@ export const Notification = ({ item, updateRead, acceptNotification }: Notificat
 											<StyledButtonText>{t('general.accept')}</StyledButtonText>
 										</StyledButton>
 
-										<StyledButton variant="delete">
+										<StyledButton
+											variant="delete"
+											onPress={() => rejectNotification(item, (status) => setLoadingUpdate(status))}
+										>
 											<StyledButtonText>{t('general.reject')}</StyledButtonText>
 										</StyledButton>
 									</>

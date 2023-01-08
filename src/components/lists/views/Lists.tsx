@@ -23,9 +23,6 @@ import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 
 export const ListsWrapper = (props: any) => {
 	const {
-		lists,
-		setLists,
-		getLists,
 		setNewList,
 		backendError,
 		visible,
@@ -36,11 +33,10 @@ export const ListsWrapper = (props: any) => {
 		listsView,
 		setListsView,
 		setIsLoading,
-		isLoading,
 		addNewListLoader,
 	} = useContext(ListsContextData);
 
-	const { lang, setLang } = useContext(GlobalContextData);
+	const { lang, setLang, getLists, listIsLoading, lists, setLists } = useContext(GlobalContextData);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -83,7 +79,7 @@ export const ListsWrapper = (props: any) => {
 				setLang={setLang}
 				onClose={() => setVisible(false)}
 				visible={visible}
-				isLoading={isLoading}
+				isLoading={listIsLoading}
 				bottomSheetHeader="general.addNewList"
 				floatedItems={floatedItems}
 				bottomSheet={
@@ -165,8 +161,12 @@ export const ListsWrapper = (props: any) => {
 	);
 };
 
-export const Lists = ({ navigation }: { navigation: any }) => (
-	<ContextProvider navigation={navigation}>
-		<ListsWrapper navigation={navigation} />
-	</ContextProvider>
-);
+export const Lists = ({ navigation }: { navigation: any }) => {
+	const { lists, setLists } = useContext(GlobalContextData);
+
+	return (
+		<ContextProvider setLists={setLists} lists={lists} navigation={navigation}>
+			<ListsWrapper navigation={navigation} />
+		</ContextProvider>
+	);
+};

@@ -20,7 +20,7 @@ interface FloatedItem {
 export interface AppLayoutInterface {
 	routeName: string;
 	children: ReactNode | ReactNode[];
-	navigation?: any;
+	navigation: any;
 	variant?: VariantType;
 	lang: string;
 	setLang: Dispatch<SetStateAction<string>>;

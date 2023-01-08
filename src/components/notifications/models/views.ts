@@ -1,4 +1,5 @@
 import { InvitationUser } from 'components/lists/models/items';
+import { ItemInterface, ListVariant } from 'components/lists/models/sections';
 import { User } from 'config/models';
 
 export interface NotificationInterface {
@@ -6,11 +7,19 @@ export interface NotificationInterface {
 	attributes: {
 		list: {
 			data: {
-				id: number;
+				id: string;
 				attributes: {
 					title: string;
 					invitations: InvitationUser[];
 					users_permissions_users: { data: User[] };
+					id: string;
+					createdAt: string;
+					updatedAt: string;
+					publishedAt: string;
+
+					description: string;
+					items: ItemInterface[];
+					variant: ListVariant;
 				};
 			};
 		};
@@ -23,7 +32,7 @@ export interface NotificationInterface {
 				};
 			};
 		};
-		type: 'invitation';
+		type: 'invitation' | 'accept' | 'reject';
 		read: boolean;
 		sendRequest: boolean;
 		createdAt: Date;

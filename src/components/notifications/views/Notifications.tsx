@@ -4,6 +4,7 @@ import { Text, TouchableOpacity } from 'react-native';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
+import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 
 // HOOKS
 import { useNotifications } from 'components/notifications/hooks/useNotifications';
@@ -18,8 +19,10 @@ import { NotificationInterface } from 'components/notifications/models/views';
 // STYLES
 import { StyledNotificationsWrapper, StyledFiltersWrapper } from 'components/notifications/views/Styles';
 
-export const Notifications = (props: any) => {
-	const { user, lang, setLang } = useContext(GlobalContextData);
+const NotificationsWrapper = (props: any) => {
+	const { user, lang, setLang, lists } = useContext(GlobalContextData);
+
+	const { addNewListFromNofitication } = useContext(ListsContextData);
 
 	const {
 		notifications,
@@ -31,7 +34,8 @@ export const Notifications = (props: any) => {
 		setShowAll,
 		updateRead,
 		acceptNotification,
-	} = useNotifications({ user });
+		rejectNotification,
+	} = useNotifications({ user, addNewListFromNofitication });
 
 	useEffect(() => {
 		getNotifications();
@@ -39,8 +43,8 @@ export const Notifications = (props: any) => {
 
 	return (
 		<AppWrapper
+			{...props?.props}
 			routeName={t('notifications.title')}
-			{...props}
 			lang={lang}
 			setLang={setLang}
 			isLoading={loadingNotifications}
@@ -52,19 +56,35 @@ export const Notifications = (props: any) => {
 						setShowAll(!showAll);
 					}}
 				>
-					{showAll ? <Text>Show all</Text> : <Text>Show unread</Text>}
+					{!showAll ? <Text>{t('notifications.showAll')}</Text> : <Text>{t('notifications.allUnRead')}</Text>}
 				</TouchableOpacity>
 
-				<Text>Mark all as read</Text>
+				<Text>{t('notifications.allRead')}</Text>
 			</StyledFiltersWrapper>
 
 			{notifications && notifications?.length > 0 && (
 				<StyledNotificationsWrapper>
 					{filteredNotifications?.map((item: NotificationInterface) => (
-						<Notification key={item?.id} item={item} updateRead={updateRead} acceptNotification={acceptNotification} />
+						<Notification
+							key={item?.id}
+							item={item}
+							updateRead={updateRead}
+							acceptNotification={acceptNotification}
+							rejectNotification={rejectNotification}
+						/>
 					))}
 				</StyledNotificationsWrapper>
 			)}
 		</AppWrapper>
+	);
+};
+
+export const Notifications = (props: any) => {
+	const { lists, setLists } = useContext(GlobalContextData);
+
+	return (
+		<ContextProvider setLists={setLists} lists={lists}>
+			<NotificationsWrapper props={props} />
+		</ContextProvider>
 	);
 };

@@ -38,6 +38,9 @@ import { ShopDataInterface } from 'components/shops/models/hooks';
 import { updateObject } from 'utils/helpers/objectHelpers';
 import { findObjectInArray, removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { useDebounce } from 'utils/helpers/useDebounce';
+import { listQuery, listNotificationQuery } from 'utils/queries';
+
+const qs = require('qs');
 
 const schema = yup
 	.object({
@@ -45,9 +48,14 @@ const schema = yup
 	})
 	.required();
 
-export const useList = () => {
+export const useList = ({
+	lists,
+	setLists,
+}: {
+	lists?: ListInterface[];
+	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
+}) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
-	const [lists, setLists] = useState<ListInterface[]>([]);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
 	const [singleListEditable, setSingleListEditable] =
 		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
@@ -55,8 +63,6 @@ export const useList = () => {
 	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
 	const [visible, setVisible] = useState(false);
 	const [listsView, setListsView] = useState(true);
-	const [isLoading, setIsLoading] = useState(false);
-	const [isUpdating, setIsUpdating] = useState(false);
 	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
 	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
 	const [listUsers, setListUsers] = useState<User[]>([]);
@@ -70,6 +76,8 @@ export const useList = () => {
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
 
 	// LOADERS
+	const [isLoading, setIsLoading] = useState(false);
+	const [isUpdating, setIsUpdating] = useState(false);
 	const [addNewListItemLoader, setAddNewListItemLoader] = useState(false);
 	const [addNewListLoader, setAddNewListLoader] = useState(false);
 	const [deleteListLoader, setDeleteListLoader] = useState(false);
@@ -82,50 +90,6 @@ export const useList = () => {
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
-
-	// SPECIFY QUERIES TO GET NEEDED DATA AND PROTECT REQUEST FOR BEING TOO BIG IN SIZE AND TIME
-	const qs = require('qs');
-	const userQuery = qs.stringify(
-		{
-			populate: {
-				lists: {
-					populate: ['items'],
-				},
-			},
-		},
-		{
-			encodeValuesOnly: true,
-		},
-	);
-
-	const listQuery = qs.stringify(
-		{
-			populate: ['items', 'users_permissions_users', 'shop.orders', 'shop.image', 'invitations'],
-		},
-		{
-			encodeValuesOnly: true,
-		},
-	);
-
-	const notificationQuery = qs.stringify(
-		{
-			populate: {
-				list: {
-					populate: '*',
-				},
-				users_permissions_user: {
-					data: {
-						attributes: {
-							populate: '*',
-						},
-					},
-				},
-			},
-		},
-		{
-			encodeValuesOnly: true,
-		},
-	);
 
 	// SOCKET.IO CONFIG
 	const [socket, setSocket] = useState<Socket<any, any> | null>(null);
@@ -162,18 +126,6 @@ export const useList = () => {
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 		} else setSearchedUsers([]);
 	}, [searchUsersValueDebounced]);
-
-	// FETCHES
-	const getLists = () => {
-		if (user?.id)
-			axios
-				.get(`users/${user?.id}?${userQuery}`)
-				.then((resp) => {
-					setIsLoading(false);
-					setLists(resp?.data?.lists);
-				})
-				.catch((error) => setBackendError(error?.response?.data?.error?.message));
-	};
 
 	const getList = (id: string) => {
 		if (id)
@@ -220,6 +172,7 @@ export const useList = () => {
 				});
 		}
 	};
+
 	const setNewList = (data: FieldValues) => {
 		setAddNewListLoader(true);
 
@@ -237,7 +190,7 @@ export const useList = () => {
 					id: resp?.data?.data?.id,
 					...resp?.data?.data?.attributes,
 				};
-				setLists([...lists, newList]);
+				if (lists && setLists) setLists([...lists, newList]);
 				setVisible(!visible);
 				reset();
 				setAddNewListLoader(false);
@@ -248,15 +201,18 @@ export const useList = () => {
 			});
 	};
 
+	const addNewListFromNofitication = (list: ListInterface) => {
+		if (lists && setLists) setLists([...lists, list]);
+	};
+
 	// TODO
 	const updateListAfterSingleChange = (toUpdate: ListInterface) => {
 		console.log(toUpdate);
-		if (toUpdate) {
+		if (toUpdate && lists && setLists) {
 			const newLists = updateObjectInArray(lists, 'id', toUpdate?.id, (todo: ListInterface) =>
 				updateObject(todo, { ...toUpdate }),
 			);
-			// setLists(newLists);
-			console.log(newLists);
+			setLists(newLists);
 		}
 	};
 
@@ -309,7 +265,12 @@ export const useList = () => {
 	};
 
 	const clearSingleListItems = () => {
-		if (singleList?.items) sendSingleListPutRequest([]);
+		const callback = () => {
+			setSortedListItemsByCategories([]);
+		};
+		if (singleList?.items) {
+			sendSingleListPutRequest([], listQuery, callback);
+		}
 	};
 
 	const updateSingleListItemStatus = (id: string, callback: () => void) => {
@@ -372,7 +333,7 @@ export const useList = () => {
 		if (newListUsers()) {
 			newListUsers()?.forEach((newUser: any) => {
 				axios
-					.post(`notifications/?${notificationQuery}`, {
+					.post(`notifications/?${listNotificationQuery}`, {
 						data: {
 							type: 'invitation',
 							list: {
@@ -385,17 +346,7 @@ export const useList = () => {
 							sender: [user],
 						},
 					})
-					.then((resp) => {
-						// SOCKET UPDATE STATES BELOW
-						// if (socket)
-						// 	socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
-						// 		if (error) {
-						// 			alert(error);
-						// 		}
-						// 	});
-						console.log(user);
-						console.log(resp.data.dsata);
-					})
+					.then(() => {})
 					.catch((error) => console.log(error?.response?.data));
 			});
 		}
@@ -451,8 +402,8 @@ export const useList = () => {
 	}, [singleList]);
 
 	return {
-		lists,
 		singleList,
+		isLoading,
 		backendError,
 		user,
 		singleListEditable,
@@ -462,7 +413,6 @@ export const useList = () => {
 		control,
 		errors,
 		listsView,
-		isLoading,
 		isUpdating,
 		editedSingleList,
 		newShop,
@@ -473,14 +423,12 @@ export const useList = () => {
 		deleteListLoader,
 		listUsers,
 		setListUsers,
-		setLists,
 		addNewSingleListItem,
 		deleteSingleListItem,
 		clearSingleListItems,
 		updateSingleListItemStatus,
 		updateSingleListItemName,
 		submitEditList,
-		getLists,
 		getList,
 		deleteList,
 		setNewList,
@@ -496,11 +444,12 @@ export const useList = () => {
 		setSortedListItemsByCategories,
 		setSocket,
 		setSearchIcons,
+		addNewListFromNofitication,
 	};
 };
 
 export const ListsContextData = createContext({} as ReturnType<typeof useList>);
 
-export const ContextProvider = ({ children }: ListContextProvider) => (
-	<ListsContextData.Provider value={useList()}>{children}</ListsContextData.Provider>
+export const ContextProvider = ({ children, lists, setLists }: ListContextProvider) => (
+	<ListsContextData.Provider value={useList({ lists, setLists })}>{children}</ListsContextData.Provider>
 );

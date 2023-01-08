@@ -60,6 +60,9 @@
 		"shopDescriptionMore": "Dodając sklep do listy oraz kategorie to elementów listy aplikacja sortuje produkty w kolejności od wejścia sklepu do kasy."
 	},
 	"notifications": {
-		"title": "Powiadomienia"
+		"title": "Powiadomienia",
+		"allUnRead": "Pokaż nieprzeczytane",
+		"showAll": "Pokaż wszystko",
+		"allRead": "Wszystkie jako przeczytane"
 	}
 }

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/native';
 
-export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SENDREQUEST' | null }>`
+export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SENDREQUEST' | 'ACCEPT' | 'REJECT' | null }>`
 	position: relative;
 	border-radius: ${({ theme }) => theme.radius[2]};
 	margin: 10px 5px;
@@ -16,6 +16,16 @@ export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SEND
 				return css`
 					padding-left: 5px;
 					background-color: ${({ theme }) => theme.danger};
+				`;
+			case 'ACCEPT':
+				return css`
+					padding-left: 5px;
+					background-color: ${({ theme }) => theme.base2};
+				`;
+			case 'REJECT':
+				return css`
+					padding-left: 5px;
+					background-color: ${({ theme }) => theme.accent3};
 				`;
 			default:
 				return null;
