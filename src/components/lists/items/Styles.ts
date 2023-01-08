@@ -91,7 +91,9 @@ export const StyledActionButton = styled.TouchableOpacity`
 `;
 
 export const StyledListTitle = styled.Text`
-	font-size: 42px;
+	max-width: 70%;
+	font-size: 40px;
+	line-height: 38px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 `;
 

@@ -206,7 +206,6 @@ export const useList = ({ lists, setLists, socket, setSocket }: useListInterface
 
 	// TODO
 	const updateListAfterSingleChange = (toUpdate: ListInterface) => {
-		console.log(toUpdate);
 		if (toUpdate && lists && setLists) {
 			const newLists = updateObjectInArray(lists, 'id', toUpdate?.id, (todo: ListInterface) =>
 				updateObject(todo, { ...toUpdate }),

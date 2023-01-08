@@ -160,10 +160,10 @@ export const ListsWrapper = (props: any) => {
 };
 
 export const Lists = ({ navigation }: { navigation: any }) => {
-	const { lists, setLists } = useContext(GlobalContextData);
+	const { lists, setLists, socket, setSocket } = useContext(GlobalContextData);
 
 	return (
-		<ContextProvider setLists={setLists} lists={lists} navigation={navigation}>
+		<ContextProvider setLists={setLists} lists={lists} socket={socket} setSocket={setSocket} navigation={navigation}>
 			<ListsWrapper navigation={navigation} />
 		</ContextProvider>
 	);

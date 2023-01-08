@@ -23,6 +23,7 @@ export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
 	text-align: center;
 	font-size: 16px;
 	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
+	margin-bottom: -3px;
 `;
 
 export const StyledIcon = styled(FontAwesome5)<{ variant?: VariantType }>`

@@ -43,7 +43,9 @@ export const ShortList = (props: any) => {
 						<StyledListCardItem>
 							<Icon name="users" size={15} />
 
-							<StyledUserCounter>{users_permissions_users?.length}</StyledUserCounter>
+							<StyledUserCounter>
+								{users_permissions_users?.length || users_permissions_users?.data?.length}
+							</StyledUserCounter>
 						</StyledListCardItem>
 					</StyledListCardTitleWrapper>
 
