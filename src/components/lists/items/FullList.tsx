@@ -29,6 +29,7 @@ import {
 	StyledListDescription,
 } from 'components/lists/items/Styles';
 import { ListInterface } from '../models/sections';
+import { GlobalContextData } from 'config/useGlobalContext';
 
 export const FullListWrapper = (
 	props: any,
@@ -61,15 +62,6 @@ export const FullListWrapper = (
 			getList(listUuid);
 			if (shops?.length === 0) getShops();
 		}
-	}, []);
-
-	// SOCKET.IO START
-	useEffect(() => {
-		const manager = new Manager(REACT_APP_API, {
-			reconnectionDelayMax: 10000,
-		});
-		const socket = manager.socket('/');
-		setSocket(socket);
 	}, []);
 
 	if (singleList) {
@@ -177,10 +169,14 @@ export const FullListWrapper = (
 	return <Loader size={100} />;
 };
 
-export const FullList = (props: any) => (
-	<ContextProvider>
-		<ShopContextProvider>
-			<FullListWrapper {...props} />
-		</ShopContextProvider>
-	</ContextProvider>
-);
+export const FullList = (props: any) => {
+	const { socket, setSocket, lists, setLists } = useContext(GlobalContextData);
+
+	return (
+		<ContextProvider socket={socket} setSocket={setSocket} lists={lists} setLists={setLists}>
+			<ShopContextProvider>
+				<FullListWrapper {...props} />
+			</ShopContextProvider>
+		</ContextProvider>
+	);
+};

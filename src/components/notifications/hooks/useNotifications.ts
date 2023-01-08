@@ -9,6 +9,7 @@ import { UseNotificationInterface } from 'components/notifications/models/hooks'
 import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { updateObject } from 'utils/helpers/objectHelpers';
 import { listQuery, notificatioQuery } from 'utils/queries';
+import { User } from 'config/models';
 
 const qs = require('qs');
 
@@ -17,6 +18,7 @@ export const useNotifications = ({
 	addNewListFromNofitication,
 	notifications,
 	setNotifications,
+	socket,
 }: UseNotificationInterface) => {
 	const [filteredNotifications, setFilteredNotifications] = useState<NotificationInterface[]>([]);
 	const [showAll, setShowAll] = useState(true);
@@ -148,7 +150,14 @@ export const useNotifications = ({
 					list: notification?.attributes?.list?.data,
 				},
 			})
-			.then(() => statusCallback(false))
+			.then((resp) => {
+				if (socket)
+					socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
+						if (error) alert(error);
+					});
+
+				statusCallback(false);
+			})
 			.catch((error) => {
 				statusCallback(false);
 				console.log(error?.response?.data?.error?.message);
@@ -160,13 +169,21 @@ export const useNotifications = ({
 			'uuid',
 			user?.id,
 		);
+
+		const actualUsers = () => {
+			let arr: User[] = [];
+			if (notification?.attributes?.list?.data?.attributes?.users_permissions_user)
+				arr = [...notification?.attributes?.list?.data?.attributes?.users_permissions_user?.data];
+
+			if (notification?.attributes?.list?.data?.attributes?.users_permissions_users)
+				arr = [...notification?.attributes?.list?.data?.attributes?.users_permissions_users?.data];
+
+			return arr;
+		};
 		axios
 			.put(`lists/${notification?.attributes?.list?.data?.id}?${listQuery}`, {
 				data: {
-					users_permissions_users: [
-						user,
-						...notification?.attributes?.list?.data?.attributes?.users_permissions_users?.data,
-					],
+					users_permissions_users: [user, ...actualUsers()],
 					invitations: newInvitations ? newInvitations : [],
 				},
 			})
@@ -217,7 +234,13 @@ export const useNotifications = ({
 					list: notification?.attributes?.list?.data,
 				},
 			})
-			.then(() => statusCallback(false))
+			.then((resp) => {
+				if (socket)
+					socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
+						if (error) alert(error);
+					});
+				statusCallback(false);
+			})
 			.catch((error) => {
 				statusCallback(false);
 				console.log(error?.response?.data?.error?.message);

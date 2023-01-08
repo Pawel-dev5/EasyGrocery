@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
+import { Manager } from 'socket.io-client';
+import { REACT_APP_API } from '@env';
 
 import { GlobalContextData } from 'config/useGlobalContext';
 
@@ -41,11 +43,28 @@ export const AppWrapper = ({
 	isLoading,
 	bottomSheetHeader,
 }: AppLayoutInterface) => {
-	const { isAuth, lang, setLang, notificationsCounter, getNotificationsCounter } = useContext(GlobalContextData);
+	const { isAuth, lang, setLang, getNotificationsCounter, setSocket, setNotifications, notifications, socket, user } =
+		useContext(GlobalContextData);
 
 	useEffect(() => {
-		if (isAuth) getNotificationsCounter();
+		if (isAuth) {
+			getNotificationsCounter();
+			// SOCKET.IO START
+			const manager = new Manager(REACT_APP_API, {
+				reconnectionDelayMax: 10000,
+			});
+			const socket = manager.socket('/');
+			setSocket(socket);
+		}
 	}, []);
+
+	// SOCKET.IO CONFIG
+	if (socket) {
+		socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
+			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email)
+				setNotifications([...notifications, data]);
+		});
+	}
 
 	return (
 		<StyledAppLayout>

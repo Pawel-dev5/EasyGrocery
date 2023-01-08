@@ -35,6 +35,13 @@ export const listNotificationQuery = qs.stringify(
 					},
 				},
 			},
+			sender: {
+				data: {
+					attributes: {
+						populate: '*',
+					},
+				},
+			},
 		},
 	},
 	{
@@ -44,7 +51,7 @@ export const listNotificationQuery = qs.stringify(
 
 export const notificatioQuery = qs.stringify(
 	{
-		populate: ['list', 'sender'],
+		populate: ['list', 'sender', 'users_permissions_user'],
 	},
 	{
 		encodeValuesOnly: true, // prettify URL

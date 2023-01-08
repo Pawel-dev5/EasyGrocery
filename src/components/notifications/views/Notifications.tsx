@@ -20,7 +20,7 @@ import { NotificationInterface } from 'components/notifications/models/views';
 import { StyledNotificationsWrapper, StyledFiltersWrapper } from 'components/notifications/views/Styles';
 
 const NotificationsWrapper = (props: any) => {
-	const { user, notifications, setNotifications } = useContext(GlobalContextData);
+	const { user, notifications, setNotifications, socket } = useContext(GlobalContextData);
 
 	const { addNewListFromNofitication } = useContext(ListsContextData);
 
@@ -35,7 +35,7 @@ const NotificationsWrapper = (props: any) => {
 		acceptNotification,
 		rejectNotification,
 		deleteNotification,
-	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications });
+	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications, socket });
 
 	useEffect(() => {
 		getNotifications();
@@ -75,10 +75,10 @@ const NotificationsWrapper = (props: any) => {
 };
 
 export const Notifications = (props: any) => {
-	const { lists, setLists } = useContext(GlobalContextData);
+	const { lists, setLists, socket, setSocket } = useContext(GlobalContextData);
 
 	return (
-		<ContextProvider setLists={setLists} lists={lists}>
+		<ContextProvider setLists={setLists} lists={lists} socket={socket} setSocket={setSocket}>
 			<NotificationsWrapper props={props} />
 		</ContextProvider>
 	);

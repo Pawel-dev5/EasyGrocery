@@ -11,6 +11,7 @@ export interface NotificationInterface {
 				attributes: {
 					title: string;
 					invitations: InvitationUser[];
+					users_permissions_user: { data: User[] };
 					users_permissions_users: { data: User[] };
 					id: string;
 					createdAt: string;

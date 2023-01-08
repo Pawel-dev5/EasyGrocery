@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Socket } from 'socket.io-client';
 
 // ROUTER
 import { lists as listRoute } from 'routes/AppRoutes';
@@ -28,6 +27,7 @@ import {
 	ListContextProvider,
 	SingleListEditableInitial,
 	SingleListEditableInitialInterface,
+	useListInterface,
 } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
@@ -48,13 +48,7 @@ const schema = yup
 	})
 	.required();
 
-export const useList = ({
-	lists,
-	setLists,
-}: {
-	lists?: ListInterface[];
-	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
-}) => {
+export const useList = ({ lists, setLists, socket, setSocket }: useListInterface) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
 	const [singleListEditable, setSingleListEditable] =
@@ -92,13 +86,21 @@ export const useList = ({
 	});
 
 	// SOCKET.IO CONFIG
-	const [socket, setSocket] = useState<Socket<any, any> | null>(null);
 	if (socket) {
 		socket.off('listUpdate').once('listUpdate', (data: any) => {
 			const { id, attributes } = data;
+			// UPDATE SINGLE LIST
 			if (singleList) setSingleList({ id, ...attributes });
 			setIsUpdating(false);
 			setEditedSingleList(null);
+
+			// UPDATE LISTS
+			if (lists) {
+				const newLists = updateObjectInArray(lists, 'id', id, (todo: ListInterface) =>
+					updateObject(todo, { id, ...attributes }),
+				);
+				if (newLists && setLists) setLists(newLists);
+			}
 		});
 	}
 
@@ -351,7 +353,12 @@ export const useList = ({
 								sender: [user],
 							},
 						})
-						.then(() => {})
+						.then((resp) => {
+							if (socket)
+								socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
+									if (error) alert(error);
+								});
+						})
 						.catch((error) => console.log(error?.response?.data));
 			});
 		}
@@ -448,6 +455,6 @@ export const useList = ({
 
 export const ListsContextData = createContext({} as ReturnType<typeof useList>);
 
-export const ContextProvider = ({ children, lists, setLists }: ListContextProvider) => (
-	<ListsContextData.Provider value={useList({ lists, setLists })}>{children}</ListsContextData.Provider>
+export const ContextProvider = ({ children, lists, setLists, socket, setSocket }: ListContextProvider) => (
+	<ListsContextData.Provider value={useList({ lists, setLists, socket, setSocket })}>{children}</ListsContextData.Provider>
 );

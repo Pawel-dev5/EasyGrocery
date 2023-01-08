@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Socket } from 'socket.io-client';
 
 // CONTEXT
 import { ContextProviderProps, UserDataInterface, User } from 'config/models';
@@ -27,6 +28,7 @@ export const useGlobalContext = () => {
 	const [lists, setLists] = useState<ListInterface[]>([]);
 	const [notificationsCounter, setNotificationsCounter] = useState<number>(0);
 	const [notifications, setNotifications] = useState<NotificationInterface[]>([]);
+	const [socket, setSocket] = useState<Socket<any, any> | null>(null);
 
 	// LOADERS
 	const [listIsLoading, setListIsLoading] = useState(false);
@@ -102,6 +104,8 @@ export const useGlobalContext = () => {
 		listIsLoading,
 		notificationsCounter,
 		lists,
+		socket,
+		setSocket,
 		signIn,
 		signOut,
 		setLang,
