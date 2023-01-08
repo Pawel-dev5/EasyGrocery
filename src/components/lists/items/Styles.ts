@@ -19,8 +19,9 @@ export const StyledListCard = styled.View<{ color: string | null }>`
 `;
 
 export const StyledListCardItem = styled.View`
+	display: flex;
 	flex-flow: row nowrap;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
 `;
 
@@ -117,3 +118,9 @@ export const StyledListDescription = styled.Text`
 `;
 
 // ========= END FULL LIST ===========
+
+export const StyledUserCounter = styled.Text`
+	font-size: 16px;
+	margin-left: 5px;
+	margin-top: -2px;
+`;

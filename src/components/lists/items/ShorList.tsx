@@ -19,8 +19,10 @@ import {
 	StyledListCardItem,
 	StyledListCardTitleWrapper,
 	StyledListCardTitle,
-	StyledListCardItemElement,
+	StyledUserCounter,
 } from 'components/lists/items/Styles';
+
+// UTILS
 import { shadowInline } from 'utils/theme/themeDefault';
 
 export const ShortList = (props: any) => {
@@ -39,13 +41,9 @@ export const ShortList = (props: any) => {
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 
 						<StyledListCardItem>
-							<StyledListCardItemElement>
-								<Icon name="users" size={15} />
-							</StyledListCardItemElement>
+							<Icon name="users" size={15} />
 
-							<StyledListCardItemElement>
-								<Text>{users_permissions_users?.length}</Text>
-							</StyledListCardItemElement>
+							<StyledUserCounter>{users_permissions_users?.length}</StyledUserCounter>
 						</StyledListCardItem>
 					</StyledListCardTitleWrapper>
 

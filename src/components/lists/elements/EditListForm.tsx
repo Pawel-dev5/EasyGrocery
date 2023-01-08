@@ -86,10 +86,10 @@ export const EditListForm = () => {
 	}, []);
 
 	const addNewUser = (user: User) => {
-		const find = findObjectInArray(listUsers, 'id', user?.id);
+		const find = findObjectInArray(listUsers, 'email', user?.email);
 
 		if (listUsers?.includes(user) || find) {
-			const newArr = removeObjectFromArray(listUsers, 'id', user?.id);
+			const newArr = removeObjectFromArray(listUsers, 'email', user?.email);
 			setListUsers([...newArr]);
 		} else setListUsers([...listUsers, { ...user, access: 'PENDING' }]);
 	};

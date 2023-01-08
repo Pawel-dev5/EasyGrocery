@@ -308,6 +308,11 @@ export const useList = ({
 		}
 	}, [showDone]);
 
+	const deleteUnAccessUser = () => {
+		const newArr = listUsers?.filter((item) => item?.access === 'FULL');
+		return [...newArr, user];
+	};
+
 	const submitEditList = (data: FieldValues) => {
 		const newListUsers = (type?: string) => {
 			const newArr: any = [];
@@ -328,8 +333,8 @@ export const useList = ({
 		};
 
 		if (newListUsers()) {
-			newListUsers()?.forEach((newUser: any) => {
-				const find = findObjectInArray(editedSingleList?.invitations!, 'id' as never, newUser?.id);
+			newListUsers()?.forEach((newUser: User) => {
+				const find = findObjectInArray(editedSingleList?.invitations!, 'email', newUser?.email);
 
 				if (find === null)
 					axios
@@ -360,6 +365,7 @@ export const useList = ({
 						...data,
 						shop: newShop || data?.shop,
 						invitations: newListUsers('invitations'),
+						users_permission_users: deleteUnAccessUser(),
 					},
 				})
 				.then((resp) => {
