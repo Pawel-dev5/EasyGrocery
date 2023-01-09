@@ -20,6 +20,7 @@ export const Input = ({
 	onKeyPress,
 	autoFocus,
 	onSubmitEditing,
+	onFocus,
 }: InputInterface) => (
 	<StyledInput
 		name={name}
@@ -39,5 +40,8 @@ export const Input = ({
 		clearButtonMode="while-editing"
 		returnKeyType="search"
 		placeholderTextColor="grey"
+		onFocus={() => {
+			if (onFocus) onFocus();
+		}}
 	/>
 );

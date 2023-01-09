@@ -1,10 +1,11 @@
 import React from 'react';
 import { Input } from 'components/layout/common';
 import { Controller } from 'react-hook-form';
-import { InputInterface } from 'components/layout/models/common';
 import { Text } from 'react-native';
 import { t } from 'i18next';
 
+// COMPONENTS
+import { InputInterface } from 'components/layout/models/common';
 interface ControllerInterface extends InputInterface {
 	control: any;
 	errors: any;
@@ -19,6 +20,7 @@ export const ControllerWrapper = ({
 	textContentType,
 	placeholder,
 	type,
+	onFocus,
 }: ControllerInterface) => (
 	<>
 		<Controller
@@ -36,6 +38,7 @@ export const ControllerWrapper = ({
 					onChange={onChange}
 					value={value}
 					name={name}
+					onFocus={onFocus}
 				/>
 			)}
 		/>

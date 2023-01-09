@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 // CONTEXT
-import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
+import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { FullList, ShortList } from 'components/lists/items';
@@ -9,8 +9,8 @@ import { FullList, ShortList } from 'components/lists/items';
 // MODELS
 import { ListVariant, ListWrapperInterface } from 'components/lists/models/sections';
 
-export const ListWrapper = (props: ListWrapperInterface) => {
-	const { lists } = useContext(ListsContextData);
+export const List = (props: ListWrapperInterface) => {
+	const { lists } = useContext(GlobalContextData);
 	const { list, variant, lists: actualList, setLists } = props;
 
 	switch (variant) {
@@ -24,9 +24,3 @@ export const ListWrapper = (props: ListWrapperInterface) => {
 			return null;
 	}
 };
-
-export const List = (props: ListWrapperInterface) => (
-	<ContextProvider>
-		<ListWrapper {...props} />
-	</ContextProvider>
-);

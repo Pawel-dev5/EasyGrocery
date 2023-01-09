@@ -22,6 +22,7 @@ export interface InputInterface {
 	value?: HTMLInputElement | string;
 	placeholder: string;
 	textContentType: string;
+	onFocus?: () => void;
 	keyboardType?: string;
 	autoComplete?: string;
 	ariaInvalid?: boolean;

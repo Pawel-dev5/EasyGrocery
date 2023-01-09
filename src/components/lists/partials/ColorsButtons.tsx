@@ -28,18 +28,6 @@ const buttons = [
 	},
 ];
 
-// const shadow = {
-// 	shadowColor: '#000',
-// 	shadowOffset: {
-// 		width: 0,
-// 		height: 0,
-// 	},
-// 	shadowOpacity: 0.58,
-// 	shadowRadius: 16.0,
-
-// 	elevation: 24,
-// };
-
 export const ColorsButtons = ({
 	setValue,
 	value,
@@ -56,7 +44,6 @@ export const ColorsButtons = ({
 				style={
 					color === value
 						? [
-								// shadow,
 								{
 									transform: [{ scale: 1.12 }],
 								},

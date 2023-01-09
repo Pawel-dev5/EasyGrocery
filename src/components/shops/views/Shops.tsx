@@ -7,7 +7,6 @@ import { ContextProvider, ShopsContextData } from 'components/shops/hooks/useSho
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { Loader } from 'components/layout/common';
 import { DefaultShops, SingleShop } from 'components/shops/sections';
 
 // STYLES
@@ -20,14 +19,13 @@ export const ShopsWrapper = (props: any) => {
 		getShops();
 	}, []);
 
-	if (isLoading) return <Loader size={100} />;
-
 	return (
 		<AppWrapper
 			{...props}
 			routeName={t('shops.shops')}
 			onClose={handleBottomSheetClose}
 			visible={visible}
+			isLoading={isLoading}
 			bottomSheet={<SingleShop />}
 		>
 			<ScrollView contentContainerStyle={{ width: '100%' }}>

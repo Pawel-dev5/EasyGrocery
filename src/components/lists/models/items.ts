@@ -1,5 +1,8 @@
+import { Dispatch, SetStateAction } from 'react';
+
+// MODELS
 import { User } from 'config/models';
-import { ItemInterface } from 'components/lists/models/sections';
+import { ItemInterface, ListInterface } from 'components/lists/models/sections';
 import { ShopDataInterface } from 'components/shops/models/hooks';
 
 export interface InvitationUser {
@@ -22,4 +25,9 @@ export interface SingleListInterface {
 		data: ShopDataInterface;
 	};
 	invitations: InvitationUser[];
+}
+
+export interface FullListInterface {
+	actualList: ListInterface[];
+	setLists: Dispatch<SetStateAction<ListInterface[]>>;
 }

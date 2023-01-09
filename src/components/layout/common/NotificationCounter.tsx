@@ -1,4 +1,6 @@
 import React from 'react';
+
+// STYLES
 import { StyledNotificationCounter, StyledCounter } from 'components/layout/common/Styles';
 
 export const NotificationCounter = ({ counter, variant }: { counter?: number; variant?: 'small' }) => (

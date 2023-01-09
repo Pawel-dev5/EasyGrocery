@@ -1,16 +1,16 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useMemo } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
-import { Manager } from 'socket.io-client';
-import { REACT_APP_API } from '@env';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 // CONTEXT
+import { GlobalContextData } from 'config/useGlobalContext';
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 import { ContextProvider as ShopContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { Icon, Loader, ProgressBar } from 'components/layout/common';
+import { Icon, ProgressBar } from 'components/layout/common';
 import { SubmitAlert } from 'components/lists/partials';
 import { ListItems, EditListForm } from 'components/lists/elements';
 
@@ -28,13 +28,11 @@ import {
 	StyledUsersWrapper,
 	StyledListDescription,
 } from 'components/lists/items/Styles';
-import { ListInterface } from '../models/sections';
-import { GlobalContextData } from 'config/useGlobalContext';
 
-export const FullListWrapper = (
-	props: any,
-	{ actualList, setLists }: { actualList: ListInterface[]; setLists: Dispatch<SetStateAction<ListInterface[]>> },
-) => {
+// MODELS
+import { FullListInterface } from 'components/lists/models/items';
+
+export const FullListWrapper = (props: any, { actualList, setLists }: FullListInterface) => {
 	const {
 		singleList,
 		getList,
@@ -47,7 +45,6 @@ export const FullListWrapper = (
 		setEditedSingleList,
 		sortItemsByCategories,
 		sortedListItemsByCategories,
-		setSocket,
 		setSortedListItemsByCategories,
 		isLoading,
 		setIsLoading,
@@ -64,109 +61,111 @@ export const FullListWrapper = (
 		}
 	}, []);
 
-	if (singleList) {
-		const { id, title, users_permissions_users, items, description, color, shop } = singleList;
-		const listItems = filteredItems || items;
+	// BOTTOMSHEET CONFIG
+	const bottomSheetRef = useRef<BottomSheet>(null);
+	const snapPoints = useMemo(() => ['75%', '75%', '99.9%'], []);
 
-		return (
-			<>
-				<AppWrapper {...props} isLoading={isLoading} routeName={t('general.myLists')} customPadding="0">
-					<StyledListBackground color={color}>
-						<StyledFullListWrapper>
-							<StyledInputTitleWrapper>
-								<StyledListTitle>{title}</StyledListTitle>
+	const listItems = filteredItems || singleList?.items;
 
-								<StyledListOptionWrapper>
-									<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
-										<Icon name={editedSingleList !== null ? 'list' : 'edit'} size={20} />
-									</StyledActionButton>
+	return (
+		<>
+			<AppWrapper {...props} isLoading={isLoading} routeName={singleList?.title || t('general.myLists')} customPadding="0">
+				<StyledListBackground color={singleList?.color!}>
+					<StyledFullListWrapper>
+						<StyledInputTitleWrapper>
+							<StyledListTitle>{singleList?.title}</StyledListTitle>
 
-									<StyledActionButton
-										onPress={() =>
-											SubmitAlert({
-												okPressed: () => clearSingleListItems(),
-												okText: t('general.delete'),
-												cancelText: t('general.cancel'),
-												cancelPressed: () => {},
-												alertTitle: singleList?.title ?? '',
-												alertMessage: t<string>('general.deleteAllItems'),
-											})
-										}
-									>
-										<Icon name="broom" size={20} />
-									</StyledActionButton>
+							<StyledListOptionWrapper>
+								<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
+									<Icon name={editedSingleList !== null ? 'list' : 'edit'} size={20} />
+								</StyledActionButton>
 
-									<StyledActionButton
-										onPress={() =>
-											SubmitAlert({
-												okPressed: () => deleteList(id!, actualList, setLists, props?.navigation),
-												okText: t('general.delete'),
-												cancelText: t('general.cancel'),
-												cancelPressed: () => {},
-												alertTitle: singleList?.title ?? '',
-												alertMessage: t<string>('general.deleteList'),
-											})
-										}
-									>
-										<Icon name="trash" size={20} />
-									</StyledActionButton>
-								</StyledListOptionWrapper>
-							</StyledInputTitleWrapper>
-
-							<StyledUsersWrapper>
-								<StyledListCardItemElement>
-									<Icon name="users" size={20} />
-								</StyledListCardItemElement>
-
-								<StyledListCardItemElement>
-									<StyledUsersCounter>{users_permissions_users?.data?.length}</StyledUsersCounter>
-								</StyledListCardItemElement>
-							</StyledUsersWrapper>
-
-							{description && <StyledListDescription>{description}</StyledListDescription>}
-
-							<ProgressBar items={items} />
-
-							{(showDone !== 'done' || showDone === null) && (
-								<TouchableOpacity onPress={() => setShowDone('done')}>
-									<Text>{t<string>('general.showOnlyDone')}</Text>
-								</TouchableOpacity>
-							)}
-
-							{(showDone !== 'unDone' || showDone === null) && (
-								<TouchableOpacity onPress={() => setShowDone('unDone')}>
-									<Text>{t<string>('general.showOnlyUnDone')}</Text>
-								</TouchableOpacity>
-							)}
-
-							{showDone !== null && (
-								<TouchableOpacity onPress={() => setShowDone(null)}>
-									<Text>{t<string>('general.showAll')}</Text>
-								</TouchableOpacity>
-							)}
-
-							{shop?.data !== null && (
-								<TouchableOpacity
+								<StyledActionButton
 									onPress={() =>
-										sortedListItemsByCategories ? setSortedListItemsByCategories(null) : sortItemsByCategories()
+										SubmitAlert({
+											okPressed: () => clearSingleListItems(),
+											okText: t('general.delete'),
+											cancelText: t('general.cancel'),
+											cancelPressed: () => {},
+											alertTitle: singleList?.title ?? '',
+											alertMessage: t<string>('general.deleteAllItems'),
+										})
 									}
 								>
-									<Text>
-										{t<string>(sortedListItemsByCategories ? 'general.backToListView' : 'general.sortByShopCategory')}
-									</Text>
-								</TouchableOpacity>
-							)}
-						</StyledFullListWrapper>
+									<Icon name="broom" size={20} />
+								</StyledActionButton>
 
+								<StyledActionButton
+									onPress={() =>
+										SubmitAlert({
+											okPressed: () => deleteList(singleList?.id!, actualList, setLists, props?.navigation),
+											okText: t('general.delete'),
+											cancelText: t('general.cancel'),
+											cancelPressed: () => {},
+											alertTitle: singleList?.title ?? '',
+											alertMessage: t<string>('general.deleteList'),
+										})
+									}
+								>
+									<Icon name="trash" size={20} />
+								</StyledActionButton>
+							</StyledListOptionWrapper>
+						</StyledInputTitleWrapper>
+
+						<StyledUsersWrapper>
+							<StyledListCardItemElement>
+								<Icon name="users" size={20} />
+							</StyledListCardItemElement>
+
+							<StyledListCardItemElement>
+								<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
+							</StyledListCardItemElement>
+						</StyledUsersWrapper>
+
+						{singleList?.description && <StyledListDescription>{singleList?.description}</StyledListDescription>}
+
+						<ProgressBar items={singleList?.items!} />
+
+						{(showDone !== 'done' || showDone === null) && (
+							<TouchableOpacity onPress={() => setShowDone('done')}>
+								<Text>{t<string>('general.showOnlyDone')}</Text>
+							</TouchableOpacity>
+						)}
+
+						{(showDone !== 'unDone' || showDone === null) && (
+							<TouchableOpacity onPress={() => setShowDone('unDone')}>
+								<Text>{t<string>('general.showOnlyUnDone')}</Text>
+							</TouchableOpacity>
+						)}
+
+						{showDone !== null && (
+							<TouchableOpacity onPress={() => setShowDone(null)}>
+								<Text>{t<string>('general.showAll')}</Text>
+							</TouchableOpacity>
+						)}
+
+						{singleList?.shop?.data !== null && (
+							<TouchableOpacity
+								onPress={() =>
+									sortedListItemsByCategories ? setSortedListItemsByCategories(null) : sortItemsByCategories()
+								}
+							>
+								<Text>
+									{t<string>(sortedListItemsByCategories ? 'general.backToListView' : 'general.sortByShopCategory')}
+								</Text>
+							</TouchableOpacity>
+						)}
+					</StyledFullListWrapper>
+
+					<BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
 						<StyledItemsWrapper>
-							{editedSingleList ? <EditListForm /> : <ListItems listItems={listItems} />}
+							{editedSingleList ? <EditListForm /> : <ListItems listItems={listItems!} />}
 						</StyledItemsWrapper>
-					</StyledListBackground>
-				</AppWrapper>
-			</>
-		);
-	}
-	return <Loader size={100} />;
+					</BottomSheet>
+				</StyledListBackground>
+			</AppWrapper>
+		</>
+	);
 };
 
 export const FullList = (props: any) => {

@@ -34,6 +34,7 @@ export const StyledListCardTitle = styled.Text`
 	font-size: 16px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 	margin-bottom: 10px;
+	max-width: 70%;
 `;
 
 export const StyledListCardItemElement = styled.View`
@@ -53,14 +54,11 @@ export const StyledFullListWrapper = styled.View`
 `;
 
 export const StyledItemsWrapper = styled.View`
-	position: absolute;
-	bottom: 0;
 	width: 100%;
-	height: 70%;
+	height: 100%;
 	border-top-left-radius: 32px;
 	border-top-right-radius: 32px;
-	padding: 18px;
-	margin-top: 16px;
+	padding: 0px 18px;
 	background: ${({ theme }) => theme.white};
 `;
 

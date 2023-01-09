@@ -1,10 +1,10 @@
 import { FieldValues } from 'react-hook-form';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // MODELS
 import { UserDataInterface } from 'config/models';
 import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 	const [backendError, setBackendError] = useState<string | null>(null);

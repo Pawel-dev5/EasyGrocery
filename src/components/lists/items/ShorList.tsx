@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Text } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 

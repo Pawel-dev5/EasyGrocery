@@ -69,23 +69,11 @@ export const StyledButton = styled.TouchableOpacity`
 
 // BOTTOM SHEET
 
-export const StyledBottomSheet = styled.SafeAreaView`
-	align-items: center;
-	min-height: 25%;
-	background: ${({ theme }) => theme.white};
-	border-top-left-radius: 21px;
-	border-top-right-radius: 21px;
-	width: 100%;
-	z-index: 1000;
-	elevation: 1000;
-	position: absolute;
-	bottom: 0;
-`;
-
 export const StyledBottomSheetBody = styled.View`
 	padding: ${({ theme }) => theme.globalPadding};
 	align-items: center;
 	justify-content: center;
+	position: relative;
 `;
 
 export const StyledBottomAddListButton = styled.TouchableOpacity`
@@ -99,11 +87,14 @@ export const StyledBottomAddListButton = styled.TouchableOpacity`
 `;
 
 export const StyledBottomSheetClose = styled.TouchableOpacity`
-	margin-top: 10px;
-	height: 7px;
-	width: 60px;
-	background: ${({ theme }) => theme.grey200};
-	border-radius: 5px;
+	position: absolute;
+	top: 0px;
+	right: -10px;
+
+	height: 40px;
+	width: 40px;
+	/* background: ${({ theme }) => theme.grey200}; */
+	/* border-radius: 5px; */
 `;
 
 export const StyledBottomSheetHeader = styled.Text`
@@ -118,18 +109,4 @@ export const StyledFloatingAddListButtonWrapper = styled.View`
 	elevation: 999;
 	bottom: 10px;
 	right: 10px;
-`;
-
-export const StyledOverlayBottomSheet = styled.TouchableOpacity`
-	position: absolute;
-	z-index: 800;
-	elevation: 800;
-	top: 0;
-	right: 0;
-	width: 100%;
-	height: 100%;
-	align-items: center;
-	justify-content: flex-end;
-	background: ${({ theme }) => theme.grey300};
-	opacity: 0.7;
 `;

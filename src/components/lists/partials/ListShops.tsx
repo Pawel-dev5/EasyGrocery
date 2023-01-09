@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
-import { t } from 'i18next';
-import { REACT_APP_API } from '@env';
+import { ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';

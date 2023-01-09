@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import { REACT_APP_API } from '@env';
+import { TouchableOpacity } from 'react-native';
 
 // CONTEXT
 import { ShopsContextData } from 'components/shops/hooks/useShops';

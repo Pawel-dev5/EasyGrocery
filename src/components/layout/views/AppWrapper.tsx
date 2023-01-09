@@ -1,8 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useMemo, useCallback } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
 import { Manager } from 'socket.io-client';
 import { REACT_APP_API } from '@env';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 
 import { GlobalContextData } from 'config/useGlobalContext';
 
@@ -21,14 +22,13 @@ import {
 	StyledChildren,
 	StyledText,
 	StyledBottomAddListButton,
-	StyledBottomSheet,
 	StyledBottomSheetBody,
 	StyledBottomSheetClose,
 	StyledBottomSheetHeader,
 	StyledFloatingAddListButtonWrapper,
-	StyledOverlayBottomSheet,
 } from 'components/layout/views/Styles';
 import { shadowInline } from 'utils/theme/themeDefault';
+import { useSwipe } from 'utils/hooks/useSwipe';
 
 export const AppWrapper = ({
 	children,
@@ -45,6 +45,17 @@ export const AppWrapper = ({
 }: AppLayoutInterface) => {
 	const { isAuth, lang, setLang, getNotificationsCounter, setSocket, setNotifications, notifications, socket, user } =
 		useContext(GlobalContextData);
+
+	// ref
+	const bottomSheetRef = useRef<BottomSheet>(null);
+
+	// variables
+	const snapPoints = useMemo(() => ['30%', '58%', '88.8%'], []);
+
+	// callbacks
+	const handleSheetChanges = useCallback((index: number) => {
+		// console.log('handleSheetChanges', index);
+	}, []);
 
 	useEffect(() => {
 		if (isAuth) {
@@ -66,6 +77,14 @@ export const AppWrapper = ({
 		});
 	}
 
+	const onSwipeLeft = () => {
+		console.log('SWIPE_LEFT');
+	};
+
+	const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();
+
+	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
+
 	return (
 		<StyledAppLayout>
 			<StyledAppNavbar variant={variant}>
@@ -86,20 +105,31 @@ export const AppWrapper = ({
 				<Loader size={100} />
 			) : (
 				<>
-					{children && <StyledChildren customPadding={customPadding}>{children}</StyledChildren>}
+					{children && (
+						<StyledChildren onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} customPadding={customPadding}>
+							{children}
+						</StyledChildren>
+					)}
 
 					{bottomSheet && visible && onClose && (
-						<>
-							<StyledOverlayBottomSheet onPress={() => onClose()} />
-							<StyledBottomSheet style={shadowInline}>
-								<StyledBottomSheetClose onPress={() => onClose()} />
+						<BottomSheet
+							ref={bottomSheetRef}
+							index={1}
+							snapPoints={snapPoints}
+							style={shadowInline}
+							enablePanDownToClose
+							onChange={handleSheetChanges}
+							backdropComponent={BottomSheetBackdrop}
+						>
+							<StyledBottomSheetBody>
+								<StyledBottomSheetClose onPress={() => onClose()}>
+									<Icon name="times" size={20} />
+								</StyledBottomSheetClose>
 
-								<StyledBottomSheetBody>
-									{bottomSheetHeader && <StyledBottomSheetHeader>{t<string>(bottomSheetHeader)}</StyledBottomSheetHeader>}
-									{bottomSheet}
-								</StyledBottomSheetBody>
-							</StyledBottomSheet>
-						</>
+								{bottomSheetHeader && <StyledBottomSheetHeader>{t<string>(bottomSheetHeader)}</StyledBottomSheetHeader>}
+								{bottomSheet}
+							</StyledBottomSheetBody>
+						</BottomSheet>
 					)}
 
 					{floatedItems && (
