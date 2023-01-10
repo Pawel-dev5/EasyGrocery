@@ -24,16 +24,39 @@ export const ListItems = ({ listItems }: ListItemInterface) => {
 	return (
 		<>
 			{sortedListItemsByCategories?.length > 0 ? (
-				<ScrollView>
-					{sortedListItemsByCategories?.map((item: any) => (
-						<View key={item?.category}>
-							<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
-							{item?.items?.map((item: ItemInterface) => (
-								<Item key={item?.id} {...item} />
-							))}
-						</View>
-					))}
-				</ScrollView>
+				<View>
+					<StyledAddNewItem>
+						<Input
+							value={singleListEditable?.value?.newItem.value!}
+							name="title"
+							placeholder={t('general.add')}
+							textContentType="nickname"
+							// onKeyPress={(e) => e.nativeEvent?.key === 'Enter' && addNewSingleListItem()}
+							onChange={(text) => addNewListItem(text)}
+						/>
+
+						{addNewListItemLoader ? (
+							<StyledAddItemButton onPress={() => {}}>
+								<Loader size={20} />
+							</StyledAddItemButton>
+						) : (
+							<StyledAddItemButton onPress={() => addNewSingleListItem()}>
+								<Icon name="plus" size={20} />
+							</StyledAddItemButton>
+						)}
+					</StyledAddNewItem>
+
+					<ScrollView>
+						{sortedListItemsByCategories?.map((item: any) => (
+							<View key={item?.category}>
+								<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
+								{item?.items?.map((item: ItemInterface) => (
+									<Item key={item?.id} {...item} />
+								))}
+							</View>
+						))}
+					</ScrollView>
+				</View>
 			) : (
 				<StyledEditInoutWrapper>
 					<StyledAddNewItem>

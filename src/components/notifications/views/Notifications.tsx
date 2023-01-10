@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { t } from 'i18next';
-import { Text, TouchableOpacity } from 'react-native';
+import { RefreshControl, ScrollView, Text, TouchableOpacity } from 'react-native';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
@@ -37,39 +37,49 @@ const NotificationsWrapper = (props: any) => {
 		deleteNotification,
 	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications, socket });
 
+	const [refreshing, setRefreshing] = useState(false);
+
 	useEffect(() => {
 		getNotifications();
 	}, []);
 
+	const onRefresh = useCallback(async () => {
+		await setRefreshing(true);
+		await getNotifications();
+		await setRefreshing(false);
+	}, []);
+
 	return (
 		<AppWrapper {...props?.props} routeName={t('notifications.title')} isLoading={loadingNotifications}>
-			<StyledFiltersWrapper>
-				<TouchableOpacity
-					onPress={() => {
-						filterNotifications();
-						setShowAll(!showAll);
-					}}
-				>
-					{!showAll ? <Text>{t('notifications.showAll')}</Text> : <Text>{t('notifications.allUnRead')}</Text>}
-				</TouchableOpacity>
+			<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+				<StyledFiltersWrapper>
+					<TouchableOpacity
+						onPress={() => {
+							filterNotifications();
+							setShowAll(!showAll);
+						}}
+					>
+						{!showAll ? <Text>{t<string>('notifications.showAll')}</Text> : <Text>{t('notifications.allUnRead')}</Text>}
+					</TouchableOpacity>
 
-				<Text>{t('notifications.allRead')}</Text>
-			</StyledFiltersWrapper>
+					<Text>{t<string>('notifications.allRead')}</Text>
+				</StyledFiltersWrapper>
 
-			{notifications && notifications?.length > 0 && (
-				<StyledNotificationsWrapper>
-					{filteredNotifications?.map((item: NotificationInterface) => (
-						<Notification
-							key={item?.id}
-							item={item}
-							updateRead={updateRead}
-							acceptNotification={acceptNotification}
-							rejectNotification={rejectNotification}
-							deleteNotification={deleteNotification}
-						/>
-					))}
-				</StyledNotificationsWrapper>
-			)}
+				{notifications && notifications?.length > 0 && (
+					<StyledNotificationsWrapper>
+						{filteredNotifications?.map((item: NotificationInterface) => (
+							<Notification
+								key={item?.id}
+								item={item}
+								updateRead={updateRead}
+								acceptNotification={acceptNotification}
+								rejectNotification={rejectNotification}
+								deleteNotification={deleteNotification}
+							/>
+						))}
+					</StyledNotificationsWrapper>
+				)}
+			</ScrollView>
 		</AppWrapper>
 	);
 };

@@ -23,11 +23,11 @@ export const StyledShopsWrapper = styled.View`
 `;
 
 export const StyledSingleShopHeaderWrapper = styled.View`
-	min-width:100%
-	max-width:100%
+	min-width: 100%;
+	max-width: 100%;
 	flex-flow: row nowrap;
 	align-items: flex-start;
-	justify-content:space-between;
+	justify-content: space-between;
 	margin-bottom: 16px;
 `;
 export const StyledHeader = styled.View`
@@ -43,12 +43,6 @@ export const StyledSingleShopHeader = styled.Text`
 	font-size: 28px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 	margin-left: 16px;
-`;
-
-export const StyledCloseButton = styled.TouchableOpacity`
-	height: 45px;
-	width: 45px;
-	align-items: center;
 `;
 
 export const StyledShopCategories = styled.Text`

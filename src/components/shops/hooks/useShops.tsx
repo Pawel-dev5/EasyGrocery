@@ -9,11 +9,11 @@ import axios from 'axios';
 import { shopQuery } from 'utils/queries';
 
 export const useShops = () => {
-	const [visible, setVisible] = useState(false);
 	const [shops, setShops] = useState<ShopDataInterface[] | []>([]);
+	const [singleShop, setSingleShop] = useState<ShopDataInterface | null>(null);
+	const [bottomSheetActive, setBottomSheetActive] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [backendError, setBackendError] = useState(true);
-	const [singleShop, setSingleShop] = useState<ShopDataInterface | null>(null);
 
 	const getShops = () => {
 		axios
@@ -26,27 +26,27 @@ export const useShops = () => {
 	};
 
 	useEffect(() => {
-		if (singleShop) return setVisible(true);
-		if (singleShop && !visible) return setSingleShop(null);
-		setVisible(false);
-	}, [singleShop, visible]);
+		if (singleShop) return setBottomSheetActive(true);
+		if (singleShop && !bottomSheetActive) return setSingleShop(null);
+		setBottomSheetActive(false);
+	}, [singleShop, bottomSheetActive]);
 
 	const handleBottomSheetClose = () => {
-		setVisible(false);
+		setBottomSheetActive(false);
 		setSingleShop(null);
 	};
 
 	return {
-		visible,
-
+		bottomSheetActive,
 		shops,
-		setShops,
-		getShops,
 		isLoading,
 		backendError,
 		singleShop,
+		setShops,
+		getShops,
 		handleBottomSheetClose,
 		setSingleShop,
+		setBottomSheetActive,
 	};
 };
 

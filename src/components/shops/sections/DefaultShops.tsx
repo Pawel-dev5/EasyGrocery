@@ -8,12 +8,18 @@ import { ShopsContextData } from 'components/shops/hooks/useShops';
 import { StyledShopImage, StyledShopsWrapper } from 'components/shops/sections/Styles';
 
 export const DefaultShops = () => {
-	const { shops, setSingleShop } = useContext(ShopsContextData);
+	const { shops, setSingleShop, setBottomSheetActive, bottomSheetActive } = useContext(ShopsContextData);
 
 	return (
 		<StyledShopsWrapper>
 			{shops?.map((shop) => (
-				<TouchableOpacity key={shop?.id} onPress={() => setSingleShop(shop)}>
+				<TouchableOpacity
+					key={shop?.id}
+					onPress={() => {
+						setSingleShop(shop);
+						setBottomSheetActive(!bottomSheetActive);
+					}}
+				>
 					<StyledShopImage
 						source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
 						style={{ resizeMode: 'contain' }}

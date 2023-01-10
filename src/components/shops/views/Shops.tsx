@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { Text, ScrollView } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Text, ScrollView, RefreshControl } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
@@ -13,7 +13,15 @@ import { DefaultShops, SingleShop } from 'components/shops/sections';
 import { StyledShopHeader, StyledMyShopsWrapper } from 'components/shops/views/Styles';
 
 export const ShopsWrapper = (props: any) => {
-	const { getShops, isLoading, handleBottomSheetClose, visible } = useContext(ShopsContextData);
+	const { getShops, isLoading, handleBottomSheetClose, bottomSheetActive } = useContext(ShopsContextData);
+
+	const [refreshing, setRefreshing] = useState(false);
+
+	const onRefresh = useCallback(async () => {
+		await setRefreshing(true);
+		await getShops();
+		await setRefreshing(false);
+	}, []);
 
 	useEffect(() => {
 		getShops();
@@ -24,12 +32,16 @@ export const ShopsWrapper = (props: any) => {
 			{...props}
 			routeName={t('shops.shops')}
 			onClose={handleBottomSheetClose}
-			visible={visible}
+			visible={bottomSheetActive}
 			isLoading={isLoading}
 			bottomSheet={<SingleShop />}
 		>
-			<ScrollView contentContainerStyle={{ width: '100%' }}>
+			<ScrollView
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				contentContainerStyle={{ width: '100%' }}
+			>
 				<StyledShopHeader>{t<string>('shops.myShops')}</StyledShopHeader>
+
 				<StyledMyShopsWrapper>
 					<Text>{t<string>('shops.noMyShops')}</Text>
 					<Text>{t<string>('shops.addShopCominSoon')}</Text>
@@ -38,6 +50,7 @@ export const ShopsWrapper = (props: any) => {
 				<StyledShopHeader>{t<string>('general.mostPopular')}</StyledShopHeader>
 				<Text>{t<string>('shops.shopDescription')}</Text>
 				<Text>{t<string>('shops.shopDescriptionMore')}</Text>
+
 				<DefaultShops />
 			</ScrollView>
 		</AppWrapper>

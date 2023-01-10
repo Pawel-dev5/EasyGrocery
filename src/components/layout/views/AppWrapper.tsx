@@ -27,8 +27,11 @@ import {
 	StyledBottomSheetHeader,
 	StyledFloatingAddListButtonWrapper,
 } from 'components/layout/views/Styles';
+
+// UTILS
 import { shadowInline } from 'utils/theme/themeDefault';
 import { useSwipe } from 'utils/hooks/useSwipe';
+import { findObjectInArray } from 'utils/helpers/arrayHelpers';
 
 export const AppWrapper = ({
 	children,
@@ -46,13 +49,9 @@ export const AppWrapper = ({
 	const { isAuth, lang, setLang, getNotificationsCounter, setSocket, setNotifications, notifications, socket, user } =
 		useContext(GlobalContextData);
 
-	// ref
+	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
-
-	// variables
 	const snapPoints = useMemo(() => ['30%', '58%', '88.8%'], []);
-
-	// callbacks
 	const handleSheetChanges = useCallback((index: number) => {
 		// console.log('handleSheetChanges', index);
 	}, []);
@@ -72,18 +71,25 @@ export const AppWrapper = ({
 	// SOCKET.IO CONFIG
 	if (socket) {
 		socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
-			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email)
-				setNotifications([...notifications, data]);
+			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email) {
+				const checkedNotification = findObjectInArray(notifications, 'id', data?.id);
+				if (checkedNotification) {
+					return null;
+				} else setNotifications([...notifications, data]);
+			}
 		});
 	}
 
-	const onSwipeLeft = () => {
-		console.log('SWIPE_LEFT');
-	};
+	const onSwipeLeft = () => {};
 
 	const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();
 
 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
+
+	const handleClosePress = () => {
+		bottomSheetRef?.current?.close();
+		if (onClose) onClose();
+	};
 
 	return (
 		<StyledAppLayout>
@@ -111,7 +117,7 @@ export const AppWrapper = ({
 						</StyledChildren>
 					)}
 
-					{bottomSheet && visible && onClose && (
+					{bottomSheet && visible && (
 						<BottomSheet
 							ref={bottomSheetRef}
 							index={1}
@@ -122,7 +128,7 @@ export const AppWrapper = ({
 							backdropComponent={BottomSheetBackdrop}
 						>
 							<StyledBottomSheetBody>
-								<StyledBottomSheetClose onPress={() => onClose()}>
+								<StyledBottomSheetClose onPress={() => handleClosePress()}>
 									<Icon name="times" size={20} />
 								</StyledBottomSheetClose>
 

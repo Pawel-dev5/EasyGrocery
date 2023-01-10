@@ -23,17 +23,17 @@ import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 
 export const ListsWrapper = (props: any) => {
 	const {
-		setNewList,
+		addNewListLoader,
 		backendError,
 		visible,
-		setVisible,
 		control,
 		errors,
-		handleSubmit,
 		listsView,
+		setNewList,
+		handleSubmit,
 		setListsView,
 		setIsLoading,
-		addNewListLoader,
+		setVisible,
 	} = useContext(ListsContextData);
 
 	const { getLists, listIsLoading, lists, setLists } = useContext(GlobalContextData);
@@ -71,50 +71,67 @@ export const ListsWrapper = (props: any) => {
 	];
 
 	return (
-		<>
-			<AppWrapper
-				{...props}
-				routeName={t('general.myLists')}
-				onClose={() => setVisible(false)}
-				visible={visible}
-				isLoading={listIsLoading}
-				bottomSheetHeader="general.addNewList"
-				floatedItems={floatedItems}
-				bottomSheet={
-					<>
-						<StyledAddListWrapper>
-							<ControllerWrapper
-								name="title"
-								placeholder={t('general.title')}
-								textContentType="nickname"
-								control={control}
-								errors={errors}
-							/>
-						</StyledAddListWrapper>
+		<AppWrapper
+			{...props}
+			routeName={t('general.myLists')}
+			onClose={() => setVisible(false)}
+			visible={visible}
+			isLoading={listIsLoading}
+			bottomSheetHeader="general.addNewList"
+			floatedItems={floatedItems}
+			bottomSheet={
+				<>
+					<StyledAddListWrapper>
+						<ControllerWrapper
+							name="title"
+							placeholder={t('general.title')}
+							textContentType="nickname"
+							control={control}
+							errors={errors}
+						/>
+					</StyledAddListWrapper>
 
-						{addNewListLoader ? (
-							<StyledBottomAddListButton>
-								<Loader size={20} />
-							</StyledBottomAddListButton>
-						) : (
-							<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
-								<Icon name="plus" size={20} variant="white" />
-							</StyledBottomAddListButton>
-						)}
+					{addNewListLoader ? (
+						<StyledBottomAddListButton>
+							<Loader size={20} />
+						</StyledBottomAddListButton>
+					) : (
+						<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
+							<Icon name="plus" size={20} variant="white" />
+						</StyledBottomAddListButton>
+					)}
 
-						{backendError && <Text>{backendError}</Text>}
-					</>
-				}
-			>
-				<StyledListsScrollView>
-					{listsView ? (
-						<FlatList
-							data={lists}
-							keyExtractor={(item) => item?.id}
-							refreshing={refreshing}
-							onRefresh={onRefresh}
-							ListEmptyComponent={() => null}
-							renderItem={({ item }) => {
+					{backendError && <Text>{backendError}</Text>}
+				</>
+			}
+		>
+			<StyledListsScrollView>
+				{listsView ? (
+					<FlatList
+						data={lists}
+						keyExtractor={(item) => item?.id}
+						refreshing={refreshing}
+						onRefresh={onRefresh}
+						ListEmptyComponent={() => null}
+						renderItem={({ item }) => {
+							const props = {
+								list: item,
+								navigation,
+								variant: ListVariant.PREVIEW,
+								lists: lists,
+								setLists: setLists,
+							};
+							return (
+								<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
+									<List {...props} />
+								</TouchableOpacity>
+							);
+						}}
+					/>
+				) : (
+					<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+						<StyledGridList>
+							{lists?.map((item) => {
 								const props = {
 									list: item,
 									navigation,
@@ -123,39 +140,20 @@ export const ListsWrapper = (props: any) => {
 									setLists: setLists,
 								};
 								return (
-									<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
+									<TouchableOpacity
+										style={{ width: '50%' }}
+										key={item?.id}
+										onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}
+									>
 										<List {...props} />
 									</TouchableOpacity>
 								);
-							}}
-						/>
-					) : (
-						<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-							<StyledGridList>
-								{lists?.map((item) => {
-									const props = {
-										list: item,
-										navigation,
-										variant: ListVariant.PREVIEW,
-										lists: lists,
-										setLists: setLists,
-									};
-									return (
-										<TouchableOpacity
-											style={{ width: '50%' }}
-											key={item?.id}
-											onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}
-										>
-											<List {...props} />
-										</TouchableOpacity>
-									);
-								})}
-							</StyledGridList>
-						</ScrollView>
-					)}
-				</StyledListsScrollView>
-			</AppWrapper>
-		</>
+							})}
+						</StyledGridList>
+					</ScrollView>
+				)}
+			</StyledListsScrollView>
+		</AppWrapper>
 	);
 };
 

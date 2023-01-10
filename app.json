@@ -1,10 +1,10 @@
 {
 	"expo": {
-		"name": "EasyGrocery",
-		"slug": "EasyGrocery",
+		"name": "Easy\nGrocery",
+		"slug": "easy-grocery",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/icon.png",
+		"icon": "./assets/EasyGrocery.png",
 		"userInterfaceStyle": "light",
 		"splash": {
 			"image": "./assets/splash.png",
@@ -32,7 +32,7 @@
 		"plugins": ["expo-community-flipper"],
 		"extra": {
 			"eas": {
-				"projectId": "ee54dc30-953d-4da0-a54b-7557a0a8a096"
+				"projectId": "7a186aca-db6b-49e4-a969-1ca1b02e9d1a"
 			}
 		}
 	}

@@ -15,7 +15,6 @@ import {
 	StyledShopImageFull,
 	StyledSingleShopHeaderWrapper,
 	StyledSingleShopHeader,
-	StyledCloseButton,
 	StyledHeader,
 	StyledShopCategories,
 	StyledShopCategoriesWrapper,
@@ -25,14 +24,15 @@ import {
 } from 'components/shops/sections/Styles';
 
 export const SingleShop = () => {
-	const { singleShop, handleBottomSheetClose } = useContext(ShopsContextData);
+	const { singleShop } = useContext(ShopsContextData);
+
 	if (singleShop) {
 		const {
 			attributes: {
 				title,
 				image: {
 					data: {
-						attributes: { url, alternativeText },
+						attributes: { url },
 					},
 				},
 				orders,
@@ -46,15 +46,10 @@ export const SingleShop = () => {
 						<StyledShopImageFull
 							source={{ uri: `${REACT_APP_API}${url?.substring(1)}` }}
 							style={{ resizeMode: 'contain' }}
-							alt={alternativeText}
 						/>
 
 						{title && <StyledSingleShopHeader>{title}</StyledSingleShopHeader>}
 					</StyledHeader>
-
-					<StyledCloseButton onPress={() => handleBottomSheetClose()}>
-						<Icon name="times" size={20} />
-					</StyledCloseButton>
 				</StyledSingleShopHeaderWrapper>
 
 				<Text>{t<string>('shops.shopCategories')}</Text>
