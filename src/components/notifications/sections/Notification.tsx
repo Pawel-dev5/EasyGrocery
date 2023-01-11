@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { format } from 'date-fns-tz';

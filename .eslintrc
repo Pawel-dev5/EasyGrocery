@@ -1,12 +1,6 @@
 {
-	"extends": [
-		"airbnb",
-		"airbnb-typescript",
-		"prettier"
-	],
-	"plugins": [
-		"prettier"
-	],
+	"extends": ["airbnb", "airbnb-typescript", "prettier"],
+	"plugins": ["prettier"],
 	"env": {
 		"jest": true,
 		"node": true,
@@ -35,10 +29,7 @@
 		"react/jsx-filename-extension": [
 			1,
 			{
-				"extensions": [
-					".ts",
-					".tsx"
-				]
+				"extensions": [".ts", ".tsx"]
 			}
 		],
 		// ====================================
@@ -68,9 +59,7 @@
 				"html": "ignore",
 				"custom": "ignore",
 				"explicitSpread": "ignore",
-				"exceptions": [
-					""
-				]
+				"exceptions": [""]
 			}
 		]
 	},
@@ -83,9 +72,7 @@
 			"rules": {} // {} - same reguły nadpisujemy tutaj
 		},
 		{
-			"files": [
-				"**/*.stories.*"
-			],
+			"files": ["**/*.stories.*"],
 			"rules": {
 				"import/no-anonymous-default-export": 0,
 				"react/jsx-props-no-spreading": 0

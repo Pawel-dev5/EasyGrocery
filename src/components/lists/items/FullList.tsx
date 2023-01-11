@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useMemo } from 'react';
+import React, { useContext, useEffect, useRef, useMemo, useCallback, useState } from 'react';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { t } from 'i18next';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -19,11 +19,9 @@ import {
 	StyledActionButton,
 	StyledFullListWrapper,
 	StyledInputTitleWrapper,
-	StyledItemsWrapper,
 	StyledListBackground,
 	StyledListCardItemElement,
 	StyledListOptionWrapper,
-	StyledListTitle,
 	StyledUsersCounter,
 	StyledUsersWrapper,
 	StyledListDescription,
@@ -51,7 +49,10 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 	} = useContext(ListsContextData);
 	const { getShops, shops } = useContext(ShopsContextData);
 
-	const listUuid = props?.route?.params?.id;
+	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
+
+	const { route, navigation } = props;
+	const listUuid = route?.params?.id;
 
 	useEffect(() => {
 		if (listUuid) {
@@ -64,6 +65,7 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const snapPoints = useMemo(() => ['75%', '75%', '99.9%'], []);
+	const handleSheetChanges = useCallback((index: number) => setBottomSheetHeight(index), []);
 
 	const listItems = filteredItems || singleList?.items;
 
@@ -72,7 +74,15 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 			<StyledListBackground color={singleList?.color!}>
 				<StyledFullListWrapper>
 					<StyledInputTitleWrapper>
-						<StyledListTitle>{singleList?.title}</StyledListTitle>
+						<StyledUsersWrapper>
+							<StyledListCardItemElement>
+								<Icon name="users" size={20} />
+							</StyledListCardItemElement>
+
+							<StyledListCardItemElement>
+								<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
+							</StyledListCardItemElement>
+						</StyledUsersWrapper>
 
 						<StyledListOptionWrapper>
 							<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
@@ -99,7 +109,7 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 							<StyledActionButton
 								onPress={() =>
 									SubmitAlert({
-										okPressed: () => deleteList(singleList?.id!, actualList, setLists, props?.navigation),
+										okPressed: () => deleteList(singleList?.id!, actualList, setLists, navigation),
 										okText: t('general.delete'),
 										cancelText: t('general.cancel'),
 										cancelPressed: () => {},
@@ -108,20 +118,10 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 									})
 								}
 							>
-								<Icon name="trash" size={20} />
+								<Icon name="trash" size={20} variant="unDone" />
 							</StyledActionButton>
 						</StyledListOptionWrapper>
 					</StyledInputTitleWrapper>
-
-					<StyledUsersWrapper>
-						<StyledListCardItemElement>
-							<Icon name="users" size={20} />
-						</StyledListCardItemElement>
-
-						<StyledListCardItemElement>
-							<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
-						</StyledListCardItemElement>
-					</StyledUsersWrapper>
 
 					{singleList?.description && <StyledListDescription>{singleList?.description}</StyledListDescription>}
 
@@ -158,11 +158,16 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 					ref={bottomSheetRef}
 					index={1}
 					snapPoints={snapPoints}
-					enableContentPanningGesture
-					enableOverDrag={false}
+					enableContentPanningGesture={false}
+					onChange={handleSheetChanges}
 				>
+					{/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
 					<BottomSheetScrollView contentContainerStyle={styles?.contentContainer}>
-						{editedSingleList ? <EditListForm /> : <ListItems listItems={listItems!} />}
+						{editedSingleList ? (
+							<EditListForm />
+						) : (
+							<ListItems listItems={listItems!} bottomSheetHeight={bottomSheetHeight} />
+						)}
 					</BottomSheetScrollView>
 				</BottomSheet>
 			</StyledListBackground>

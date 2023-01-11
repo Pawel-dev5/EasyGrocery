@@ -6,6 +6,7 @@ import { t } from 'i18next';
 
 // COMPONENTS
 import { InputInterface } from 'components/layout/models/common';
+
 interface ControllerInterface extends InputInterface {
 	control: any;
 	errors: any;

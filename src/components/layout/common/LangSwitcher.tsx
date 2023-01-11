@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import i18next from 'i18next';

@@ -65,18 +65,18 @@ export const EditListForm = () => {
 	useEffect(() => {
 		if (users) {
 			const newArr: any = [];
-			users?.forEach((user) => {
+			users?.forEach((newUser) => {
 				const newObject = {
-					id: user?.id,
-					...user?.attributes,
+					id: newUser?.id,
+					...newUser?.attributes,
 					access: 'FULL',
 				};
 				newArr.push(newObject);
 			});
-			invitedUsers?.forEach((user) => {
+			invitedUsers?.forEach((newUser) => {
 				const newObject = {
-					id: user?.uuid,
-					...user,
+					id: newUser?.uuid,
+					...newUser,
 					access: 'PENDING',
 				};
 				newArr.push(newObject);
@@ -85,13 +85,13 @@ export const EditListForm = () => {
 		}
 	}, []);
 
-	const addNewUser = (user: User) => {
-		const find = findObjectInArray(listUsers, 'email', user?.email);
+	const addNewUser = (newUser: User) => {
+		const find = findObjectInArray(listUsers, 'email', newUser?.email);
 
-		if (listUsers?.includes(user) || find) {
-			const newArr = removeObjectFromArray(listUsers, 'email', user?.email);
+		if (listUsers?.includes(newUser) || find) {
+			const newArr = removeObjectFromArray(listUsers, 'email', newUser?.email);
 			setListUsers([...newArr]);
-		} else setListUsers([...listUsers, { ...user, access: 'PENDING' }]);
+		} else setListUsers([...listUsers, { ...newUser, access: 'PENDING' }]);
 	};
 
 	const {
@@ -137,9 +137,9 @@ export const EditListForm = () => {
 				<StyledEditFormWrapper style={{ zIndex: 2 }}>
 					<StyledEditFormWrapperTitle>{t<string>('general.users')}</StyledEditFormWrapperTitle>
 					<StyledUsersWrapper>
-						{listUsers?.map((user) => (
-							<StyledUserTitle key={user?.id} colorType={user?.access}>
-								{user?.attributes?.username || user?.username}
+						{listUsers?.map((newUser) => (
+							<StyledUserTitle key={newUser?.id} colorType={newUser?.access}>
+								{newUser?.attributes?.username || newUser?.username}
 							</StyledUserTitle>
 						))}
 

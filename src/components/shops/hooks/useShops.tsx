@@ -28,7 +28,7 @@ export const useShops = () => {
 	useEffect(() => {
 		if (singleShop) return setBottomSheetActive(true);
 		if (singleShop && !bottomSheetActive) return setSingleShop(null);
-		setBottomSheetActive(false);
+		return setBottomSheetActive(false);
 	}, [singleShop, bottomSheetActive]);
 
 	const handleBottomSheetClose = () => {

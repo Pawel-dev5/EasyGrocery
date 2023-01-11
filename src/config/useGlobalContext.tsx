@@ -94,7 +94,7 @@ export const useGlobalContext = () => {
 
 	const setUser = (user: User) => setUserData({ ...userData, user });
 
-	if (userData?.jwt) axios.defaults.headers.common['Authorization'] = `Bearer ${userData?.jwt}`;
+	if (userData?.jwt) axios.defaults.headers.common.Authorization = `Bearer ${userData?.jwt}`;
 
 	return {
 		lang,

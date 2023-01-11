@@ -2,11 +2,12 @@ import styled from 'styled-components/native';
 
 export const StyledNotificationsWrapper = styled.ScrollView`
 	width: 100%;
-	margin: 10px 5px;
+	min-width: 100%;
 `;
 
 export const StyledFiltersWrapper = styled.View`
 	width: 100%;
+	max-width: 100%;
 	min-height: 30px;
 	display: flex;
 	align-items: center;

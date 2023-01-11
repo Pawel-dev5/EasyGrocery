@@ -24,7 +24,7 @@ const schema = yup
 
 export const Forgot = (props: any) => {
 	const { signIn } = useContext(GlobalContextData);
-	const { submitResetPassword, backendError, loginStatus } = useAuth(signIn);
+	const { submitResetPassword, backendError } = useAuth(signIn);
 
 	const {
 		control,
@@ -36,7 +36,7 @@ export const Forgot = (props: any) => {
 
 	return (
 		<AppWrapper routeName={t('auth.login')} {...props} customPadding="0">
-			<ScreenWrapper props={props}>
+			<ScreenWrapper>
 				<StyledLoginContainer>
 					<StyledInputWrapper>
 						<ControllerWrapper

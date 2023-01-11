@@ -49,8 +49,10 @@ const NotificationsWrapper = (props: any) => {
 		await setRefreshing(false);
 	}, []);
 
+	const { props: newProps } = props;
+
 	return (
-		<AppWrapper {...props?.props} routeName={t('notifications.title')} isLoading={loadingNotifications}>
+		<AppWrapper {...newProps} routeName={t('notifications.title')} isLoading={loadingNotifications}>
 			<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 				<StyledFiltersWrapper>
 					<TouchableOpacity
@@ -62,7 +64,7 @@ const NotificationsWrapper = (props: any) => {
 						{!showAll ? <Text>{t<string>('notifications.showAll')}</Text> : <Text>{t('notifications.allUnRead')}</Text>}
 					</TouchableOpacity>
 
-					<Text>{t<string>('notifications.allRead')}</Text>
+					{/* <Text>{t<string>('notifications.allRead')}</Text> */}
 				</StyledFiltersWrapper>
 
 				{notifications && notifications?.length > 0 && (

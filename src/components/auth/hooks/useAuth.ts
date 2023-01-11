@@ -10,17 +10,6 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [loginStatus, setLoginStatus] = useState('PENDING');
 
-	const loginStoredUser = async () => {
-		const storedPassword = await AsyncStorage.getItem('userPassword', (err, item) => item);
-		const storedEmail = await AsyncStorage.getItem('userEmail', (err, item) => item);
-		if (storedEmail && storedPassword) {
-			submitLogin({ email: storedEmail, password: storedPassword });
-			setLoginStatus('LOGGED');
-		} else {
-			setLoginStatus('UNLOGGED');
-		}
-	};
-
 	const submitLogin = (data: FieldValues) => {
 		const { email, password } = data;
 
@@ -38,6 +27,17 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 				AsyncStorage.setItem('userEmail', email);
 			})
 			.catch((error) => setBackendError(error?.response?.data?.error?.message));
+	};
+
+	const loginStoredUser = async () => {
+		const storedPassword = await AsyncStorage.getItem('userPassword', (err, item) => item);
+		const storedEmail = await AsyncStorage.getItem('userEmail', (err, item) => item);
+		if (storedEmail && storedPassword) {
+			submitLogin({ email: storedEmail, password: storedPassword });
+			setLoginStatus('LOGGED');
+		} else {
+			setLoginStatus('UNLOGGED');
+		}
 	};
 
 	const submitRegister = (data: FieldValues) => {

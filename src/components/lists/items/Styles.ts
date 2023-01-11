@@ -68,6 +68,7 @@ export const StyledInputTitleWrapper = styled.View`
 	align-items: center;
 	justify-content: space-between;
 `;
+
 export const StyledListBackground = styled.View<{ color: string | null }>`
 	width: 100%;
 	flex: 1;
@@ -88,18 +89,12 @@ export const StyledActionButton = styled.TouchableOpacity`
 	justify-content: center;
 `;
 
-export const StyledListTitle = styled.Text`
-	max-width: 70%;
-	font-size: 40px;
-	line-height: 38px;
-	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
-`;
-
 export const StyledListOptionWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	height: 100%;
+	margin-right: -15px;
 `;
 
 export const StyledUsersWrapper = styled.View`

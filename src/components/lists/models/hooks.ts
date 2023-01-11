@@ -35,7 +35,7 @@ export const SingleListEditableInitial: SingleListEditableInitialInterface = {
 	},
 };
 
-export interface useListInterface {
+export interface UseListInterface {
 	lists?: ListInterface[];
 	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
 	socket: any;

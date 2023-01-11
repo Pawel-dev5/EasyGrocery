@@ -3,6 +3,7 @@ import { ItemInterface } from 'components/lists/models/sections';
 
 export interface ListItemInterface {
 	listItems: ItemInterface[];
+	bottomSheetHeight: number;
 }
 
 export interface SubmitAlertInterface {

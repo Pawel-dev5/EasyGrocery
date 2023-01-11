@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { Text } from 'react-native';
 import { t } from 'i18next';
-import { REACT_APP_API } from '@env';
 
 // CONTEXT
 import { ShopsContextData } from 'components/shops/hooks/useShops';
@@ -27,41 +26,31 @@ export const SingleShop = () => {
 	const { singleShop } = useContext(ShopsContextData);
 
 	if (singleShop) {
-		const {
-			attributes: {
-				title,
-				image: {
-					data: {
-						attributes: { url },
-					},
-				},
-				orders,
-			},
-		} = singleShop;
-
 		return (
 			<SingleShopWrapper>
 				<StyledSingleShopHeaderWrapper>
 					<StyledHeader>
 						<StyledShopImageFull
-							source={{ uri: `${REACT_APP_API}${url?.substring(1)}` }}
+							source={{ uri: singleShop?.attributes?.image?.data?.attributes?.url }}
 							style={{ resizeMode: 'contain' }}
 						/>
 
-						{title && <StyledSingleShopHeader>{title}</StyledSingleShopHeader>}
+						{singleShop?.attributes?.title && (
+							<StyledSingleShopHeader>{singleShop?.attributes?.title}</StyledSingleShopHeader>
+						)}
 					</StyledHeader>
 				</StyledSingleShopHeaderWrapper>
 
 				<Text>{t<string>('shops.shopCategories')}</Text>
 
-				{orders?.length > 0 && (
+				{singleShop?.attributes?.orders?.length > 0 && (
 					<StyledShopCategoriesWrapper>
 						<StyledCategoriesDescriptionWrapper>
 							<StyledCategoriesDescription>{t<string>('general.entrance')}</StyledCategoriesDescription>
 							<Icon name="door-open" size={20} />
 						</StyledCategoriesDescriptionWrapper>
 
-						{orders?.map(({ id, value }) => (
+						{singleShop?.attributes?.orders?.map(({ id, value }) => (
 							<StyledShopCategories key={id}>{value}</StyledShopCategories>
 						))}
 

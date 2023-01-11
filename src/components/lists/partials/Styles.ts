@@ -44,18 +44,19 @@ export const StyledItemTitle = styled.Text`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-left: 10px;
+	margin-left: 5px;
 `;
 
 export const StyledCategory = styled.Text`
 	font-size: 14px;
-	margin-left: 50px;
+	margin-left: 40px;
 `;
 
 export const StyledItemTitleWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
 	width: 80%;
+	margin-left: -5px;
 `;
 
 export const StyledListItemsOptions = styled.View`
@@ -88,7 +89,7 @@ export const StyledEditInoutWrapper = styled.View`
 
 export const StyledItemsContainer = styled.View`
 	max-width: 100%;
-	padding: 10px;
+	padding: 10px 0;
 	border-bottom-color: ${({ theme }) => theme.grey200};
 	border-bottom-width: 1px;
 `;
@@ -113,6 +114,17 @@ export const StyledEditInputWrapper = styled.View`
 	width: 90%;
 `;
 
-export const StyledItemsWrapper = styled.ScrollView`
-	height: 93%;
+export const StyledItemsWrapper = styled.ScrollView<{ bottomSheetHeight: number }>`
+	${({ bottomSheetHeight }) => {
+		switch (bottomSheetHeight) {
+			case 1:
+				return css`
+					height: 77%;
+				`;
+			default:
+				return css`
+					height: 91%;
+				`;
+		}
+	}}
 `;

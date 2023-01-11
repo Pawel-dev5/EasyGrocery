@@ -38,7 +38,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 
 	return (
 		<StyledItemsContainer>
-			<StyledListItemsWrapper key={id}>
+			<StyledListItemsWrapper>
 				<StyledItemTitleWrapper>
 					<StyledCheckButton
 						onPress={() => {
@@ -92,20 +92,21 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							deleteSingleListItem(id, () => setTrashLoading(false));
 						}}
 					>
-						{trashLoading ? <Loader size={20} /> : <Icon name="trash" size={20} />}
+						{trashLoading ? <Loader size={20} /> : <Icon name="trash" variant="unDone" size={20} />}
 					</TouchableOpacity>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
 
 			{editableItem !== null && categories && categories?.length > 0 && (
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				<ScrollView contentContainerStyle={styles.scrollView} horizontal>
-					{categories?.map(({ id, value }) => (
+					{categories?.map(({ id: catId, value: catValue }) => (
 						<StyledItemsCategory
-							key={id}
-							onPress={() => setEditableItem({ ...editableItem, category: value })}
-							active={(value === category && editableItem === null) || editableItem?.category === value}
+							key={catId}
+							onPress={() => setEditableItem({ ...editableItem, category: catValue })}
+							active={(catValue === category && editableItem === null) || editableItem?.category === catValue}
 						>
-							<Text>{value}</Text>
+							<Text>{catValue}</Text>
 						</StyledItemsCategory>
 					))}
 				</ScrollView>

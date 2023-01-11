@@ -15,7 +15,8 @@ export const ListShops = () => {
 
 	return (
 		<>
-			<ScrollView contentContainerStyle={styles.scrollView} horizontal>
+			{/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
+			<ScrollView contentContainerStyle={styles?.scrollView} horizontal>
 				{shops?.map((shop) => {
 					const isActiveShop = () => {
 						if (shop?.id === newShop?.id)
@@ -26,6 +27,7 @@ export const ListShops = () => {
 							return {
 								transform: [{ scale: 1.12 }],
 							};
+						return null;
 					};
 					return (
 						<TouchableOpacity key={shop?.id} onPress={() => setNewShop(shop)}>

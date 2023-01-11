@@ -3,28 +3,40 @@ import styled, { css } from 'styled-components/native';
 export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SENDREQUEST' | 'ACCEPT' | 'REJECT' | null }>`
 	position: relative;
 	border-radius: ${({ theme }) => theme.radius[2]};
-	margin: 10px 5px;
+	margin: 10px 0px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 0px 5px;
 
 	${({ variant }) => {
 		switch (variant) {
 			case 'UNREAD':
 				return css`
-					padding-left: 5px;
+					padding-right: 0;
+					margin-left: 5px;
+					width: 97.7%;
 					background-color: ${({ theme }) => theme.warning};
 				`;
 			case 'SENDREQUEST':
 				return css`
-					padding-left: 5px;
+					padding-right: 0;
+					margin-left: 5px;
+					width: 97.7%;
 					background-color: ${({ theme }) => theme.danger};
 				`;
 			case 'ACCEPT':
 				return css`
-					padding-left: 5px;
+					padding-right: 0;
+					margin-left: 5px;
+					width: 97.7%;
 					background-color: ${({ theme }) => theme.base2};
 				`;
 			case 'REJECT':
 				return css`
-					padding-left: 5px;
+					padding-right: 0;
+					margin-left: 5px;
+					width: 97.5%;
 					background-color: ${({ theme }) => theme.accent3};
 				`;
 			default:
@@ -101,7 +113,7 @@ export const StyledReadWrapper = styled.TouchableOpacity`
 `;
 
 export const StyledButtonWrapper = styled.View`
-	width: 100%;
+	width: 97%;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;

@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { t } from 'i18next';
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 // ROUTER
@@ -21,7 +22,7 @@ import { Icon, Loader } from 'components/layout/common';
 import { StyledGridList, StyledListsScrollView, StyledAddListWrapper } from 'components/lists/views/Styles';
 import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 
-export const ListsWrapper = (props: any) => {
+const ListsWrapper = (props: any) => {
 	const {
 		addNewListLoader,
 		backendError,
@@ -114,16 +115,16 @@ export const ListsWrapper = (props: any) => {
 						onRefresh={onRefresh}
 						ListEmptyComponent={() => null}
 						renderItem={({ item }) => {
-							const props = {
+							const newProps = {
 								list: item,
 								navigation,
 								variant: ListVariant.PREVIEW,
-								lists: lists,
-								setLists: setLists,
+								lists,
+								setLists,
 							};
 							return (
 								<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
-									<List {...props} />
+									<List {...newProps} />
 								</TouchableOpacity>
 							);
 						}}
@@ -132,12 +133,12 @@ export const ListsWrapper = (props: any) => {
 					<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 						<StyledGridList>
 							{lists?.map((item) => {
-								const props = {
+								const newProps = {
 									list: item,
 									navigation,
 									variant: ListVariant.PREVIEW,
-									lists: lists,
-									setLists: setLists,
+									lists,
+									setLists,
 								};
 								return (
 									<TouchableOpacity
@@ -145,7 +146,7 @@ export const ListsWrapper = (props: any) => {
 										key={item?.id}
 										onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}
 									>
-										<List {...props} />
+										<List {...newProps} />
 									</TouchableOpacity>
 								);
 							})}

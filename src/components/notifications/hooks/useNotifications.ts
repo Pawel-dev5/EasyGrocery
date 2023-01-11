@@ -172,11 +172,15 @@ export const useNotifications = ({
 
 		const actualUsers = () => {
 			let arr: User[] = [];
-			if (notification?.attributes?.list?.data?.attributes?.users_permissions_user)
-				arr = [...notification?.attributes?.list?.data?.attributes?.users_permissions_user?.data];
+			if (notification?.attributes?.list?.data?.attributes?.users_permissions_user) {
+				const newUsers = notification?.attributes?.list?.data?.attributes?.users_permissions_user?.data;
+				arr = [...newUsers];
+			}
 
-			if (notification?.attributes?.list?.data?.attributes?.users_permissions_users)
-				arr = [...notification?.attributes?.list?.data?.attributes?.users_permissions_users?.data];
+			if (notification?.attributes?.list?.data?.attributes?.users_permissions_users) {
+				const newUsers = notification?.attributes?.list?.data?.attributes?.users_permissions_users?.data;
+				arr = [...newUsers];
+			}
 
 			return arr;
 		};
@@ -184,7 +188,7 @@ export const useNotifications = ({
 			.put(`lists/${notification?.attributes?.list?.data?.id}?${listQuery}`, {
 				data: {
 					users_permissions_users: [user, ...actualUsers()],
-					invitations: newInvitations ? newInvitations : [],
+					invitations: newInvitations || [],
 				},
 			})
 			.then((resp) => {
@@ -255,10 +259,10 @@ export const useNotifications = ({
 		axios
 			.put(`lists/${notification?.attributes?.list?.data?.id}?${listQuery}`, {
 				data: {
-					invitations: newInvitations ? newInvitations : [],
+					invitations: newInvitations || [],
 				},
 			})
-			.then((resp) => statusCallback(false))
+			.then(() => statusCallback(false))
 			.catch((error) => {
 				statusCallback(false);
 				console.log(error?.response?.data?.error?.message);

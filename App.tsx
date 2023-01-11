@@ -14,8 +14,7 @@ import 'src/config/i18nConfig';
 import { setupInterceptorsTo } from 'config/axiosConfig';
 
 // CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
-import { ContextProvider } from 'config/useGlobalContext';
+import { GlobalContextData, ContextProvider } from 'config/useGlobalContext';
 
 // STYLES
 import { ThemeProvider } from 'styled-components';
@@ -65,7 +64,8 @@ const AppComponent = () => {
 					</>
 				)}
 			</Navigator>
-			<StatusBar style="dark" />
+
+			<StatusBar />
 		</NavigationContainer>
 	);
 };

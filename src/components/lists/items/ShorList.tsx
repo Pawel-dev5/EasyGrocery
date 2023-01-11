@@ -26,6 +26,7 @@ import { shadowInline } from 'utils/theme/themeDefault';
 
 export const ShortList = (props: any) => {
 	const { deleteList, deleteListLoader } = useContext(ListsContextData);
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const { navigation, title, users_permissions_users, items, id, color, lists, setLists } = props;
 
 	return (

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
@@ -17,7 +17,7 @@ import { StyledEditInoutWrapper, StyledItemsWrapper } from 'components/lists/par
 import { ItemInterface } from 'components/lists/models/sections';
 import { ListItemInterface } from 'components/lists/models/partials';
 
-export const ListItems = ({ listItems }: ListItemInterface) => {
+export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) => {
 	const { singleListEditable, addNewListItem, addNewSingleListItem, addNewListItemLoader, sortedListItemsByCategories } =
 		useContext(ListsContextData);
 
@@ -50,8 +50,8 @@ export const ListItems = ({ listItems }: ListItemInterface) => {
 						{sortedListItemsByCategories?.map((item: any) => (
 							<View key={item?.category}>
 								<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
-								{item?.items?.map((item: ItemInterface) => (
-									<Item key={item?.id} {...item} />
+								{item?.items?.map((newItem: ItemInterface) => (
+									<Item key={newItem?.id} {...newItem} />
 								))}
 							</View>
 						))}
@@ -80,7 +80,7 @@ export const ListItems = ({ listItems }: ListItemInterface) => {
 						)}
 					</StyledAddNewItem>
 
-					<StyledItemsWrapper>
+					<StyledItemsWrapper bottomSheetHeight={bottomSheetHeight}>
 						{listItems?.map((item: ItemInterface) => (
 							<Item key={item?.id} {...item} withCategories={item?.category !== null ?? true} />
 						))}

@@ -9,9 +9,8 @@ import React, {
 	useState,
 } from 'react';
 import axios from 'axios';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
-import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -27,7 +26,7 @@ import {
 	ListContextProvider,
 	SingleListEditableInitial,
 	SingleListEditableInitialInterface,
-	useListInterface,
+	UseListInterface,
 } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
@@ -48,7 +47,7 @@ const schema = yup
 	})
 	.required();
 
-export const useList = ({ lists, setLists, socket, setSocket }: useListInterface) => {
+export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface) => {
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
 	const [singleListEditable, setSingleListEditable] =
@@ -244,10 +243,22 @@ export const useList = ({ lists, setLists, socket, setSocket }: useListInterface
 				});
 	};
 
+	const addNewListItem = (title: ChangeEvent<HTMLInputElement> | string) => {
+		const newItem = {
+			value: title as string,
+			done: false,
+		};
+		setSingleListEditable({
+			isEdited: 'items',
+			value: { ...singleListEditable.value, newItem },
+		});
+	};
+
 	const addNewSingleListItem = () => {
 		setAddNewListItemLoader(true);
 		if (singleList?.items) {
-			const newData = [...singleList?.items, singleListEditable?.value?.newItem];
+			const newItems = singleList?.items;
+			const newData = [...newItems, singleListEditable?.value?.newItem];
 			sendSingleListPutRequest(newData as ItemInterface[], listQuery, () => {
 				addNewListItem('');
 				setAddNewListItemLoader(false);
@@ -289,24 +300,15 @@ export const useList = ({ lists, setLists, socket, setSocket }: useListInterface
 		}
 	};
 
-	const addNewListItem = (title: ChangeEvent<HTMLInputElement> | string) => {
-		const newItem = {
-			value: title as string,
-			done: false,
-		};
-		setSingleListEditable({
-			isEdited: 'items',
-			value: { ...singleListEditable.value, newItem },
-		});
-	};
-
 	const filteredItems = useMemo(() => {
 		if (singleList?.items) {
-			const baseItems = [...singleList?.items];
+			const newItems = singleList?.items;
+			const baseItems = [...newItems];
 			const filter = showDone === 'done' ?? true;
 			if (baseItems && showDone !== null) return baseItems?.filter(({ done }) => done === filter);
 			if (showDone === null) return null;
 		}
+		return null;
 	}, [showDone]);
 
 	const deleteUnAccessUser = () => {
@@ -317,18 +319,19 @@ export const useList = ({ lists, setLists, socket, setSocket }: useListInterface
 	const submitEditList = (data: FieldValues) => {
 		const newListUsers = (type?: string) => {
 			const newArr: any = [];
-			listUsers?.map((user) => {
-				const find = findObjectInArray(editedSingleList?.users_permissions_users?.data!, 'id', user?.id);
+			listUsers?.map((listUser) => {
+				const find = findObjectInArray(editedSingleList?.users_permissions_users?.data!, 'id', listUser?.id);
 				if (find === null) {
 					const newUser = {
-						uuid: user?.id,
-						email: user?.email,
-						username: user?.username,
+						uuid: listUser?.id,
+						email: listUser?.email,
+						username: listUser?.username,
 					};
 					if (type === 'invitations') {
 						newArr.push(newUser);
-					} else newArr.push(user);
+					} else newArr.push(listUser);
 				}
+				return null;
 			});
 			return newArr;
 		};

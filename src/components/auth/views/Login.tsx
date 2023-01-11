@@ -50,55 +50,53 @@ export const Login = (props: any) => {
 		resolver: yupResolver(schema),
 	});
 
-	if (loginStatus === 'PANDING' || loginStatus === 'LOGGED') {
-		return <Loader size={100} />;
-	} else {
-		return (
-			<AppWrapper routeName={t('auth.login')} {...props} customPadding="0">
-				<ScreenWrapper props={props}>
-					<StyledLoginContainer>
-						<StyledInputWrapper>
-							<ControllerWrapper
-								name="email"
-								placeholder="Email"
-								keyboardType="email-address"
-								textContentType="emailAddress"
-								autoComplete="email"
-								control={control}
-								errors={errors}
-							/>
-						</StyledInputWrapper>
+	if (loginStatus === 'PANDING' || loginStatus === 'LOGGED') return <Loader size={100} />;
 
-						<StyledInputWrapper>
-							<ControllerWrapper
-								name="password"
-								placeholder={t('auth.password')}
-								textContentType="password"
-								autoComplete="password"
-								control={control}
-								errors={errors}
-								type="password"
-							/>
-						</StyledInputWrapper>
+	return (
+		<AppWrapper routeName={t('auth.login')} {...props} customPadding="0">
+			<ScreenWrapper>
+				<StyledLoginContainer>
+					<StyledInputWrapper>
+						<ControllerWrapper
+							name="email"
+							placeholder="Email"
+							keyboardType="email-address"
+							textContentType="emailAddress"
+							autoComplete="email"
+							control={control}
+							errors={errors}
+						/>
+					</StyledInputWrapper>
 
-						<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
+					<StyledInputWrapper>
+						<ControllerWrapper
+							name="password"
+							placeholder={t('auth.password')}
+							textContentType="password"
+							autoComplete="password"
+							control={control}
+							errors={errors}
+							type="password"
+						/>
+					</StyledInputWrapper>
 
-						<StyledLoginButtonsWrapper>
-							<Text>{t<string>('auth.dontHaveAccount')}</Text>
+					<Button title={t<string>('auth.login')} onPress={handleSubmit(submitLogin)} />
 
-							<TouchableOpacity onPress={() => navigation.navigate(auth.register)}>
-								<StyledRegister>{t<string>('auth.register')}</StyledRegister>
-							</TouchableOpacity>
-						</StyledLoginButtonsWrapper>
+					<StyledLoginButtonsWrapper>
+						<Text>{t<string>('auth.dontHaveAccount')}</Text>
 
-						<TouchableOpacity onPress={() => navigation.navigate(auth.passwordForgot)}>
-							<Text>{t<string>('auth.forgotPassword')}</Text>
+						<TouchableOpacity onPress={() => navigation.navigate(auth.register)}>
+							<StyledRegister>{t<string>('auth.register')}</StyledRegister>
 						</TouchableOpacity>
+					</StyledLoginButtonsWrapper>
 
-						{backendError && <Text>{backendError}</Text>}
-					</StyledLoginContainer>
-				</ScreenWrapper>
-			</AppWrapper>
-		);
-	}
+					<TouchableOpacity onPress={() => navigation.navigate(auth.passwordForgot)}>
+						<Text>{t<string>('auth.forgotPassword')}</Text>
+					</TouchableOpacity>
+
+					{backendError && <Text>{backendError}</Text>}
+				</StyledLoginContainer>
+			</ScreenWrapper>
+		</AppWrapper>
+	);
 };

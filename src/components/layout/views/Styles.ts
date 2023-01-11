@@ -52,7 +52,7 @@ export const StyledAppNavbar = styled.View<{ variant: VariantType }>`
 export const StyledText = styled.Text<{ variant?: VariantType }>`
 	text-align: center;
 	flex: 1;
-	font-size: 18px;
+	font-size: 20px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 	color: ${({ theme, variant }) => (variant === 'transparent' ? theme.white : theme.base1)};
 `;

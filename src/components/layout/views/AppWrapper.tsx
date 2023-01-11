@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useContext, useEffect, useRef, useMemo } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
 import { Manager } from 'socket.io-client';
@@ -52,9 +52,6 @@ export const AppWrapper = ({
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const snapPoints = useMemo(() => ['30%', '58%', '88.8%'], []);
-	const handleSheetChanges = useCallback((index: number) => {
-		// console.log('handleSheetChanges', index);
-	}, []);
 
 	useEffect(() => {
 		if (isAuth) {
@@ -63,8 +60,8 @@ export const AppWrapper = ({
 			const manager = new Manager(REACT_APP_API, {
 				reconnectionDelayMax: 10000,
 			});
-			const socket = manager.socket('/');
-			setSocket(socket);
+			const newSocket = manager.socket('/');
+			setSocket(newSocket);
 		}
 	}, []);
 
@@ -73,10 +70,10 @@ export const AppWrapper = ({
 		socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
 			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email) {
 				const checkedNotification = findObjectInArray(notifications, 'id', data?.id);
-				if (checkedNotification) {
-					return null;
-				} else setNotifications([...notifications, data]);
+				if (!checkedNotification || checkedNotification === null || checkedNotification === undefined)
+					return setNotifications([...notifications, data]);
 			}
+			return null;
 		});
 	}
 
@@ -124,7 +121,6 @@ export const AppWrapper = ({
 							snapPoints={snapPoints}
 							style={shadowInline}
 							enablePanDownToClose
-							onChange={handleSheetChanges}
 							backdropComponent={BottomSheetBackdrop}
 						>
 							<StyledBottomSheetBody>
@@ -140,9 +136,9 @@ export const AppWrapper = ({
 
 					{floatedItems && (
 						<StyledFloatingAddListButtonWrapper>
-							{floatedItems?.map(({ id, icon, variant, size, onPress }) => (
+							{floatedItems?.map(({ id, icon, variant: itemVariant, size, onPress }) => (
 								<StyledBottomAddListButton key={id} onPress={onPress} style={shadowInline}>
-									<Icon name={icon} size={size} variant={variant} />
+									<Icon name={icon} size={size} variant={itemVariant} />
 								</StyledBottomAddListButton>
 							))}
 						</StyledFloatingAddListButtonWrapper>
