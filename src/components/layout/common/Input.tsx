@@ -21,8 +21,13 @@ export const Input = ({
 	autoFocus,
 	onSubmitEditing,
 	onFocus,
+	inputRef,
+	blurOnSubmit,
 }: InputInterface) => (
 	<StyledInput
+		returnKeyType="next"
+		autoFocus
+		ref={inputRef}
 		name={name}
 		onBlur={onBlur}
 		onChangeText={onChange}
@@ -40,6 +45,7 @@ export const Input = ({
 		clearButtonMode="while-editing"
 		returnKeyType="search"
 		placeholderTextColor="grey"
+		blurOnSubmit={blurOnSubmit}
 		onFocus={() => {
 			if (onFocus) onFocus();
 		}}

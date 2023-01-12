@@ -24,8 +24,11 @@ import {
 // UTILS
 import { shadowInline } from 'utils/theme/themeDefault';
 
+// MODELS
+import { ProgressBarVariant } from 'components/lists/models/sections';
+
 export const ShortList = (props: any) => {
-	const { deleteList, deleteListLoader } = useContext(ListsContextData);
+	const { deleteList, deleteListLoader, listsView } = useContext(ListsContextData);
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const { navigation, title, users_permissions_users, items, id, color, lists, setLists } = props;
 
@@ -49,7 +52,7 @@ export const ShortList = (props: any) => {
 						</StyledListCardItem>
 					</StyledListCardTitleWrapper>
 
-					<ProgressBar items={items} />
+					<ProgressBar items={items} variant={listsView ? ProgressBarVariant.LONG : ProgressBarVariant.SHORT} />
 				</StyledListCard>
 			</TapGestureHandler>
 		</Swipeable>

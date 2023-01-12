@@ -94,6 +94,22 @@ export const useGlobalContext = () => {
 
 	const setUser = (user: User) => setUserData({ ...userData, user });
 
+	const userQuery2 = qs.stringify({
+		populate: {
+			lists: {
+				populate: '*',
+			},
+		},
+	});
+
+	const updateListOrder = (data: ListInterface[]) => {
+		if (userData?.user?.id)
+			axios
+				.put(`users/${userData?.user?.id}/?${userQuery2}`, { ...userData?.user, lists: data })
+				.then(() => {})
+				.catch((error) => console.log(error?.response?.data?.error?.message));
+	};
+
 	if (userData?.jwt) axios.defaults.headers.common.Authorization = `Bearer ${userData?.jwt}`;
 
 	return {
@@ -106,6 +122,7 @@ export const useGlobalContext = () => {
 		lists,
 		socket,
 		setSocket,
+		updateListOrder,
 		signIn,
 		signOut,
 		setLang,

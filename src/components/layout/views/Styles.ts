@@ -9,8 +9,7 @@ export const StyledChildren = styled.View<{ customPadding?: string }>`
 	background-color: ${({ theme }) => theme.white};
 	align-items: center;
 	justify-content: flex-start;
-	padding: ${({ theme }) => theme.globalPadding};
-	padding-top: 0;
+	padding: 0 ${({ theme }) => theme.globalPadding};
 
 	${({ customPadding }) =>
 		customPadding &&

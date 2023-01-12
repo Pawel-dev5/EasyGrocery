@@ -26,6 +26,7 @@ export const StyledEditButtonsWrapper = styled.View`
 	justify-content: space-between;
 	align-items: center;
 	padding: 0;
+	padding-bottom: 16px;
 `;
 
 export const StyledItemsCategoryWrapper = styled.View`
@@ -69,6 +70,7 @@ export const StyledUserTitle = styled.Text<{ colorType?: string }>`
 	margin-right: 8px;
 	padding: 4px 8px;
 	border-radius: ${({ theme }) => theme.radius[1]};
+	height: 33px;
 
 	${({ colorType }) => {
 		switch (colorType) {
@@ -99,8 +101,8 @@ export const StyledEditFormWrapperTitle = styled.Text`
 
 export const StyledAddUserButton = styled.TouchableOpacity<{ active: boolean }>`
 	border-radius: 50%;
-	width: 27px;
-	height: 27px;
+	width: 33px;
+	height: 33px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -116,4 +118,19 @@ export const StyledAddUserButton = styled.TouchableOpacity<{ active: boolean }>`
 
 export const StyledAddUserWrapper = styled.View`
 	margin-top: 8px;
+`;
+
+export const StyledEditListWrapper = styled.ScrollView<{ bottomSheetHeight: number }>`
+	${({ bottomSheetHeight }) => {
+		switch (bottomSheetHeight) {
+			case 1:
+				return css`
+					height: 74.8%;
+				`;
+			default:
+				return css`
+					height: 100%;
+				`;
+		}
+	}}
 `;

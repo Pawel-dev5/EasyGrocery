@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { FlatList, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { Text, TouchableOpacity, ScrollView, RefreshControl, Platform } from 'react-native';
 import { t } from 'i18next';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
 // ROUTER
 import { lists as listRoute } from 'routes/AppRoutes';
@@ -13,13 +14,13 @@ import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { ListVariant } from 'components/lists/models/sections';
+import { ListInterface, ListVariant } from 'components/lists/models/sections';
 import { List } from 'components/lists/sections';
 import { ControllerWrapper } from 'components/auth/sections';
 import { Icon, Loader } from 'components/layout/common';
 
 // STYLES
-import { StyledGridList, StyledListsScrollView, StyledAddListWrapper } from 'components/lists/views/Styles';
+import { StyledGridList, StyledAddListWrapper } from 'components/lists/views/Styles';
 import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 
 const ListsWrapper = (props: any) => {
@@ -37,7 +38,7 @@ const ListsWrapper = (props: any) => {
 		setVisible,
 	} = useContext(ListsContextData);
 
-	const { getLists, listIsLoading, lists, setLists } = useContext(GlobalContextData);
+	const { getLists, lists, setLists, updateListOrder, listIsLoading } = useContext(GlobalContextData);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -71,6 +72,15 @@ const ListsWrapper = (props: any) => {
 		},
 	];
 
+	if (Platform.OS === 'android')
+		floatedItems.push({
+			id: uuidv4(),
+			icon: 'redo',
+			size: 20,
+			variant: 'white',
+			onPress: () => getLists(),
+		});
+
 	return (
 		<AppWrapper
 			{...props}
@@ -92,29 +102,25 @@ const ListsWrapper = (props: any) => {
 						/>
 					</StyledAddListWrapper>
 
-					{addNewListLoader ? (
-						<StyledBottomAddListButton>
-							<Loader size={20} />
-						</StyledBottomAddListButton>
-					) : (
-						<StyledBottomAddListButton onPress={handleSubmit(setNewList)}>
-							<Icon name="plus" size={20} variant="white" />
-						</StyledBottomAddListButton>
-					)}
+					<StyledBottomAddListButton onPress={handleSubmit(setNewList)} disabled={addNewListLoader}>
+						{addNewListLoader ? <Loader size={20} /> : <Icon name="plus" size={20} variant="white" />}
+					</StyledBottomAddListButton>
 
 					{backendError && <Text>{backendError}</Text>}
 				</>
 			}
 		>
-			<StyledListsScrollView>
+			<>
 				{listsView ? (
-					<FlatList
+					<DraggableFlatList
 						data={lists}
-						keyExtractor={(item) => item?.id}
-						refreshing={refreshing}
-						onRefresh={onRefresh}
-						ListEmptyComponent={() => null}
-						renderItem={({ item }) => {
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+						onDragEnd={({ data }: { data: ListInterface[] }) => {
+							updateListOrder(data);
+							setLists(data);
+						}}
+						keyExtractor={(item: ListInterface) => item?.id}
+						renderItem={({ item, drag, isActive }: RenderItemParams<ListInterface>) => {
 							const newProps = {
 								list: item,
 								navigation,
@@ -123,14 +129,23 @@ const ListsWrapper = (props: any) => {
 								setLists,
 							};
 							return (
-								<TouchableOpacity onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}>
-									<List {...newProps} />
-								</TouchableOpacity>
+								<OpacityDecorator>
+									<TouchableOpacity
+										onLongPress={drag}
+										disabled={isActive}
+										onPress={() => navigation?.navigate(listRoute.singleList, { id: item?.id })}
+									>
+										<List {...newProps} />
+									</TouchableOpacity>
+								</OpacityDecorator>
 							);
 						}}
 					/>
 				) : (
-					<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+					<ScrollView
+						keyboardShouldPersistTaps="always"
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					>
 						<StyledGridList>
 							{lists?.map((item) => {
 								const newProps = {
@@ -153,7 +168,7 @@ const ListsWrapper = (props: any) => {
 						</StyledGridList>
 					</ScrollView>
 				)}
-			</StyledListsScrollView>
+			</>
 		</AppWrapper>
 	);
 };

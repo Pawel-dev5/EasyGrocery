@@ -6,6 +6,16 @@ export enum ListVariant {
 	FULL = 'Full',
 }
 
+export enum ProgressBarVariant {
+	LONG = 'long',
+	SHORT = 'short',
+}
+
+export interface ProgressBarIterface {
+	items: ItemInterface[];
+	variant?: ProgressBarVariant;
+}
+
 export interface ItemInterface {
 	id: string;
 	uuid: string;

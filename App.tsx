@@ -65,7 +65,8 @@ const AppComponent = () => {
 				)}
 			</Navigator>
 
-			<StatusBar />
+			{/* eslint-disable-next-line react/style-prop-object */}
+			<StatusBar style="dark" />
 		</NavigationContainer>
 	);
 };

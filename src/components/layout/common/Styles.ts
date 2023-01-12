@@ -4,6 +4,7 @@ import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 // MODELS
 import { VariantType } from 'components/layout/models/common';
 import { ColorsKeys } from 'utils/theme/themeDefault';
+import { ProgressBarVariant } from 'components/lists/models/sections';
 
 export const StyledMenuOption = styled.View`
 	position: relative;
@@ -61,10 +62,26 @@ export const StyledInput = styled.TextInput`
 	background-color: ${({ theme }) => theme.white};
 `;
 
-export const StyledProgressBarContainer = styled.View`
+export const StyledProgressBarContainer = styled.View<{ variant: ProgressBarVariant }>`
 	height: 7px;
-	width: 88%;
+
 	position: relative;
+
+	${({ variant }) => {
+		switch (variant) {
+			case ProgressBarVariant.LONG:
+				return css`
+					width: 86%;
+				`;
+			case ProgressBarVariant.SHORT:
+				return css`
+					width: 75%;
+				`;
+
+			default:
+				return null;
+		}
+	}}
 `;
 
 export const StyledProgressBarBaseBox = styled.View<{ percent?: number }>`
@@ -102,8 +119,8 @@ export const StyledProgressBarCounter = styled.View`
 // =========  LOADER  ===========
 export const StyledLoaderContainer = styled.View`
 	flex: 1;
+	display: flex;
 	justify-content: center;
-	flex-direction: row;
 	align-items: center;
 	padding: 10px;
 `;

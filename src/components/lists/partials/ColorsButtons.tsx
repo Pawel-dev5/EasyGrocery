@@ -1,4 +1,9 @@
 import React from 'react';
+
+// MODELS
+import { ColorButtonsInterface } from 'components/lists/models/partials';
+
+// STYLES
 import { StyledRadioButtonWrapper, StyledRadioButton } from './Styles';
 
 const buttons = [
@@ -28,19 +33,16 @@ const buttons = [
 	},
 ];
 
-export const ColorsButtons = ({
-	setValue,
-	value,
-}: {
-	setValue: (arg0: 'color' | 'title', arg1: string) => void;
-	value: string | null | undefined;
-}) => (
+export const ColorsButtons = ({ setValue, value, setNewColor }: ColorButtonsInterface) => (
 	<StyledRadioButtonWrapper>
 		{buttons?.map(({ id, color }) => (
 			<StyledRadioButton
 				key={id}
 				color={color}
-				onPress={() => setValue('color', color)}
+				onPress={() => {
+					setValue('color', color);
+					setNewColor(color);
+				}}
 				style={
 					color === value
 						? [

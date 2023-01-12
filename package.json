@@ -1,6 +1,6 @@
 {
 	"name": "easy-grocery",
-	"version": "1.0",
+	"version": "1.0.0",
 	"main": "node_modules/expo/AppEntry.js",
 	"scripts": {
 		"start": "expo start",
@@ -10,7 +10,7 @@
 		"debbuger": "open 'rndebugger://set-debugger-loc?host=192.168.0.192&port=19000'",
 		"react-devtools": "react-devtools adb reverse tcp:19000 tcp:19000",
 		"android-build-dev": "eas build --profile development --platform android",
-		"android-prod-dev": "eas build --profile production --platform android",
+		"android-build-prod": "eas build --profile production --platform android",
 		"lint": "eslint ."
 	},
 	"dependencies": {
@@ -46,6 +46,7 @@
 		"react-i18next": "^12.1.1",
 		"react-native": "0.70.5",
 		"react-native-dotenv": "^3.3.1",
+		"react-native-draggable-flatlist": "^4.0.0",
 		"react-native-flipper": "^0.176.1",
 		"react-native-gesture-handler": "~2.8.0",
 		"react-native-get-random-values": "^1.8.0",

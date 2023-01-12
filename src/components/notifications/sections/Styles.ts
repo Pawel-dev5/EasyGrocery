@@ -9,34 +9,25 @@ export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SEND
 	width: 100%;
 	padding: 0px 5px;
 
+	padding-right: 0;
+	margin-left: 5px;
+	width: 97.7%;
 	${({ variant }) => {
 		switch (variant) {
 			case 'UNREAD':
 				return css`
-					padding-right: 0;
-					margin-left: 5px;
-					width: 97.7%;
 					background-color: ${({ theme }) => theme.warning};
 				`;
 			case 'SENDREQUEST':
 				return css`
-					padding-right: 0;
-					margin-left: 5px;
-					width: 97.7%;
 					background-color: ${({ theme }) => theme.danger};
 				`;
 			case 'ACCEPT':
 				return css`
-					padding-right: 0;
-					margin-left: 5px;
-					width: 97.7%;
 					background-color: ${({ theme }) => theme.base2};
 				`;
 			case 'REJECT':
 				return css`
-					padding-right: 0;
-					margin-left: 5px;
-					width: 97.5%;
 					background-color: ${({ theme }) => theme.accent3};
 				`;
 			default:

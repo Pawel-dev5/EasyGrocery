@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, ScrollView } from 'react-native';
+import React, { useContext, useRef } from 'react';
+import { View, ScrollView, TextInput } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
@@ -21,32 +21,39 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 	const { singleListEditable, addNewListItem, addNewSingleListItem, addNewListItemLoader, sortedListItemsByCategories } =
 		useContext(ListsContextData);
 
+	const ref = useRef<TextInput>(null);
+
+	const handleSubmit = () => {
+		addNewSingleListItem();
+		ref?.current?.focus();
+	};
+
+	const addInput = () => (
+		<StyledAddNewItem>
+			<Input
+				inputRef={ref}
+				value={singleListEditable?.value?.newItem.value!}
+				name="title"
+				placeholder={t('general.add')}
+				textContentType="nickname"
+				onSubmitEditing={() => handleSubmit()}
+				onChange={(text) => addNewListItem(text)}
+				blurOnSubmit={false}
+			/>
+
+			<StyledAddItemButton onPress={() => handleSubmit()} disabled={addNewListItemLoader}>
+				{addNewListItemLoader ? <Loader size={20} /> : <Icon name="plus" size={20} />}
+			</StyledAddItemButton>
+		</StyledAddNewItem>
+	);
+
 	return (
 		<>
 			{sortedListItemsByCategories?.length > 0 ? (
 				<View>
-					<StyledAddNewItem>
-						<Input
-							value={singleListEditable?.value?.newItem.value!}
-							name="title"
-							placeholder={t('general.add')}
-							textContentType="nickname"
-							// onKeyPress={(e) => e.nativeEvent?.key === 'Enter' && addNewSingleListItem()}
-							onChange={(text) => addNewListItem(text)}
-						/>
+					{addInput()}
 
-						{addNewListItemLoader ? (
-							<StyledAddItemButton onPress={() => {}}>
-								<Loader size={20} />
-							</StyledAddItemButton>
-						) : (
-							<StyledAddItemButton onPress={() => addNewSingleListItem()}>
-								<Icon name="plus" size={20} />
-							</StyledAddItemButton>
-						)}
-					</StyledAddNewItem>
-
-					<ScrollView>
+					<ScrollView keyboardShouldPersistTaps="always">
 						{sortedListItemsByCategories?.map((item: any) => (
 							<View key={item?.category}>
 								<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
@@ -59,28 +66,9 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 				</View>
 			) : (
 				<StyledEditInoutWrapper>
-					<StyledAddNewItem>
-						<Input
-							value={singleListEditable?.value?.newItem.value!}
-							name="title"
-							placeholder={t('general.add')}
-							textContentType="nickname"
-							// onKeyPress={(e) => e.nativeEvent?.key === 'Enter' && addNewSingleListItem()}
-							onChange={(text) => addNewListItem(text)}
-						/>
+					{addInput()}
 
-						{addNewListItemLoader ? (
-							<StyledAddItemButton onPress={() => {}}>
-								<Loader size={20} />
-							</StyledAddItemButton>
-						) : (
-							<StyledAddItemButton onPress={() => addNewSingleListItem()}>
-								<Icon name="plus" size={20} />
-							</StyledAddItemButton>
-						)}
-					</StyledAddNewItem>
-
-					<StyledItemsWrapper bottomSheetHeight={bottomSheetHeight}>
+					<StyledItemsWrapper keyboardShouldPersistTaps="always" bottomSheetHeight={bottomSheetHeight}>
 						{listItems?.map((item: ItemInterface) => (
 							<Item key={item?.id} {...item} withCategories={item?.category !== null ?? true} />
 						))}

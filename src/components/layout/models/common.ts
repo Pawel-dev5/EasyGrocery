@@ -1,5 +1,6 @@
 import { User } from 'config/models';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, RefObject } from 'react';
+import { TextInput } from 'react-native';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 
 export type VariantType = 'white' | 'grey' | 'transparent' | 'done' | 'unDone';
@@ -20,6 +21,7 @@ export interface MenuOptionInterface {
 
 export interface InputInterface {
 	name: string;
+	inputRef?: RefObject<TextInput>;
 	value?: HTMLInputElement | string;
 	placeholder: string;
 	textContentType: string;
@@ -30,9 +32,10 @@ export interface InputInterface {
 	onBlur?: () => void;
 	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 	autoFocus?: boolean;
-	onSubmitEditing?: any;
+	onSubmitEditing?: () => void;
 	onKeyPress?: (e: ChangeEvent<HTMLInputElement>) => void;
 	type?: 'password' | 'text' | 'number' | 'checkbox' | 'radio' | 'submit' | ' button' | 'date' | 'image';
+	blurOnSubmit?: boolean;
 }
 
 export interface SearchInterface {

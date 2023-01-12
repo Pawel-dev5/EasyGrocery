@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, {
 	ChangeEvent,
 	createContext,
@@ -48,11 +49,12 @@ const schema = yup
 	.required();
 
 export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface) => {
+	const { user } = useContext(GlobalContextData);
+
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
 	const [singleListEditable, setSingleListEditable] =
 		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
-	const { user } = useContext(GlobalContextData);
 	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
 	const [visible, setVisible] = useState(false);
 	const [listsView, setListsView] = useState(true);

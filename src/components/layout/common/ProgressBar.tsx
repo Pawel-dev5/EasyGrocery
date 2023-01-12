@@ -11,15 +11,15 @@ import {
 } from 'components/layout/common/Styles';
 
 // MODELS
-import { ItemInterface } from 'components/lists/models/sections';
+import { ProgressBarIterface, ProgressBarVariant } from 'components/lists/models/sections';
 
-export const ProgressBar = ({ items }: { items: ItemInterface[] }) => {
+export const ProgressBar = ({ items, variant = ProgressBarVariant.LONG }: ProgressBarIterface) => {
 	const doneItems = items?.filter(({ done }) => done === true)?.length;
 	const itemLength = items?.length;
 
 	return (
 		<StyledProgressBarWrapper>
-			<StyledProgressBarContainer>
+			<StyledProgressBarContainer variant={variant}>
 				<StyledProgressBarBackground />
 
 				<StyledProgressBarProgress percent={(100 * doneItems) / itemLength} />

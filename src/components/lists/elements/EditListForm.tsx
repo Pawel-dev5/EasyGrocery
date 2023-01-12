@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, SafeAreaView, ScrollView } from 'react-native';
+import { Text, SafeAreaView } from 'react-native';
 import { t } from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -24,6 +24,7 @@ import {
 	StyledUserTitle,
 	StyledAddUserButton,
 	StyledAddUserWrapper,
+	StyledEditListWrapper,
 } from 'components/lists/elements/Styles';
 
 // MODELS
@@ -31,6 +32,7 @@ import { User } from 'config/models';
 
 // HELPERS
 import { findObjectInArray, removeObjectFromArray } from 'utils/helpers/arrayHelpers';
+import { EditListFormInterface } from 'components/lists/models/elements';
 
 const schema = yup
 	.object({
@@ -40,7 +42,7 @@ const schema = yup
 	})
 	.required();
 
-export const EditListForm = () => {
+export const EditListForm = ({ bottomSheetHeight, setNewColor }: EditListFormInterface) => {
 	const {
 		isUpdating,
 		editedSingleList,
@@ -110,7 +112,7 @@ export const EditListForm = () => {
 	});
 
 	return (
-		<ScrollView>
+		<StyledEditListWrapper keyboardShouldPersistTaps="always" bottomSheetHeight={bottomSheetHeight}>
 			<SafeAreaView>
 				<StyledEditFormWrapper>
 					<StyledEditFormWrapperTitle>{t<string>('general.title')}</StyledEditFormWrapperTitle>
@@ -136,6 +138,7 @@ export const EditListForm = () => {
 
 				<StyledEditFormWrapper style={{ zIndex: 2 }}>
 					<StyledEditFormWrapperTitle>{t<string>('general.users')}</StyledEditFormWrapperTitle>
+
 					<StyledUsersWrapper>
 						{listUsers?.map((newUser) => (
 							<StyledUserTitle key={newUser?.id} colorType={newUser?.access}>
@@ -168,7 +171,7 @@ export const EditListForm = () => {
 					<Controller
 						name="color"
 						control={control}
-						render={({ field: { value } }) => <ColorsButtons setValue={setValue} value={value} />}
+						render={({ field: { value } }) => <ColorsButtons setValue={setValue} setNewColor={setNewColor} value={value} />}
 					/>
 				</StyledEditFormWrapper>
 
@@ -179,7 +182,7 @@ export const EditListForm = () => {
 
 				<StyledEditButtonsWrapper>
 					{isUpdating ? (
-						<Loader size={30} />
+						<Loader size={50} />
 					) : (
 						<>
 							<StyledEditButton onPress={handleSubmit(submitEditList)} disabled={isUpdating}>
@@ -203,6 +206,6 @@ export const EditListForm = () => {
 
 				{backendError && <Text>{backendError}</Text>}
 			</SafeAreaView>
-		</ScrollView>
+		</StyledEditListWrapper>
 	);
 };

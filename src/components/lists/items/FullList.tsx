@@ -50,6 +50,7 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 	const { getShops, shops } = useContext(ShopsContextData);
 
 	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
+	const [newColor, setNewColor] = useState<string | null>(null);
 
 	const { route, navigation } = props;
 	const listUuid = route?.params?.id;
@@ -71,7 +72,7 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 
 	return (
 		<AppWrapper {...props} isLoading={isLoading} routeName={singleList?.title || t('general.myLists')} customPadding="0">
-			<StyledListBackground color={singleList?.color!}>
+			<StyledListBackground color={newColor || singleList?.color!}>
 				<StyledFullListWrapper>
 					<StyledInputTitleWrapper>
 						<StyledUsersWrapper>
@@ -162,9 +163,9 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 					onChange={handleSheetChanges}
 				>
 					{/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-					<BottomSheetScrollView contentContainerStyle={styles?.contentContainer}>
+					<BottomSheetScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles?.contentContainer}>
 						{editedSingleList ? (
-							<EditListForm />
+							<EditListForm bottomSheetHeight={bottomSheetHeight} setNewColor={setNewColor} />
 						) : (
 							<ListItems listItems={listItems!} bottomSheetHeight={bottomSheetHeight} />
 						)}
@@ -192,6 +193,9 @@ const styles = StyleSheet.create({
 		width: '100%',
 		maxHeight: '100%',
 		flexDirection: 'column',
-		padding: 16,
+		paddingRight: 16,
+		paddingLeft: 16,
+		paddingTop: 0,
+		paddingBottom: 0,
 	},
 });

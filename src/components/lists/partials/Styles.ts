@@ -55,15 +55,15 @@ export const StyledCategory = styled.Text`
 export const StyledItemTitleWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
-	width: 80%;
+	width: 78%;
 	margin-left: -5px;
 `;
 
 export const StyledListItemsOptions = styled.View`
 	flex-direction: row;
 	align-items: center;
-	justify-content: space-between;
-	width: 50px;
+	justify-content: flex-end;
+	width: 64px;
 `;
 
 export const StyledItemsCategory = styled.TouchableOpacity<{ active: boolean }>`
@@ -127,4 +127,13 @@ export const StyledItemsWrapper = styled.ScrollView<{ bottomSheetHeight: number 
 				`;
 		}
 	}}
+`;
+
+export const StyledItemButton = styled.TouchableOpacity`
+	width: 32px;
+	height: 32px;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;

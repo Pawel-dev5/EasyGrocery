@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { TouchableOpacity, Text, ScrollView, StyleSheet } from 'react-native';
+import { Text, ScrollView, StyleSheet } from 'react-native';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
@@ -18,6 +18,7 @@ import {
 	StyledItemsContainer,
 	StyledCheckButton,
 	StyledEditInputWrapper,
+	StyledItemButton,
 } from 'components/lists/partials/Styles';
 
 // MODELS
@@ -45,9 +46,10 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							setDoneLoading(true);
 							updateSingleListItemStatus(id, () => setDoneLoading(false));
 						}}
+						disabled={doneLoading}
 					>
 						{doneLoading ? (
-							<Loader size={30} />
+							<Loader size={32} />
 						) : (
 							<Icon variant={done ? 'done' : 'unDone'} name={done ? 'check-circle' : 'circle'} size={30} />
 						)}
@@ -70,32 +72,43 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 
 				<StyledListItemsOptions>
 					{editableItem !== null ? (
-						<TouchableOpacity
+						<StyledItemButton
 							onPress={() => {
 								setEditLoading(true);
+
+								if (value === editableItem?.title && category === editableItem?.category) {
+									setEditLoading(false);
+									setEditableItem(null);
+									return null;
+								}
 								updateSingleListItemName(id, editableItem, () => {
 									setEditableItem(null);
 									setEditLoading(false);
 								});
+								return null;
 							}}
+							disabled={editLoading}
 						>
-							{editLoading ? <Loader size={15} /> : <Icon name="check" size={20} />}
-						</TouchableOpacity>
+							{editLoading ? <Loader size={20} /> : <Icon name="check" size={20} />}
+						</StyledItemButton>
 					) : (
-						<TouchableOpacity onPress={() => setEditableItem({ title: value, category })}>
+						<StyledItemButton onPress={() => setEditableItem({ title: value, category })}>
 							<Icon name="edit" size={20} />
-						</TouchableOpacity>
+						</StyledItemButton>
 					)}
-					<TouchableOpacity
+					<StyledItemButton
 						onPress={() => {
 							setTrashLoading(true);
 							deleteSingleListItem(id, () => setTrashLoading(false));
 						}}
+						disabled={trashLoading}
 					>
 						{trashLoading ? <Loader size={20} /> : <Icon name="trash" variant="unDone" size={20} />}
-					</TouchableOpacity>
+					</StyledItemButton>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
+
+			{withCategories && <StyledCategory>{editableItem?.category || category}</StyledCategory>}
 
 			{editableItem !== null && categories && categories?.length > 0 && (
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -111,8 +124,6 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 					))}
 				</ScrollView>
 			)}
-
-			{withCategories && <StyledCategory>{category}</StyledCategory>}
 		</StyledItemsContainer>
 	);
 };
