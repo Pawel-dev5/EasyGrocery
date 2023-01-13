@@ -25,8 +25,6 @@ export const Input = ({
 	blurOnSubmit,
 }: InputInterface) => (
 	<StyledInput
-		returnKeyType="next"
-		autoFocus
 		ref={inputRef}
 		name={name}
 		onBlur={onBlur}

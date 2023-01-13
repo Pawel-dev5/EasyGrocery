@@ -10,6 +10,7 @@ import { RightSwipeDelete } from 'components/layout/elements';
 
 // MODELS
 import { NotificationComponentInterface } from 'components/notifications/models/sections';
+import { SwipeVariants } from 'components/layout/models/elements';
 
 // STYLES
 import {
@@ -87,6 +88,7 @@ export const Notification = ({
 						<RightSwipeDelete
 							onClick={() => deleteNotification(id, (status) => setLoadingDelete(status))}
 							loader={loadingDelete}
+							variant={SwipeVariants.NOTIFICATION}
 						/>
 					)
 				}

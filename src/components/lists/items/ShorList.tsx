@@ -30,16 +30,23 @@ import { ProgressBarVariant } from 'components/lists/models/sections';
 export const ShortList = (props: any) => {
 	const { deleteList, deleteListLoader, listsView } = useContext(ListsContextData);
 	// eslint-disable-next-line @typescript-eslint/naming-convention
-	const { navigation, title, users_permissions_users, items, id, color, lists, setLists } = props;
+	const { navigation, title, users_permissions_users, items, id, color, lists, setLists, index } = props;
 
+	// eslint-disable-next-line no-unsafe-optional-chaining
+	const listsLength = lists?.length + 1;
 	return (
 		<Swipeable
 			renderRightActions={() => (
-				<RightSwipeDelete onClick={() => deleteList(id, lists, setLists)} loader={deleteListLoader} />
+				<RightSwipeDelete
+					onClick={() => deleteList(id, lists, setLists)}
+					loader={deleteListLoader}
+					lastElement={index === listsLength}
+					firstElement={index === 0}
+				/>
 			)}
 		>
 			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard style={shadowInline} color={color}>
+				<StyledListCard style={shadowInline} color={color} lastElement={index === listsLength} firstElement={index === 0}>
 					<StyledListCardTitleWrapper>
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 

@@ -119,14 +119,16 @@ const ListsWrapper = (props: any) => {
 							updateListOrder(data);
 							setLists(data);
 						}}
+						contentContainerStyle={{ paddingBottom: 15 }}
 						keyExtractor={(item: ListInterface) => item?.id}
-						renderItem={({ item, drag, isActive }: RenderItemParams<ListInterface>) => {
+						renderItem={({ item, drag, isActive, getIndex }: RenderItemParams<ListInterface>) => {
 							const newProps = {
 								list: item,
 								navigation,
 								variant: ListVariant.PREVIEW,
 								lists,
 								setLists,
+								index: getIndex()!,
 							};
 							return (
 								<OpacityDecorator>

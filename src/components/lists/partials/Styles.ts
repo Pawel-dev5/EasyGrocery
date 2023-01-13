@@ -119,11 +119,11 @@ export const StyledItemsWrapper = styled.ScrollView<{ bottomSheetHeight: number 
 		switch (bottomSheetHeight) {
 			case 1:
 				return css`
-					height: 77%;
+					height: 78.1%;
 				`;
 			default:
 				return css`
-					height: 91%;
+					height: 92.6%;
 				`;
 		}
 	}}

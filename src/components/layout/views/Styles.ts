@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components/native';
 import { VariantType } from 'components/layout/models/common';
 
 export const StyledChildren = styled.View<{ customPadding?: string }>`
-	height: 89%;
+	height: 88.5%;
 	width: 100%;
 	background-color: ${({ theme }) => theme.white};
 	align-items: center;

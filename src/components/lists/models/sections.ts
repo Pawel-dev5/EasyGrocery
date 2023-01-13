@@ -43,4 +43,5 @@ export interface ListWrapperInterface {
 	navigation: any;
 	lists?: ListInterface[];
 	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
+	index?: number;
 }

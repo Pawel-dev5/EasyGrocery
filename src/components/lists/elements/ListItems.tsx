@@ -42,7 +42,7 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 			/>
 
 			<StyledAddItemButton onPress={() => handleSubmit()} disabled={addNewListItemLoader}>
-				{addNewListItemLoader ? <Loader size={20} /> : <Icon name="plus" size={20} />}
+				{addNewListItemLoader ? <Loader size={25} /> : <Icon name="plus" size={20} />}
 			</StyledAddItemButton>
 		</StyledAddNewItem>
 	);

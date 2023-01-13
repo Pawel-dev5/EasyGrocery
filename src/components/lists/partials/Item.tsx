@@ -89,7 +89,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							}}
 							disabled={editLoading}
 						>
-							{editLoading ? <Loader size={20} /> : <Icon name="check" size={20} />}
+							{editLoading ? <Loader size={25} /> : <Icon name="check" size={20} />}
 						</StyledItemButton>
 					) : (
 						<StyledItemButton onPress={() => setEditableItem({ title: value, category })}>
@@ -103,7 +103,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 						}}
 						disabled={trashLoading}
 					>
-						{trashLoading ? <Loader size={20} /> : <Icon name="trash" variant="unDone" size={20} />}
+						{trashLoading ? <Loader size={25} /> : <Icon name="trash" variant="unDone" size={20} />}
 					</StyledItemButton>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>

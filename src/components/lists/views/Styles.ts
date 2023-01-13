@@ -5,6 +5,7 @@ export const StyledGridList = styled.View`
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: flex-start;
+	padding: 15px 0;
 `;
 
 export const StyledAddListWrapper = styled.View`

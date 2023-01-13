@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components/native';
 
-export const StyledListCard = styled.View<{ color: string | null }>`
+export const StyledListCard = styled.View<{ color: string | null; lastElement: boolean; firstElement: boolean }>`
 	max-width: 100%;
 	min-height: 80px;
 	border-radius: ${({ theme }) => theme.radius[2]};
 	border: 1px solid ${({ theme }) => theme.grey200};
-	margin: 10px 5px;
+	margin: 8.5px 5px;
 	padding: 12px;
 	overflow: hidden;
 	background: ${({ theme }) => theme.white};
@@ -15,6 +15,18 @@ export const StyledListCard = styled.View<{ color: string | null }>`
 		color &&
 		css`
 			background: ${color};
+		`}
+
+	${({ lastElement }) =>
+		lastElement &&
+		css`
+			margin-bottom: 21px;
+		`}
+
+	${({ firstElement }) =>
+		firstElement &&
+		css`
+			margin-top: 21px;
 		`}
 `;
 

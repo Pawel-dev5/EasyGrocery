@@ -1,5 +1,9 @@
 import styled, { css } from 'styled-components/native';
 
+// MODELS
+import { StyledRightSwipeInterface } from 'components/layout/models/styles';
+import { SwipeVariants } from 'components/layout/models/elements';
+
 export const StyledSearchWrapper = styled.View`
 	position: relative;
 `;
@@ -54,10 +58,11 @@ export const StyledUserWrapper = styled.Text<{ notLast: boolean; colorType?: str
 `;
 
 // SWIPES
-export const StyledRightSwipeDelete = styled.TouchableOpacity`
-	margin: 10px 0;
+export const StyledRightSwipeDelete = styled.TouchableOpacity<StyledRightSwipeInterface>`
+	margin: 9px 0;
 	padding: 12px;
 	max-width: 40px;
+	height: 82%;
 	align-items: center;
 	justify-content: center;
 	border-top-right-radius: ${({ theme }) => theme.radius[2]};
@@ -66,4 +71,29 @@ export const StyledRightSwipeDelete = styled.TouchableOpacity`
 	border-bottom-left-radius: 0;
 	border: 1px solid ${({ theme }) => theme.grey200};
 	background: ${({ theme }) => theme.danger};
+
+	${({ variant }) => {
+		switch (variant) {
+			case SwipeVariants.NOTIFICATION:
+				return css`
+					height: 90%;
+				`;
+
+			default:
+				return null;
+		}
+	}}
+
+	${({ lastElement }) =>
+		lastElement &&
+		css`
+			margin-bottom: 22px;
+		`}
+
+	${({ firstElement }) =>
+		firstElement &&
+		css`
+			height: 72%;
+			margin-top: 22px;
+		`}
 `;

@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 export const StyledNotificationsWrapper = styled.ScrollView`
 	width: 100%;
 	min-width: 100%;
+	padding: 15px 0;
 `;
 
 export const StyledFiltersWrapper = styled.View`

@@ -94,18 +94,10 @@ export const useGlobalContext = () => {
 
 	const setUser = (user: User) => setUserData({ ...userData, user });
 
-	const userQuery2 = qs.stringify({
-		populate: {
-			lists: {
-				populate: '*',
-			},
-		},
-	});
-
 	const updateListOrder = (data: ListInterface[]) => {
 		if (userData?.user?.id)
 			axios
-				.put(`users/${userData?.user?.id}/?${userQuery2}`, { ...userData?.user, lists: data })
+				.put(`users/${userData?.user?.id}/?${userQuery}`, { ...userData?.user, lists: data })
 				.then(() => {})
 				.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
