@@ -12,5 +12,4 @@ export interface UseNotificationInterface {
 	addNewListFromNofitication: (arg0: ListInterface) => void;
 	notifications: NotificationInterface[];
 	setNotifications: Dispatch<SetStateAction<NotificationInterface[]>>;
-	socket: any;
 }

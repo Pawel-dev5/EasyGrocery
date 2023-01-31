@@ -2,6 +2,10 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { t } from 'i18next';
 import { RefreshControl, ScrollView, Text, TouchableOpacity } from 'react-native';
 
+// REDUX
+import { selectGlobal } from 'redux/slices/global';
+import { useAppSelector } from 'redux/hooks';
+
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
@@ -20,7 +24,10 @@ import { NotificationInterface } from 'components/notifications/models/views';
 import { StyledNotificationsWrapper, StyledFiltersWrapper } from 'components/notifications/views/Styles';
 
 const NotificationsWrapper = (props: any) => {
-	const { user, notifications, setNotifications, socket } = useContext(GlobalContextData);
+	const globalState = useAppSelector(selectGlobal);
+	const user = globalState?.user;
+
+	const { notifications, setNotifications } = useContext(GlobalContextData);
 
 	const { addNewListFromNofitication } = useContext(ListsContextData);
 
@@ -35,7 +42,7 @@ const NotificationsWrapper = (props: any) => {
 		acceptNotification,
 		rejectNotification,
 		deleteNotification,
-	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications, socket });
+	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications });
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -87,10 +94,10 @@ const NotificationsWrapper = (props: any) => {
 };
 
 export const Notifications = (props: any) => {
-	const { lists, setLists, socket, setSocket } = useContext(GlobalContextData);
+	const { lists, setLists } = useContext(GlobalContextData);
 
 	return (
-		<ContextProvider setLists={setLists} lists={lists} socket={socket} setSocket={setSocket}>
+		<ContextProvider setLists={setLists} lists={lists}>
 			<NotificationsWrapper props={props} />
 		</ContextProvider>
 	);

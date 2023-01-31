@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { t } from 'i18next';
 import { Button, SafeAreaView, Image } from 'react-native';
 import axios from 'axios';
@@ -7,8 +7,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormData from 'form-data';
 
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
+// REDUX
+import { selectGlobal } from 'redux/slices/global';
+import { useAppSelector } from 'redux/hooks';
 
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
@@ -31,7 +32,9 @@ const schema = yup
 	.required();
 
 export const Profile = (props: any) => {
-	const { user, setUser } = useContext(GlobalContextData);
+	const globalState = useAppSelector(selectGlobal);
+	const user = globalState?.user;
+
 	const [file, setFile] = useState<any>(null);
 	const [image, setImage] = useState<any>(null);
 
@@ -194,7 +197,7 @@ export const Profile = (props: any) => {
 	const updateProfile = () => {
 		axios
 			.put(`users/${id}/?${userQuery}`, getValues())
-			.then((resp) => setUser(resp.data))
+			.then((resp) => console.log(resp.data))
 			.catch((error) => console.log(error?.response?.data?.error));
 	};
 

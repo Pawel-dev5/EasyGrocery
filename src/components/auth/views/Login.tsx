@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { auth } from 'routes/AppRoutes';
 
 // CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
 import { useAuth } from 'components/auth/hooks/useAuth';
 
 // COMPONENTS
@@ -33,8 +32,7 @@ const schema = yup
 	.required();
 
 export const Login = (props: any) => {
-	const { signIn } = useContext(GlobalContextData);
-	const { submitLogin, backendError, loginStoredUser, loginStatus } = useAuth(signIn);
+	const { submitLogin, backendError, loginStoredUser, loginStatus } = useAuth();
 
 	const { navigation } = props;
 

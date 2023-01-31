@@ -1,11 +1,12 @@
 import React, { createContext, useEffect, useState } from 'react';
-import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Socket } from 'socket.io-client';
+
+// REDUX
+import { selectGlobal } from 'redux/slices/global';
+import { useAppSelector } from 'redux/hooks';
 
 // CONTEXT
-import { ContextProviderProps, UserDataInterface, User } from 'config/models';
+import { ContextProviderProps } from 'config/models';
 
 // MODELS
 import { ListInterface } from 'components/lists/models/sections';
@@ -16,19 +17,12 @@ import { userQuery } from 'utils/queries';
 
 const qs = require('qs');
 
-const InitialUserData: UserDataInterface = {
-	jwt: null,
-	user: null,
-};
-
 export const useGlobalContext = () => {
-	const [lang, setLang] = useState('pl');
-	const [isAuth, setIsAuth] = useState(false);
-	const [userData, setUserData] = useState<UserDataInterface>(InitialUserData);
+	const globalState = useAppSelector(selectGlobal);
+
 	const [lists, setLists] = useState<ListInterface[]>([]);
 	const [notificationsCounter, setNotificationsCounter] = useState<number>(0);
 	const [notifications, setNotifications] = useState<NotificationInterface[]>([]);
-	const [socket, setSocket] = useState<Socket<any, any> | null>(null);
 
 	// LOADERS
 	const [listIsLoading, setListIsLoading] = useState(false);
@@ -42,13 +36,21 @@ export const useGlobalContext = () => {
 
 	const getLists = () => {
 		setListIsLoading(true);
-		if (userData?.user?.id)
+		if (globalState?.user?.id)
 			axios
-				.get(`users/${userData?.user?.id}?${userQuery}`)
+				.get(`users/${globalState?.user?.id}?${userQuery}`)
 				.then((resp) => {
 					setListIsLoading(false);
 					setLists(resp?.data?.lists);
 				})
+				.catch((error) => console.log(error?.response?.data?.error?.message));
+	};
+
+	const updateListOrder = (data: ListInterface[]) => {
+		if (globalState?.user?.id)
+			axios
+				.put(`users/${globalState?.user?.id}/?${userQuery}`, { ...globalState?.user, lists: data })
+				.then(() => {})
 				.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
@@ -58,7 +60,7 @@ export const useGlobalContext = () => {
 				filters: {
 					users_permissions_user: {
 						email: {
-							$eq: userData?.user?.email,
+							$eq: globalState?.user?.email,
 						},
 					},
 				},
@@ -74,51 +76,12 @@ export const useGlobalContext = () => {
 			.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
-	const signIn = (data: UserDataInterface) => {
-		if (data?.jwt)
-			SecureStore.setItemAsync('token', data?.jwt).then(() => {
-				setUserData({ ...data });
-				setIsAuth(true);
-			});
-	};
-
-	const signOut = () => {
-		if (userData?.jwt)
-			SecureStore.deleteItemAsync('token').then(() => {
-				setUserData(InitialUserData);
-				setIsAuth(false);
-			});
-		AsyncStorage.removeItem('userPassword');
-		AsyncStorage.removeItem('userEmail');
-	};
-
-	const setUser = (user: User) => setUserData({ ...userData, user });
-
-	const updateListOrder = (data: ListInterface[]) => {
-		if (userData?.user?.id)
-			axios
-				.put(`users/${userData?.user?.id}/?${userQuery}`, { ...userData?.user, lists: data })
-				.then(() => {})
-				.catch((error) => console.log(error?.response?.data?.error?.message));
-	};
-
-	if (userData?.jwt) axios.defaults.headers.common.Authorization = `Bearer ${userData?.jwt}`;
-
 	return {
-		lang,
-		isAuth,
-		user: userData?.user,
 		notifications,
 		listIsLoading,
 		notificationsCounter,
 		lists,
-		socket,
-		setSocket,
 		updateListOrder,
-		signIn,
-		signOut,
-		setLang,
-		setUser,
 		getLists,
 		setLists,
 		setListIsLoading,

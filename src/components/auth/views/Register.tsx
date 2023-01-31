@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { t } from 'i18next';
 import { Button, Text, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form';
@@ -10,7 +10,6 @@ import { auth } from 'routes/AppRoutes';
 
 // CONTEXT
 import { useAuth } from 'components/auth/hooks/useAuth';
-import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { ControllerWrapper, ScreenWrapper } from 'components/auth/sections';
@@ -34,8 +33,7 @@ const schema = yup
 	.required();
 
 export const Register = (props: any) => {
-	const { signIn } = useContext(GlobalContextData);
-	const { submitRegister, backendError } = useAuth(signIn);
+	const { submitRegister, backendError } = useAuth();
 
 	const { navigation } = props;
 

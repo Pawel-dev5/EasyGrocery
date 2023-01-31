@@ -1,25 +1,18 @@
 /* eslint-disable no-alert */
-import React, {
-	ChangeEvent,
-	createContext,
-	Dispatch,
-	SetStateAction,
-	useContext,
-	useEffect,
-	useMemo,
-	useState,
-} from 'react';
+import React, { ChangeEvent, createContext, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues, useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+// REDUX
+import { selectSocket } from 'redux/slices/socket';
+import { useAppSelector } from 'redux/hooks';
+import { selectGlobal } from 'redux/slices/global';
+
 // ROUTER
 import { lists as listRoute } from 'routes/AppRoutes';
-
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
 
 // MODELS
 import { ItemInterface, ListInterface } from 'components/lists/models/sections';
@@ -48,8 +41,11 @@ const schema = yup
 	})
 	.required();
 
-export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface) => {
-	const { user } = useContext(GlobalContextData);
+export const useList = ({ lists, setLists }: UseListInterface) => {
+	const socketState = useAppSelector(selectSocket);
+
+	const globalState = useAppSelector(selectGlobal);
+	const user = globalState?.user;
 
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
@@ -87,8 +83,8 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 	});
 
 	// SOCKET.IO CONFIG
-	if (socket) {
-		socket.off('listUpdate').once('listUpdate', (data: any) => {
+	if (socketState?.socket) {
+		socketState?.socket.off('listUpdate').once('listUpdate', (data: any) => {
 			const { id, attributes } = data;
 			// UPDATE SINGLE LIST
 			if (singleList) setSingleList({ id, ...attributes });
@@ -227,8 +223,8 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 				})
 				.then((resp) => {
 					// SOCKET UPDATE STATES BELOW
-					if (socket)
-						socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
+					if (socketState?.socket)
+						socketState?.socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
 							if (error) alert(error);
 							setSingleListEditable(SingleListEditableInitial);
 						});
@@ -354,8 +350,8 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 							},
 						})
 						.then((resp) => {
-							if (socket)
-								socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
+							if (socketState?.socket)
+								socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
 									if (error) alert(error);
 								});
 						})
@@ -377,8 +373,8 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 				})
 				.then((resp) => {
 					// SOCKET UPDATE STATES BELOW
-					if (socket)
-						socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
+					if (socketState?.socket)
+						socketState?.socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
 							if (error) alert(error);
 						});
 				})
@@ -447,7 +443,6 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 		setNewShop,
 		sortItemsByCategories,
 		setSortedListItemsByCategories,
-		setSocket,
 		setSearchIcons,
 		addNewListFromNofitication,
 	};
@@ -455,6 +450,6 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 
 export const ListsContextData = createContext({} as ReturnType<typeof useList>);
 
-export const ContextProvider = ({ children, lists, setLists, socket, setSocket }: ListContextProvider) => (
-	<ListsContextData.Provider value={useList({ lists, setLists, socket, setSocket })}>{children}</ListsContextData.Provider>
+export const ContextProvider = ({ children, lists, setLists }: ListContextProvider) => (
+	<ListsContextData.Provider value={useList({ lists, setLists })}>{children}</ListsContextData.Provider>
 );

@@ -177,10 +177,10 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 };
 
 export const FullList = (props: any) => {
-	const { socket, setSocket, lists, setLists } = useContext(GlobalContextData);
+	const { lists, setLists } = useContext(GlobalContextData);
 
 	return (
-		<ContextProvider socket={socket} setSocket={setSocket} lists={lists} setLists={setLists}>
+		<ContextProvider lists={lists} setLists={setLists}>
 			<ShopContextProvider>
 				<FullListWrapper {...props} />
 			</ShopContextProvider>

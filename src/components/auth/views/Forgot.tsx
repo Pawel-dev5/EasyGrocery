@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Button, Text } from 'react-native';
 import { t } from 'i18next';
 import { useForm } from 'react-hook-form';
@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
 import { useAuth } from 'components/auth/hooks/useAuth';
 
 // COMPONENTS
@@ -23,8 +22,7 @@ const schema = yup
 	.required();
 
 export const Forgot = (props: any) => {
-	const { signIn } = useContext(GlobalContextData);
-	const { submitResetPassword, backendError } = useAuth(signIn);
+	const { submitResetPassword, backendError } = useAuth();
 
 	const {
 		control,

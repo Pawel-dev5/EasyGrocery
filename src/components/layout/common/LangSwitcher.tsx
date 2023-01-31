@@ -1,30 +1,32 @@
 /* eslint-disable global-require */
-import React, { useContext } from 'react';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import i18next from 'i18next';
 
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
+// REDUX
+import { globalSetLang, selectGlobal } from 'redux/slices/global';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 
 // STYLES
 import { StyledLangSwitcher, StyledLangWrapper, StyledLangTitle } from 'components/layout/common/Styles';
 
 export const LangSwitcher = () => {
-	const { lang, setLang } = useContext(GlobalContextData);
+	const dispatch = useAppDispatch();
+	const globalState = useAppSelector(selectGlobal);
 
 	return (
 		<TouchableOpacity
 			onPress={() => {
-				if (lang === 'en') {
-					setLang('pl');
+				if (globalState?.lang === 'en') {
+					dispatch(globalSetLang('pl'));
 					i18next.changeLanguage('pl');
 				} else {
-					setLang('en');
+					dispatch(globalSetLang('en'));
 					i18next.changeLanguage('en');
 				}
 			}}
 		>
-			{lang !== 'pl' ? (
+			{globalState?.lang !== 'pl' ? (
 				<StyledLangSwitcher source={require('../../../assets/flags/PL.png')} />
 			) : (
 				<StyledLangSwitcher source={require('../../../assets/flags/EN.png')} />
@@ -33,21 +35,22 @@ export const LangSwitcher = () => {
 	);
 };
 export const LangSwitcherExpanded = () => {
-	const { lang, setLang } = useContext(GlobalContextData);
+	const dispatch = useAppDispatch();
+	const globalState = useAppSelector(selectGlobal);
 
 	return (
 		<TouchableOpacity
 			onPress={() => {
-				if (lang === 'en') {
-					setLang('pl');
+				if (globalState?.lang === 'en') {
+					dispatch(globalSetLang('pl'));
 					i18next.changeLanguage('pl');
 				} else {
-					setLang('en');
+					dispatch(globalSetLang('en'));
 					i18next.changeLanguage('en');
 				}
 			}}
 		>
-			{lang !== 'pl' ? (
+			{globalState?.lang !== 'pl' ? (
 				<StyledLangWrapper>
 					<StyledLangTitle>Polski</StyledLangTitle>
 					<StyledLangSwitcher source={require('../../../assets/flags/PL.png')} />

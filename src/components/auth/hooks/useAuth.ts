@@ -2,11 +2,17 @@ import { FieldValues } from 'react-hook-form';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// REDUX
+import { globalSetAuthToken, selectGlobal } from 'redux/slices/global';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+
 // MODELS
-import { UserDataInterface } from 'config/models';
 import { useState } from 'react';
 
-export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
+export const useAuth = () => {
+	const dispatch = useAppDispatch();
+	const globalState = useAppSelector(selectGlobal);
+
 	const [backendError, setBackendError] = useState<string | null>(null);
 	const [loginStatus, setLoginStatus] = useState('PENDING');
 
@@ -19,18 +25,25 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 				password,
 			})
 			.then((response) => {
-				if (signIn) signIn(response?.data);
 				const jsonValue = JSON.stringify(data);
-				setLoginStatus('LOGGED');
-
+				dispatch(globalSetAuthToken(response?.data));
 				AsyncStorage.setItem('userData', jsonValue);
 				AsyncStorage.setItem('userPassword', password);
 				AsyncStorage.setItem('userEmail', email);
+				setLoginStatus('LOGGED');
 			})
 			.catch((error) => {
 				setLoginStatus('ERROR');
 				setBackendError(error?.response?.data?.error?.message);
 			});
+	};
+
+	const signOut = () => {
+		if (globalState?.token) {
+			dispatch(globalSetAuthToken({ jwt: null, user: null }));
+			AsyncStorage.removeItem('userPassword');
+			AsyncStorage.removeItem('userEmail');
+		}
 	};
 
 	const loginStoredUser = async () => {
@@ -64,5 +77,7 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 		console.log('reset password');
 	};
 
-	return { submitLogin, submitRegister, loginStoredUser, submitResetPassword, backendError, loginStatus };
+	if (globalState?.token) axios.defaults.headers.common.Authorization = `Bearer ${globalState?.token}`;
+
+	return { submitLogin, submitRegister, loginStoredUser, submitResetPassword, signOut, backendError, loginStatus };
 };

@@ -2,11 +2,16 @@ import React, { useContext } from 'react';
 import { Menu as MenuComponent, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import { t } from 'i18next';
 
+// REDUX
+import { selectGlobal } from 'redux/slices/global';
+import { useAppSelector } from 'redux/hooks';
+
 // ROUTER
 import { lists, notifications, profile, shops } from 'routes/AppRoutes';
 
 // CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
+import { useAuth } from 'components/auth/hooks/useAuth';
 
 // COMPONENTS
 import { Icon, MenuOption, LangSwitcher, LangSwitcherExpanded, NotificationCounter } from 'components/layout/common';
@@ -19,11 +24,13 @@ import { StyledMenuTrigger } from 'components/layout/sections/Styles';
 import { MenuInterface } from 'components/layout/models/sections';
 
 export const Menu = ({ variant, navigation }: MenuInterface) => {
-	const { isAuth, signOut, notificationsCounter } = useContext(GlobalContextData);
+	const globalState = useAppSelector(selectGlobal);
+	const { notificationsCounter } = useContext(GlobalContextData);
+	const { signOut } = useAuth();
 
 	return (
 		<>
-			{isAuth ? (
+			{globalState?.token ? (
 				<MenuComponent>
 					<MenuTrigger>
 						<StyledMenuTrigger>

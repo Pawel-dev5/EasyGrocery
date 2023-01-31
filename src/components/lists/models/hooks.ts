@@ -7,8 +7,6 @@ export interface ListContextProvider extends ContextProviderProps {
 	navigation?: any;
 	lists?: ListInterface[];
 	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
-	socket: any;
-	setSocket: any;
 }
 
 export interface SingleListEditableInitialInterface {
@@ -38,6 +36,4 @@ export const SingleListEditableInitial: SingleListEditableInitialInterface = {
 export interface UseListInterface {
 	lists?: ListInterface[];
 	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
-	socket: any;
-	setSocket: any;
 }

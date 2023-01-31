@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { t } from 'i18next';
 import axios from 'axios';
@@ -13,8 +13,15 @@ import { auth, lists, notifications, profile, shops } from 'routes/AppRoutes';
 import 'src/config/i18nConfig';
 import { setupInterceptorsTo } from 'config/axiosConfig';
 
+// REDUX
+import { Provider } from 'react-redux';
+import { store, persistor } from 'redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { selectGlobal } from 'redux/slices/global';
+import { useAppSelector } from 'redux/hooks';
+
 // CONTEXT
-import { GlobalContextData, ContextProvider } from 'config/useGlobalContext';
+import { ContextProvider } from 'config/useGlobalContext';
 
 // STYLES
 import { ThemeProvider } from 'styled-components';
@@ -36,7 +43,7 @@ const { Screen, Navigator } = createNativeStackNavigator();
 setupInterceptorsTo(axios);
 
 const AppComponent = () => {
-	const { isAuth } = useContext(GlobalContextData);
+	const globalState = useAppSelector(selectGlobal);
 
 	return (
 		<NavigationContainer>
@@ -46,7 +53,7 @@ const AppComponent = () => {
 					headerShown: false,
 				}}
 			>
-				{isAuth && (
+				{globalState?.token && (
 					<>
 						<Screen name={lists.lists}>{(props) => <Lists {...props} />}</Screen>
 						<Screen name={lists.singleList}>{(props) => <List variant={ListVariant.FULL} {...props} />}</Screen>
@@ -56,7 +63,7 @@ const AppComponent = () => {
 					</>
 				)}
 
-				{!isAuth && (
+				{!globalState?.token && (
 					<>
 						<Screen name={auth.login}>{(props) => <Login {...props} />}</Screen>
 						<Screen name={auth.register}>{(props) => <Register {...props} />}</Screen>
@@ -72,15 +79,19 @@ const AppComponent = () => {
 };
 
 const App = () => (
-	<ThemeProvider theme={theme}>
-		<GestureHandlerRootView style={{ flex: 1 }}>
-			<ContextProvider>
-				<MenuProvider>
-					<AppComponent />
-				</MenuProvider>
-			</ContextProvider>
-		</GestureHandlerRootView>
-	</ThemeProvider>
+	<Provider store={store}>
+		<PersistGate loading={null} persistor={persistor}>
+			<ThemeProvider theme={theme}>
+				<GestureHandlerRootView style={{ flex: 1 }}>
+					<ContextProvider>
+						<MenuProvider>
+							<AppComponent />
+						</MenuProvider>
+					</ContextProvider>
+				</GestureHandlerRootView>
+			</ThemeProvider>
+		</PersistGate>
+	</Provider>
 );
 
 export default App;

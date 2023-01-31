@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+// REDUX
+import { useAppSelector } from 'redux/hooks';
+import { selectSocket } from 'redux/slices/socket';
+
 // MODELS
 import { NotificationInterface } from 'components/notifications/models/views';
 import { UseNotificationInterface } from 'components/notifications/models/hooks';
@@ -18,8 +22,9 @@ export const useNotifications = ({
 	addNewListFromNofitication,
 	notifications,
 	setNotifications,
-	socket,
 }: UseNotificationInterface) => {
+	const socketState = useAppSelector(selectSocket);
+
 	const [filteredNotifications, setFilteredNotifications] = useState<NotificationInterface[]>([]);
 	const [showAll, setShowAll] = useState(true);
 
@@ -151,8 +156,8 @@ export const useNotifications = ({
 				},
 			})
 			.then((resp) => {
-				if (socket)
-					socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
+				if (socketState?.socket)
+					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
 						if (error) alert(error);
 					});
 
@@ -239,8 +244,8 @@ export const useNotifications = ({
 				},
 			})
 			.then((resp) => {
-				if (socket)
-					socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
+				if (socketState?.socket)
+					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
 						if (error) alert(error);
 					});
 				statusCallback(false);

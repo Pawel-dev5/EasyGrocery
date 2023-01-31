@@ -5,6 +5,12 @@ import { Manager } from 'socket.io-client';
 import { REACT_APP_API } from '@env';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 
+// REDUX
+import { selectGlobal } from 'redux/slices/global';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { selectSocket, setSocket } from 'redux/slices/socket';
+
+// CONTEXT
 import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
@@ -46,28 +52,32 @@ export const AppWrapper = ({
 	isLoading,
 	bottomSheetHeader,
 }: AppLayoutInterface) => {
-	const { isAuth, lang, setLang, getNotificationsCounter, setSocket, setNotifications, notifications, socket, user } =
-		useContext(GlobalContextData);
+	const dispatch = useAppDispatch();
+	const globalState = useAppSelector(selectGlobal);
+	const socketState = useAppSelector(selectSocket);
+	const user = globalState?.user;
+
+	const { getNotificationsCounter, setNotifications, notifications } = useContext(GlobalContextData);
 
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const snapPoints = useMemo(() => ['30%', '58%', '88.8%'], []);
 
 	useEffect(() => {
-		if (isAuth) {
+		if (globalState?.token) {
 			getNotificationsCounter();
 			// SOCKET.IO START
 			const manager = new Manager(REACT_APP_API, {
 				reconnectionDelayMax: 10000,
 			});
 			const newSocket = manager.socket('/');
-			setSocket(newSocket);
+			dispatch(setSocket(newSocket));
 		}
 	}, []);
 
 	// SOCKET.IO CONFIG
-	if (socket) {
-		socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
+	if (socketState?.socket) {
+		socketState?.socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
 			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email) {
 				const checkedNotification = findObjectInArray(notifications, 'id', data?.id);
 				if (!checkedNotification || checkedNotification === null || checkedNotification === undefined)
@@ -99,7 +109,7 @@ export const AppWrapper = ({
 
 				<StyledText variant={variant}>{routeName}</StyledText>
 
-				<Menu variant={variant} navigation={navigation} lang={lang} setLang={setLang} />
+				<Menu variant={variant} navigation={navigation} />
 			</StyledAppNavbar>
 
 			{isLoading ? (
