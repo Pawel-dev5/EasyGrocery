@@ -78,9 +78,7 @@ export const AppWrapper = ({
 	}
 
 	const onSwipeLeft = () => {};
-
 	const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();
-
 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
 
 	const handleClosePress = () => {

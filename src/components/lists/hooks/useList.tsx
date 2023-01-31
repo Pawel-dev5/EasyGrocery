@@ -276,12 +276,8 @@ export const useList = ({ lists, setLists, socket, setSocket }: UseListInterface
 	};
 
 	const clearSingleListItems = () => {
-		const callback = () => {
-			setSortedListItemsByCategories([]);
-		};
-		if (singleList?.items) {
-			sendSingleListPutRequest([], listQuery, callback);
-		}
+		const callback = () => setSortedListItemsByCategories([]);
+		if (singleList?.items) sendSingleListPutRequest([], listQuery, callback);
 	};
 
 	const updateSingleListItemStatus = (id: string, callback: () => void) => {

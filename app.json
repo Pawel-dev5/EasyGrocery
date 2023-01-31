@@ -16,18 +16,42 @@
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,
-			"bundleIdentifier": "com.EasyGrocery.ios.app"
+			"bundleIdentifier": "com.EasyGrocery.ios.app",
+			"infoPlist": {
+				"NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
+				"NSPhotoLibraryUsageDescription": "This app uses the photo library to add user avatar.",
+				"NSMicrophoneUsageDescription": "This app uses the camera to scan barcodes on event tickets."
+			}
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png"
 			},
-			"package": "com.EasyGrocery.android.app"
+			"package": "com.EasyGrocery.android.app",
+			"permissions": [
+				"READ_EXTERNAL_STORAGE",
+				"CAMERA",
+				"WRITE_EXTERNAL_STORAGE",
+				"ACCESS_MEDIA_LOCATION",
+				"MANAGE_EXTERNAL_STORAGE",
+				"READ_MEDIA_IMAGES"
+			]
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
 		},
-		"plugins": ["expo-community-flipper"],
+		"plugins": [
+			"expo-community-flipper",
+			[
+				"expo-image-picker",
+				{
+					"permissions": ["READ_EXTERNAL_STORAGE", "CAMERA", "WRITE_EXTERNAL_STORAGE", "ACCESS_MEDIA_LOCATION"],
+					"photosPermission": "The app accesses your photos to let you edit your account cover.",
+					"cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+					"microphonePermission": "Allow $(PRODUCT_NAME) to open the microphone"
+				}
+			]
+		],
 		"extra": {
 			"eas": {
 				"projectId": "7a186aca-db6b-49e4-a969-1ca1b02e9d1a"

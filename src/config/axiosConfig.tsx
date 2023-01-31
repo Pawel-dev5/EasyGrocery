@@ -9,9 +9,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 };
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => Promise.reject(error);
-
 const onResponse = (response: AxiosResponse): AxiosResponse => response;
-
 const onResponseError = (error: AxiosError): Promise<AxiosError> => Promise.reject(error);
 
 export const setupInterceptorsTo = (axiosInstance: AxiosInstance): AxiosInstance => {

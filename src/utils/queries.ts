@@ -6,6 +6,9 @@ export const userQuery = qs.stringify(
 			lists: {
 				populate: ['items', 'users_permissions_users'],
 			},
+			cover: {
+				populate: ['ext', 'alternativeText', 'id', 'url'],
+			},
 		},
 	},
 	{

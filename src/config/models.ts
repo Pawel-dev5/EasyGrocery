@@ -17,6 +17,7 @@ export interface User {
 	username: string | null;
 	lists: ListInterface[];
 	access?: string;
+	cover: any;
 }
 
 export interface UserDataInterface {

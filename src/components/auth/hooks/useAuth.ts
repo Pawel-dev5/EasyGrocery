@@ -21,12 +21,16 @@ export const useAuth = (signIn?: (arg0: UserDataInterface) => void) => {
 			.then((response) => {
 				if (signIn) signIn(response?.data);
 				const jsonValue = JSON.stringify(data);
+				setLoginStatus('LOGGED');
 
 				AsyncStorage.setItem('userData', jsonValue);
 				AsyncStorage.setItem('userPassword', password);
 				AsyncStorage.setItem('userEmail', email);
 			})
-			.catch((error) => setBackendError(error?.response?.data?.error?.message));
+			.catch((error) => {
+				setLoginStatus('ERROR');
+				setBackendError(error?.response?.data?.error?.message);
+			});
 	};
 
 	const loginStoredUser = async () => {
