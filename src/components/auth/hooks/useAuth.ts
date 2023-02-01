@@ -40,7 +40,6 @@ export const useAuth = () => {
 
 	const signOut = () => {
 		if (globalState?.token) {
-			dispatch(globalSetAuthToken({ jwt: null, user: null }));
 			AsyncStorage.removeItem('userPassword');
 			AsyncStorage.removeItem('userEmail');
 		}

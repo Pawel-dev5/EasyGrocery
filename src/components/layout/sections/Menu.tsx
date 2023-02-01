@@ -1,20 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Menu as MenuComponent, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import { t } from 'i18next';
 
 // REDUX
 import { selectGlobal } from 'redux/slices/global';
-import { useAppSelector } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+
+// ACTIONS
+import { logoutAction } from 'redux/actions';
 
 // ROUTER
 import { lists, notifications, profile, shops } from 'routes/AppRoutes';
 
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
+// HOOKS
 import { useAuth } from 'components/auth/hooks/useAuth';
 
 // COMPONENTS
-import { Icon, MenuOption, LangSwitcher, LangSwitcherExpanded, NotificationCounter } from 'components/layout/common';
+import { Icon, MenuOption, LangSwitcher, NotificationCounter } from 'components/layout/common';
 import { SubmitAlert } from 'components/lists/partials';
 
 // STYLES
@@ -22,10 +24,14 @@ import { StyledMenuTrigger } from 'components/layout/sections/Styles';
 
 // MODELS
 import { MenuInterface } from 'components/layout/models/sections';
+import { selectNotifications } from 'redux/slices/notifications';
 
 export const Menu = ({ variant, navigation }: MenuInterface) => {
+	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
-	const { notificationsCounter } = useContext(GlobalContextData);
+	const notificationState = useAppSelector(selectNotifications);
+	const notificationsCounter = notificationState?.counter;
+
 	const { signOut } = useAuth();
 
 	return (
@@ -52,7 +58,10 @@ export const Menu = ({ variant, navigation }: MenuInterface) => {
 						<MenuOption
 							onSelect={() =>
 								SubmitAlert({
-									okPressed: () => signOut(),
+									okPressed: () => {
+										signOut();
+										dispatch(logoutAction());
+									},
 									okText: t('auth.logout'),
 									cancelText: t('general.cancel'),
 									cancelPressed: () => {},
@@ -63,7 +72,7 @@ export const Menu = ({ variant, navigation }: MenuInterface) => {
 							icon="sign-out"
 						/>
 
-						<LangSwitcherExpanded />
+						<LangSwitcher expanded />
 					</MenuOptions>
 				</MenuComponent>
 			) : (

@@ -2,28 +2,35 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // REDUX
-import { useAppSelector } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectSocket } from 'redux/slices/socket';
+import {
+	selectNotifications,
+	notificationsSetItems,
+	notificationsSetItemsDelete,
+	notificationsSetItemsUpdateRead,
+	notificationsSetItemsRejectNotification,
+	notificationsSetItemsAcceptNotification,
+	notificationsSetCounter,
+} from 'redux/slices/notifications';
+import { selectGlobal } from 'redux/slices/global';
 
 // MODELS
 import { NotificationInterface } from 'components/notifications/models/views';
 import { UseNotificationInterface } from 'components/notifications/models/hooks';
-
-// UTILS
-import { removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
-import { updateObject } from 'utils/helpers/objectHelpers';
-import { listQuery, notificatioQuery } from 'utils/queries';
 import { User } from 'config/models';
 
-const qs = require('qs');
+// UTILS
+import { filterUnRead, removeObjectFromArray } from 'utils/helpers/arrayHelpers';
+import { getNotificationsCounterQuery, listQuery, notificationsQuery, notificatioQuery } from 'utils/queries';
 
-export const useNotifications = ({
-	user,
-	addNewListFromNofitication,
-	notifications,
-	setNotifications,
-}: UseNotificationInterface) => {
+export const useNotifications = ({ addNewListFromNofitication }: UseNotificationInterface) => {
+	const dispatch = useAppDispatch();
+	const globalState = useAppSelector(selectGlobal);
+	const user = globalState?.user;
 	const socketState = useAppSelector(selectSocket);
+	const notificationsState = useAppSelector(selectNotifications);
+	const notifications = notificationsState?.items;
 
 	const [filteredNotifications, setFilteredNotifications] = useState<NotificationInterface[]>([]);
 	const [showAll, setShowAll] = useState(true);
@@ -35,43 +42,21 @@ export const useNotifications = ({
 		setFilteredNotifications(notifications);
 	}, [notifications]);
 
-	const getNotifications = () => {
+	const getNotifications = async () => {
 		setLoadingNotifications(true);
 
-		const query = qs.stringify(
-			{
-				populate: {
-					list: {
-						populate: ['invitations', 'users_permissions_users'],
-					},
-					sender: {
-						populate: '*',
-					},
-				},
-				filters: {
-					users_permissions_user: {
-						email: {
-							$eq: user?.email,
-						},
-					},
-				},
-				sort: ['createdAt:desc'],
-			},
-			{
-				encodeValuesOnly: true, // prettify URL
-			},
-		);
-
 		axios
-			.get(`notifications/?${query}`)
-			.then((resp) => {
-				setNotifications(resp?.data?.data);
-				setLoadingNotifications(false);
-			})
-			.catch((error) => {
-				setLoadingNotifications(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.get(`notifications/?${notificationsQuery(user?.email!)}`)
+			.then((resp) => dispatch(notificationsSetItems(resp?.data?.data)))
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => setLoadingNotifications(false));
+	};
+
+	const getNotificationsCounter = () => {
+		axios
+			.get(`notifications/?${getNotificationsCounterQuery(user?.email!)}`)
+			.then((resp) => dispatch(notificationsSetCounter(filterUnRead(resp?.data?.data))))
+			.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
 	const filterNotifications = () => {
@@ -90,17 +75,9 @@ export const useNotifications = ({
 					read: !notification?.attributes?.read,
 				},
 			})
-			.then((resp) => {
-				const newArr = updateObjectInArray(notifications, 'id', resp?.data?.data?.id, (todo: NotificationInterface[]) =>
-					updateObject(todo, { ...resp?.data?.data }),
-				);
-				setNotifications(newArr);
-				statusCallback(false);
-			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.then((resp) => dispatch(notificationsSetItemsUpdateRead(resp?.data?.data)))
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 	};
 
 	const deleteNotification = (id: number, statusCallback: (arg0: boolean) => void) => {
@@ -108,14 +85,9 @@ export const useNotifications = ({
 
 		axios
 			.delete(`notifications/${id}?${notificatioQuery}`)
-			.then((resp) => {
-				const newArr = notifications?.filter((item) => item?.id !== resp?.data?.data?.id);
-				setNotifications(newArr);
-			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.then((resp) => dispatch(notificationsSetItemsDelete(resp?.data?.data)))
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 	};
 
 	const acceptNotification = (notification: NotificationInterface, statusCallback: (arg0: boolean) => void) => {
@@ -130,17 +102,9 @@ export const useNotifications = ({
 					read: true,
 				},
 			})
-			.then((resp) => {
-				const newArr = updateObjectInArray(notifications, 'id', resp?.data?.data?.id, (todo: NotificationInterface[]) =>
-					updateObject(todo, { ...resp?.data?.data }),
-				);
-				setNotifications(newArr);
-				statusCallback(false);
-			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.then((resp) => dispatch(notificationsSetItemsAcceptNotification(resp?.data?.data)))
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 
 		// CREATE ACCEPT NOTIFICATION TO INVITATION SENDER
 		axios
@@ -160,13 +124,9 @@ export const useNotifications = ({
 					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
 						if (error) alert(error);
 					});
-
-				statusCallback(false);
 			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 
 		// UPDATE LIST ACCESS
 		const newInvitations = removeObjectFromArray(
@@ -196,14 +156,9 @@ export const useNotifications = ({
 					invitations: newInvitations || [],
 				},
 			})
-			.then((resp) => {
-				addNewListFromNofitication({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id });
-				statusCallback(false);
-			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.then((resp) => addNewListFromNofitication({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id }))
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 	};
 
 	const rejectNotification = (notification: NotificationInterface, statusCallback: (arg0: boolean) => void) => {
@@ -218,17 +173,9 @@ export const useNotifications = ({
 					read: true,
 				},
 			})
-			.then((resp) => {
-				const newArr = updateObjectInArray(notifications, 'id', resp?.data?.data?.id, (todo: NotificationInterface[]) =>
-					updateObject(todo, { ...resp?.data?.data }),
-				);
-				setNotifications(newArr);
-				statusCallback(false);
-			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.then((resp) => dispatch(notificationsSetItemsRejectNotification(resp?.data?.data)))
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 
 		// CREATE REJECT NOTIFICATION TO INVITATION SENDER
 		axios
@@ -248,12 +195,9 @@ export const useNotifications = ({
 					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
 						if (error) alert(error);
 					});
-				statusCallback(false);
 			})
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 
 		// UPDATE LIST ACCESS
 		const newInvitations = removeObjectFromArray(
@@ -261,17 +205,16 @@ export const useNotifications = ({
 			'uuid',
 			user?.id,
 		);
+
 		axios
 			.put(`lists/${notification?.attributes?.list?.data?.id}?${listQuery}`, {
 				data: {
 					invitations: newInvitations || [],
 				},
 			})
-			.then(() => statusCallback(false))
-			.catch((error) => {
-				statusCallback(false);
-				console.log(error?.response?.data?.error?.message);
-			});
+			.then(() => {})
+			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.finally(() => statusCallback(false));
 	};
 
 	return {
@@ -282,6 +225,7 @@ export const useNotifications = ({
 		setShowAll,
 		filterNotifications,
 		getNotifications,
+		getNotificationsCounter,
 		updateRead,
 		acceptNotification,
 		rejectNotification,

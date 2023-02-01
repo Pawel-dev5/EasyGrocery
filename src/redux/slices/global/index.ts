@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from 'redux/store';
 
+// ACTIONS
+import { logoutAction } from 'redux/actions';
+
 // MODELS
 import { InitialStateInterface, LanguageTypes } from 'redux/slices/global/models';
 
@@ -22,6 +25,12 @@ export const globalSlice = createSlice({
 		globalSetLang: (state, action: PayloadAction<LanguageTypes>) => {
 			state.lang = action.payload;
 		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(logoutAction, (state) => {
+			state.token = null;
+			state.user = null;
+		});
 	},
 });
 

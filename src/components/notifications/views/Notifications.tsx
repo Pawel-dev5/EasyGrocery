@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import { RefreshControl, ScrollView, Text, TouchableOpacity } from 'react-native';
 
 // REDUX
-import { selectGlobal } from 'redux/slices/global';
+import { selectNotifications } from 'redux/slices/notifications';
 import { useAppSelector } from 'redux/hooks';
 
 // CONTEXT
@@ -24,10 +24,8 @@ import { NotificationInterface } from 'components/notifications/models/views';
 import { StyledNotificationsWrapper, StyledFiltersWrapper } from 'components/notifications/views/Styles';
 
 const NotificationsWrapper = (props: any) => {
-	const globalState = useAppSelector(selectGlobal);
-	const user = globalState?.user;
-
-	const { notifications, setNotifications } = useContext(GlobalContextData);
+	const notificationsState = useAppSelector(selectNotifications);
+	const notifications = notificationsState?.items;
 
 	const { addNewListFromNofitication } = useContext(ListsContextData);
 
@@ -42,7 +40,7 @@ const NotificationsWrapper = (props: any) => {
 		acceptNotification,
 		rejectNotification,
 		deleteNotification,
-	} = useNotifications({ user, addNewListFromNofitication, notifications, setNotifications });
+	} = useNotifications({ addNewListFromNofitication });
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -50,10 +48,12 @@ const NotificationsWrapper = (props: any) => {
 		getNotifications();
 	}, []);
 
+	const updateRefresh = async (value: boolean) => setRefreshing(value);
+
 	const onRefresh = useCallback(async () => {
-		await setRefreshing(true);
+		await updateRefresh(true);
 		await getNotifications();
-		await setRefreshing(false);
+		await updateRefresh(false);
 	}, []);
 
 	const { props: newProps } = props;

@@ -1,10 +1,10 @@
+import { NotificationInterface } from 'components/notifications/models/views';
+
 export const removeObjectFromArray = <T, U extends keyof T>(array: T[], key: U, arg: any) => {
 	if (array && Array.isArray(array)) {
 		const removeIndex = array?.findIndex((item) => item[key] === arg);
-
-		if (removeIndex !== -1) {
-			array.splice(removeIndex, 1);
-		}
+		if (array?.length === 1) return [];
+		if (removeIndex !== -1) array?.splice(removeIndex, 1);
 	}
 
 	return array;
@@ -16,15 +16,9 @@ export const findObjectInArray = <T, U extends keyof T>(array: T[], key: U, arg?
 	if (array?.length > 0) {
 		let searchedObject = -1;
 
-		if (key && arg) {
-			searchedObject = array?.findIndex((item) => item[key] === arg);
-		}
-		if (key && !arg) {
-			searchedObject = array?.findIndex((item) => item[key]);
-		}
-		if (searchedObject >= 0) {
-			return array[searchedObject];
-		}
+		if (key && arg) searchedObject = array?.findIndex((item) => item[key] === arg);
+		if (key && !arg) searchedObject = array?.findIndex((item) => item[key]);
+		if (searchedObject >= 0) return array[searchedObject];
 	}
 
 	return null;
@@ -106,4 +100,9 @@ export const updateObjectInArray = <T, U extends keyof T>(array: T[], key: U, ar
 	}
 
 	return array;
+};
+
+export const filterUnRead = (data: NotificationInterface[]) => {
+	const unReadNotifications = data?.filter((item: NotificationInterface) => !item?.attributes?.read);
+	return unReadNotifications?.length;
 };

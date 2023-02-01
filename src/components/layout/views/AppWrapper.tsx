@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useContext } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
 import { Manager } from 'socket.io-client';
@@ -9,9 +9,13 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { selectGlobal } from 'redux/slices/global';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectSocket, setSocket } from 'redux/slices/socket';
+import { notificationsSetCounter, notificationsSetItemsSocketUpdate, selectNotifications } from 'redux/slices/notifications';
 
 // CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
+import { ListsContextData } from 'components/lists/hooks/useList';
+
+// HOOKS
+import { useNotifications } from 'components/notifications/hooks/useNotifications';
 
 // COMPONENTS
 import { Menu } from 'components/layout/sections';
@@ -37,7 +41,7 @@ import {
 // UTILS
 import { shadowInline } from 'utils/theme/themeDefault';
 import { useSwipe } from 'utils/hooks/useSwipe';
-import { findObjectInArray } from 'utils/helpers/arrayHelpers';
+import { filterUnRead } from 'utils/helpers/arrayHelpers';
 
 export const AppWrapper = ({
 	children,
@@ -55,9 +59,12 @@ export const AppWrapper = ({
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const socketState = useAppSelector(selectSocket);
+	const notificationsState = useAppSelector(selectNotifications);
+	const notifications = notificationsState?.items;
 	const user = globalState?.user;
 
-	const { getNotificationsCounter, setNotifications, notifications } = useContext(GlobalContextData);
+	const { addNewListFromNofitication } = useContext(ListsContextData);
+	const { getNotificationsCounter } = useNotifications({ addNewListFromNofitication });
 
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
@@ -79,13 +86,15 @@ export const AppWrapper = ({
 	if (socketState?.socket) {
 		socketState?.socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
 			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email) {
-				const checkedNotification = findObjectInArray(notifications, 'id', data?.id);
-				if (!checkedNotification || checkedNotification === null || checkedNotification === undefined)
-					return setNotifications([...notifications, data]);
+				dispatch(notificationsSetItemsSocketUpdate(data));
 			}
 			return null;
 		});
 	}
+
+	useEffect(() => {
+		dispatch(notificationsSetCounter(filterUnRead(notifications)));
+	}, [notifications]);
 
 	const onSwipeLeft = () => {};
 	const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();

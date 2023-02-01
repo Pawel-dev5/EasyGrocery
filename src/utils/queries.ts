@@ -57,7 +57,7 @@ export const notificatioQuery = qs.stringify(
 		populate: ['list', 'sender', 'users_permissions_user'],
 	},
 	{
-		encodeValuesOnly: true, // prettify URL
+		encodeValuesOnly: true,
 	},
 );
 
@@ -66,6 +66,47 @@ export const shopQuery = qs.stringify(
 		populate: ['image', 'orders'],
 	},
 	{
-		encodeValuesOnly: true, // prettify URL
+		encodeValuesOnly: true,
 	},
 );
+
+export const notificationsQuery = (value: string) =>
+	qs.stringify(
+		{
+			populate: {
+				list: {
+					populate: ['invitations', 'users_permissions_users'],
+				},
+				sender: {
+					populate: '*',
+				},
+			},
+			filters: {
+				users_permissions_user: {
+					email: {
+						$eq: value,
+					},
+				},
+			},
+			sort: ['createdAt:desc'],
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);
+
+export const getNotificationsCounterQuery = (value: string) =>
+	qs.stringify(
+		{
+			filters: {
+				users_permissions_user: {
+					email: {
+						$eq: value,
+					},
+				},
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);

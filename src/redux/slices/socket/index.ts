@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from 'redux/store';
 
+// ACTIONS
+import { logoutAction } from 'redux/actions';
+
 // MODELS
 import { InitialStateInterface } from 'redux/slices/socket/models';
 
@@ -15,6 +18,9 @@ export const socketSlice = createSlice({
 		setSocket: (state, action: PayloadAction<any>) => {
 			state.socket = action.payload;
 		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(logoutAction, () => initialState);
 	},
 });
 
