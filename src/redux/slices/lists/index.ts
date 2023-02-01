@@ -16,16 +16,6 @@ import { updateObject } from 'utils/helpers/objectHelpers';
 const initialState: InitialStateInterface = {
 	lists: [],
 	list: null,
-	listEditable: {
-		isEdited: null,
-		value: {
-			title: null,
-			newItem: {
-				value: null,
-				done: false,
-			},
-		},
-	},
 };
 
 export const listsSlice = createSlice({

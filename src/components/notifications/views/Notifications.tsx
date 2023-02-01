@@ -50,10 +50,8 @@ export const Notifications = (props: any) => {
 		await updateRefresh(false);
 	}, []);
 
-	const { props: newProps } = props;
-
 	return (
-		<AppWrapper {...newProps} routeName={t('notifications.title')} isLoading={loadingNotifications}>
+		<AppWrapper {...props} routeName={t('notifications.title')} isLoading={loadingNotifications}>
 			<ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 				<StyledFiltersWrapper>
 					<TouchableOpacity

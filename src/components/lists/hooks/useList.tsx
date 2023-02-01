@@ -30,7 +30,7 @@ import { ShopDataInterface } from 'components/shops/models/hooks';
 
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
-import { findObjectInArray, removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
+import { findObjectInArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { useDebounce } from 'utils/helpers/useDebounce';
 import { listQuery, listNotificationQuery, searchUserQuery, userQuery } from 'utils/queries';
 
@@ -52,22 +52,13 @@ const SingleListEditableInitial: SingleListEditableInitialInterface = {
 };
 
 export const useList = () => {
+	// REDUX
 	const dispatch = useAppDispatch();
 	const socketState = useAppSelector(selectSocket);
 	const globalState = useAppSelector(selectGlobal);
 	const listsState = useAppSelector(selectLists);
 	const user = globalState?.user;
 	const singleList = listsState?.list;
-
-	const [backendError, setBackendError] = useState<string | null>(null);
-	const [singleListEditable, setSingleListEditable] =
-		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
-	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
-	const [visible, setVisible] = useState(false);
-	const [listsView, setListsView] = useState(true);
-	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
-	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
-	const [listUsers, setListUsers] = useState<User[]>([]);
 
 	// SEARCH VALUES
 	const [searchUsersValue, setSearchUsersValue] = useState<string>('');
@@ -76,6 +67,11 @@ export const useList = () => {
 
 	// NEW LIST ALL VALUES EDITITED
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
+	const [singleListItemsEditable, setSingleListItemsEditable] =
+		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
+	const [listUsers, setListUsers] = useState<User[]>([]);
+	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
+	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
 
 	// LOADERS
 	const [isLoading, setIsLoading] = useState(false);
@@ -84,6 +80,14 @@ export const useList = () => {
 	const [addNewListLoader, setAddNewListLoader] = useState(false);
 	const [deleteListLoader, setDeleteListLoader] = useState(false);
 	const [listIsLoading, setListIsLoading] = useState(false);
+
+	// STATES
+	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
+	const [visible, setVisible] = useState(false);
+	const [listsView, setListsView] = useState(true);
+
+	// ERRORS
+	const [backendError, setBackendError] = useState<string | null>(null);
 
 	const {
 		control,
@@ -97,12 +101,11 @@ export const useList = () => {
 	// SOCKET.IO CONFIG
 	if (socketState?.socket) {
 		socketState?.socket.off('listUpdate').once('listUpdate', (data: any) => {
-			const { id, attributes } = data;
 			// UPDATE SINGLE LIST
-			if (singleList) dispatch(listsSetList({ id, ...attributes }));
+			if (singleList) dispatch(listsSetList(data));
 
 			// UPDATE LISTS
-			dispatch(listsSetListsUpdate({ id, ...attributes }));
+			dispatch(listsSetListsUpdate(data));
 			setEditedSingleList(null);
 			setIsUpdating(false);
 		});
@@ -149,14 +152,17 @@ export const useList = () => {
 				.finally(() => setIsLoading(false));
 	};
 
-	const deleteList = (id: string) => {
+	const deleteList = (id: string, callback?: () => void) => {
 		if (id) {
 			setDeleteListLoader(true);
 			axios
 				.delete(`lists/${id}`)
 				.then((resp) => dispatch(listsSetListsDelete(resp?.data?.data?.id)))
 				.catch((error) => setBackendError(error?.response?.data?.error?.message))
-				.finally(() => setDeleteListLoader(false));
+				.finally(() => {
+					setDeleteListLoader(false);
+					if (callback) callback();
+				});
 		}
 	};
 
@@ -186,11 +192,10 @@ export const useList = () => {
 	};
 
 	// UPDATING LIST
-	const sendSingleListPutRequest = (data: ItemInterface[] | [], query?: string, callbackOnSuccess?: () => void) => {
-		const putQuery = query ? `?${query}` : '';
+	const sendSingleListPutRequest = (data: ItemInterface[] | [], callbackOnSuccess?: () => void) => {
 		if (data)
 			axios
-				.put(`lists/${singleList?.id}${putQuery}`, {
+				.put(`lists/${singleList?.id}?${listQuery}`, {
 					data: {
 						items: data,
 					},
@@ -198,15 +203,18 @@ export const useList = () => {
 				.then((resp) => {
 					// SOCKET UPDATE STATES BELOW
 					if (socketState?.socket)
-						socketState?.socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
-							if (error) alert(error);
-							setSingleListEditable(SingleListEditableInitial);
-						});
-					const newListToUpdate = {
-						id: resp.data.data?.id,
-						...resp.data.data?.attributes,
-					};
-					dispatch(listsSetListsUpdate(newListToUpdate));
+						socketState?.socket.emit(
+							'listUpdate',
+							{
+								data: {
+									id: resp.data.data?.id,
+									...resp.data.data?.attributes,
+								},
+							},
+							(error: any) => {
+								if (error) alert(error);
+							},
+						);
 				})
 				.catch((error) => {
 					console.log(error?.response?.data?.error?.message);
@@ -216,39 +224,40 @@ export const useList = () => {
 				});
 	};
 
-	const addNewListItem = (title: ChangeEvent<HTMLInputElement> | string) => {
+	const inputHandler = (title: ChangeEvent<HTMLInputElement> | string) => {
 		const newItem = {
 			value: title as string,
 			done: false,
 		};
-		setSingleListEditable({
+		setSingleListItemsEditable({
 			isEdited: 'items',
-			value: { ...singleListEditable.value, newItem },
+			value: { ...singleListItemsEditable?.value, newItem },
 		});
 	};
 
-	const addNewSingleListItem = () => {
+	const addSingleListItem = () => {
 		setAddNewListItemLoader(true);
 		if (singleList?.items) {
 			const newItems = singleList?.items;
-			const newData = [...newItems, singleListEditable?.value?.newItem];
-			sendSingleListPutRequest(newData as ItemInterface[], listQuery, () => {
-				addNewListItem('');
+			const newData = [...newItems, singleListItemsEditable?.value?.newItem];
+			sendSingleListPutRequest(newData as ItemInterface[], () => {
+				inputHandler('');
 				setAddNewListItemLoader(false);
+				setSingleListItemsEditable(SingleListEditableInitial);
 			});
 		}
 	};
 
 	const deleteSingleListItem = (id: string, callback: () => void) => {
 		if (singleList?.items) {
-			const newData = removeObjectFromArray(singleList?.items, 'id', id);
-			sendSingleListPutRequest(newData, listQuery, callback);
+			const newData = singleList?.items?.filter((item) => item?.id !== id);
+			sendSingleListPutRequest(newData, callback);
 		}
 	};
 
 	const clearSingleListItems = () => {
-		const callback = () => setSortedListItemsByCategories([]);
-		if (singleList?.items) sendSingleListPutRequest([], listQuery, callback);
+		if (singleList?.items && singleList?.items?.length > 0)
+			sendSingleListPutRequest([], () => setSortedListItemsByCategories([]));
 	};
 
 	const updateSingleListItemStatus = (id: string, callback: () => void) => {
@@ -256,7 +265,7 @@ export const useList = () => {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
 				updateObject(todo, { done: !todo?.done }),
 			);
-			sendSingleListPutRequest(newData, listQuery, callback);
+			sendSingleListPutRequest(newData, callback);
 		}
 	};
 
@@ -265,7 +274,7 @@ export const useList = () => {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
 				updateObject(todo, { value: item?.title, category: item?.category }),
 			);
-			sendSingleListPutRequest(newData, listQuery, callback);
+			sendSingleListPutRequest(newData, callback);
 		}
 	};
 
@@ -349,9 +358,18 @@ export const useList = () => {
 				.then((resp) => {
 					// SOCKET UPDATE STATES BELOW
 					if (socketState?.socket)
-						socketState?.socket.emit('listUpdate', { data: resp?.data?.data }, (error: any) => {
-							if (error) alert(error);
-						});
+						socketState?.socket.emit(
+							'listUpdate',
+							{
+								data: {
+									id: resp.data.data?.id,
+									...resp.data.data?.attributes,
+								},
+							},
+							(error: any) => {
+								if (error) alert(error);
+							},
+						);
 				})
 				.catch((error) => console.log(error?.response?.data))
 				.finally(() => setIsUpdating(false));
@@ -383,7 +401,7 @@ export const useList = () => {
 		isLoading,
 		backendError,
 		user,
-		singleListEditable,
+		singleListItemsEditable,
 		filteredItems,
 		showDone,
 		visible,
@@ -403,7 +421,7 @@ export const useList = () => {
 		updateListOrder,
 		getLists,
 		setListUsers,
-		addNewSingleListItem,
+		addSingleListItem,
 		deleteSingleListItem,
 		clearSingleListItems,
 		updateSingleListItemStatus,
@@ -412,7 +430,7 @@ export const useList = () => {
 		getList,
 		deleteList,
 		setNewList,
-		addNewListItem,
+		inputHandler,
 		setShowDone,
 		setVisible,
 		handleSubmit,

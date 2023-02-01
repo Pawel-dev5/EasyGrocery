@@ -3,6 +3,9 @@ import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { t } from 'i18next';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
+// ROUTER
+import { lists } from 'routes/AppRoutes';
+
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 import { ContextProvider as ShopContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
@@ -48,7 +51,7 @@ export const FullListWrapper = (props: any) => {
 	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
 	const [newColor, setNewColor] = useState<string | null>(null);
 
-	const { route } = props;
+	const { route, navigation } = props;
 	const listUuid = route?.params?.id;
 
 	useEffect(() => {
@@ -106,7 +109,7 @@ export const FullListWrapper = (props: any) => {
 							<StyledActionButton
 								onPress={() =>
 									SubmitAlert({
-										okPressed: () => deleteList(singleList?.id!),
+										okPressed: () => deleteList(singleList?.id!, () => navigation.navigate(lists.lists)),
 										okText: t('general.delete'),
 										cancelText: t('general.cancel'),
 										cancelPressed: () => {},

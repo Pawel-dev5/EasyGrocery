@@ -7,7 +7,7 @@ import { FullList, ShortList } from 'components/lists/items';
 import { ListVariant, ListWrapperInterface } from 'components/lists/models/sections';
 
 export const List = (props: ListWrapperInterface) => {
-	const { list, variant, lists: actualList, index } = props;
+	const { list, variant, lists: actualList, index, navigation } = props;
 
 	switch (variant) {
 		case ListVariant.PREVIEW:
@@ -15,7 +15,7 @@ export const List = (props: ListWrapperInterface) => {
 
 			return null;
 		case ListVariant.FULL:
-			return <FullList {...props} actualList={actualList} />;
+			return <FullList {...props} actualList={actualList} navigation={navigation} />;
 		default:
 			return null;
 	}

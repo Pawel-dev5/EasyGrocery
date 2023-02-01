@@ -1,6 +1,8 @@
 const updateObject = (oldObject: object, newValues: object) => {
 	if (oldObject && newValues) {
-		return Object.assign(oldObject, newValues);
+		const oldCopy = { ...oldObject };
+		const newCopy = { ...newValues };
+		return Object.assign(oldCopy, newCopy);
 	}
 
 	return oldObject;

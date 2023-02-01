@@ -96,6 +96,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							<Icon name="edit" size={20} />
 						</StyledItemButton>
 					)}
+
 					<StyledItemButton
 						onPress={() => {
 							setTrashLoading(true);

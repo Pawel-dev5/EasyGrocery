@@ -18,13 +18,13 @@ import { ItemInterface } from 'components/lists/models/sections';
 import { ListItemInterface } from 'components/lists/models/partials';
 
 export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) => {
-	const { singleListEditable, addNewListItem, addNewSingleListItem, addNewListItemLoader, sortedListItemsByCategories } =
+	const { singleListItemsEditable, inputHandler, addSingleListItem, addNewListItemLoader, sortedListItemsByCategories } =
 		useContext(ListsContextData);
 
 	const ref = useRef<TextInput>(null);
 
 	const handleSubmit = () => {
-		addNewSingleListItem();
+		addSingleListItem();
 		ref?.current?.focus();
 	};
 
@@ -32,12 +32,12 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 		<StyledAddNewItem>
 			<Input
 				inputRef={ref}
-				value={singleListEditable?.value?.newItem.value!}
+				value={singleListItemsEditable?.value?.newItem.value!}
 				name="title"
 				placeholder={t('general.add')}
 				textContentType="nickname"
 				onSubmitEditing={() => handleSubmit()}
-				onChange={(text) => addNewListItem(text)}
+				onChange={(text) => inputHandler(text)}
 				blurOnSubmit={false}
 			/>
 
