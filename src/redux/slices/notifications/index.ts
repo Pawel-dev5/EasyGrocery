@@ -27,19 +27,7 @@ export const notificationsSlice = createSlice({
 		notificationsSetItems: (state, action: PayloadAction<NotificationInterface[]>) => {
 			state.items = action.payload;
 		},
-		notificationsSetItemsUpdateRead: (state, action: PayloadAction<NotificationInterface>) => {
-			const newArr = updateObjectInArray(state.items, 'id', action.payload?.id, (todo: NotificationInterface[]) =>
-				updateObject(todo, { ...action.payload }),
-			);
-			state.items = newArr;
-		},
-		notificationsSetItemsAcceptNotification: (state, action: PayloadAction<NotificationInterface>) => {
-			const newArr = updateObjectInArray(state.items, 'id', action.payload?.id, (todo: NotificationInterface[]) =>
-				updateObject(todo, { ...action.payload }),
-			);
-			state.items = newArr;
-		},
-		notificationsSetItemsRejectNotification: (state, action: PayloadAction<NotificationInterface>) => {
+		notificationsSetItemsUpdate: (state, action: PayloadAction<NotificationInterface>) => {
 			const newArr = updateObjectInArray(state.items, 'id', action.payload?.id, (todo: NotificationInterface[]) =>
 				updateObject(todo, { ...action.payload }),
 			);
@@ -65,9 +53,7 @@ export const {
 	notificationsSetCounter,
 	notificationsSetItems,
 	notificationsSetItemsDelete,
-	notificationsSetItemsUpdateRead,
-	notificationsSetItemsAcceptNotification,
-	notificationsSetItemsRejectNotification,
+	notificationsSetItemsUpdate,
 	notificationsSetItemsSocketUpdate,
 } = notificationsSlice.actions;
 

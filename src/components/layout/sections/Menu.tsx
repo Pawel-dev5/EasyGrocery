@@ -4,6 +4,7 @@ import { t } from 'i18next';
 
 // REDUX
 import { selectGlobal } from 'redux/slices/global';
+import { selectNotifications } from 'redux/slices/notifications';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 
 // ACTIONS
@@ -24,7 +25,6 @@ import { StyledMenuTrigger } from 'components/layout/sections/Styles';
 
 // MODELS
 import { MenuInterface } from 'components/layout/models/sections';
-import { selectNotifications } from 'redux/slices/notifications';
 
 export const Menu = ({ variant, navigation }: MenuInterface) => {
 	const dispatch = useAppDispatch();

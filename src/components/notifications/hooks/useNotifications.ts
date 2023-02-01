@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-console */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -8,9 +10,7 @@ import {
 	selectNotifications,
 	notificationsSetItems,
 	notificationsSetItemsDelete,
-	notificationsSetItemsUpdateRead,
-	notificationsSetItemsRejectNotification,
-	notificationsSetItemsAcceptNotification,
+	notificationsSetItemsUpdate,
 	notificationsSetCounter,
 } from 'redux/slices/notifications';
 import { selectGlobal } from 'redux/slices/global';
@@ -75,7 +75,7 @@ export const useNotifications = ({ addNewListFromNofitication }: UseNotification
 					read: !notification?.attributes?.read,
 				},
 			})
-			.then((resp) => dispatch(notificationsSetItemsUpdateRead(resp?.data?.data)))
+			.then((resp) => dispatch(notificationsSetItemsUpdate(resp?.data?.data)))
 			.catch((error) => console.log(error?.response?.data?.error?.message))
 			.finally(() => statusCallback(false));
 	};
@@ -102,7 +102,7 @@ export const useNotifications = ({ addNewListFromNofitication }: UseNotification
 					read: true,
 				},
 			})
-			.then((resp) => dispatch(notificationsSetItemsAcceptNotification(resp?.data?.data)))
+			.then((resp) => dispatch(notificationsSetItemsUpdate(resp?.data?.data)))
 			.catch((error) => console.log(error?.response?.data?.error?.message))
 			.finally(() => statusCallback(false));
 
@@ -173,7 +173,7 @@ export const useNotifications = ({ addNewListFromNofitication }: UseNotification
 					read: true,
 				},
 			})
-			.then((resp) => dispatch(notificationsSetItemsRejectNotification(resp?.data?.data)))
+			.then((resp) => dispatch(notificationsSetItemsUpdate(resp?.data?.data)))
 			.catch((error) => console.log(error?.response?.data?.error?.message))
 			.finally(() => statusCallback(false));
 
