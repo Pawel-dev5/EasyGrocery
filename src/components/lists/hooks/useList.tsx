@@ -118,7 +118,7 @@ export const useList = () => {
 	useEffect(() => {
 		if (searchUsersValue !== '') {
 			axios
-				.get(`users/?${searchUserQuery(user?.username!)}`)
+				.get(`users/?${searchUserQuery(user?.username!, searchUsersValueDebounced)}`)
 				.then((resp) => setSearchedUsers(resp?.data))
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 		} else setSearchedUsers([]);

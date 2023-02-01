@@ -60,7 +60,7 @@ export const AppWrapper = ({
 	const notifications = notificationsState?.items;
 	const user = globalState?.user;
 
-	const { getNotificationsCounter } = useNotifications();
+	const { getNotifications } = useNotifications();
 
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
@@ -68,7 +68,7 @@ export const AppWrapper = ({
 
 	useEffect(() => {
 		if (globalState?.token) {
-			getNotificationsCounter();
+			if (notifications?.length === 0) getNotifications();
 
 			if (!socketState?.socket) {
 				// SOCKET.IO START

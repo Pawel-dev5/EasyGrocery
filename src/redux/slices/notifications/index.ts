@@ -40,7 +40,7 @@ export const notificationsSlice = createSlice({
 		notificationsSetItemsSocketUpdate: (state, action: PayloadAction<any>) => {
 			const checkedNotification = findObjectInArray(state?.items, 'id', action.payload?.id);
 			if (!checkedNotification || checkedNotification === null || checkedNotification === undefined) {
-				state.items = [...state.items, action.payload];
+				state.items = [action.payload, ...state.items];
 			}
 		},
 	},

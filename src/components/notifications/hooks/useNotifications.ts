@@ -11,7 +11,6 @@ import {
 	notificationsSetItems,
 	notificationsSetItemsDelete,
 	notificationsSetItemsUpdate,
-	notificationsSetCounter,
 } from 'redux/slices/notifications';
 import { selectGlobal } from 'redux/slices/global';
 
@@ -20,8 +19,8 @@ import { NotificationInterface } from 'components/notifications/models/views';
 import { User } from 'config/models';
 
 // UTILS
-import { filterUnRead, removeObjectFromArray } from 'utils/helpers/arrayHelpers';
-import { getNotificationsCounterQuery, listQuery, notificationsQuery, notificatioQuery } from 'utils/queries';
+import { removeObjectFromArray } from 'utils/helpers/arrayHelpers';
+import { listQuery, notificationsQuery, notificatioQuery } from 'utils/queries';
 import { listsSetListsAdd } from 'redux/slices/lists';
 
 export const useNotifications = () => {
@@ -50,13 +49,6 @@ export const useNotifications = () => {
 			.then((resp) => dispatch(notificationsSetItems(resp?.data?.data)))
 			.catch((error) => console.log(error?.response?.data?.error?.message))
 			.finally(() => setLoadingNotifications(false));
-	};
-
-	const getNotificationsCounter = () => {
-		axios
-			.get(`notifications/?${getNotificationsCounterQuery(user?.email!)}`)
-			.then((resp) => dispatch(notificationsSetCounter(filterUnRead(resp?.data?.data))))
-			.catch((error) => console.log(error?.response?.data?.error?.message));
 	};
 
 	const filterNotifications = () => {
@@ -225,7 +217,6 @@ export const useNotifications = () => {
 		setShowAll,
 		filterNotifications,
 		getNotifications,
-		getNotificationsCounter,
 		updateRead,
 		acceptNotification,
 		rejectNotification,

@@ -95,29 +95,13 @@ export const notificationsQuery = (value: string) =>
 		},
 	);
 
-export const getNotificationsCounterQuery = (value: string) =>
-	qs.stringify(
-		{
-			filters: {
-				users_permissions_user: {
-					email: {
-						$eq: value,
-					},
-				},
-			},
-		},
-		{
-			encodeValuesOnly: true,
-		},
-	);
-
-export const searchUserQuery = (value: string) =>
+export const searchUserQuery = (currentUser: string, value: string) =>
 	qs.stringify(
 		{
 			filters: {
 				username: {
 					$contains: value,
-					$ne: value,
+					$ne: currentUser,
 				},
 			},
 		},
