@@ -17,14 +17,14 @@ import { selectGlobal } from 'redux/slices/global';
 
 // MODELS
 import { NotificationInterface } from 'components/notifications/models/views';
-import { UseNotificationInterface } from 'components/notifications/models/hooks';
 import { User } from 'config/models';
 
 // UTILS
 import { filterUnRead, removeObjectFromArray } from 'utils/helpers/arrayHelpers';
 import { getNotificationsCounterQuery, listQuery, notificationsQuery, notificatioQuery } from 'utils/queries';
+import { listsSetListsAdd } from 'redux/slices/lists';
 
-export const useNotifications = ({ addNewListFromNofitication }: UseNotificationInterface) => {
+export const useNotifications = () => {
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const user = globalState?.user;
@@ -156,7 +156,7 @@ export const useNotifications = ({ addNewListFromNofitication }: UseNotification
 					invitations: newInvitations || [],
 				},
 			})
-			.then((resp) => addNewListFromNofitication({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id }))
+			.then((resp) => dispatch(listsSetListsAdd({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id })))
 			.catch((error) => console.log(error?.response?.data?.error?.message))
 			.finally(() => statusCallback(false));
 	};

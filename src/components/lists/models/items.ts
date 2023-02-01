@@ -26,8 +26,3 @@ export interface SingleListInterface {
 	};
 	invitations: InvitationUser[];
 }
-
-export interface FullListInterface {
-	actualList: ListInterface[];
-	setLists: Dispatch<SetStateAction<ListInterface[]>>;
-}

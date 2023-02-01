@@ -1,5 +1,6 @@
 /* eslint-disable no-alert */
-import React, { ChangeEvent, createContext, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+/* eslint-disable no-console */
+import React, { ChangeEvent, createContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues, useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,32 +9,30 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // REDUX
 import { selectSocket } from 'redux/slices/socket';
-import { useAppSelector } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectGlobal } from 'redux/slices/global';
-
-// ROUTER
-import { lists as listRoute } from 'routes/AppRoutes';
+import {
+	listsSetList,
+	listsSetLists,
+	listsSetListsAdd,
+	listsSetListsDelete,
+	listsSetListsUpdate,
+	selectLists,
+} from 'redux/slices/lists';
 
 // MODELS
 import { ItemInterface, ListInterface } from 'components/lists/models/sections';
-import {
-	ListContextProvider,
-	SingleListEditableInitial,
-	SingleListEditableInitialInterface,
-	UseListInterface,
-} from 'components/lists/models/hooks';
+import { SingleListEditableInitialInterface } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
-import { User } from 'config/models';
+import { ContextProviderProps, User } from 'config/models';
 import { ShopDataInterface } from 'components/shops/models/hooks';
 
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
 import { findObjectInArray, removeObjectFromArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { useDebounce } from 'utils/helpers/useDebounce';
-import { listQuery, listNotificationQuery } from 'utils/queries';
-
-const qs = require('qs');
+import { listQuery, listNotificationQuery, searchUserQuery, userQuery } from 'utils/queries';
 
 const schema = yup
 	.object({
@@ -41,14 +40,26 @@ const schema = yup
 	})
 	.required();
 
-export const useList = ({ lists, setLists }: UseListInterface) => {
-	const socketState = useAppSelector(selectSocket);
+const SingleListEditableInitial: SingleListEditableInitialInterface = {
+	isEdited: null,
+	value: {
+		title: null,
+		newItem: {
+			value: null,
+			done: false,
+		},
+	},
+};
 
+export const useList = () => {
+	const dispatch = useAppDispatch();
+	const socketState = useAppSelector(selectSocket);
 	const globalState = useAppSelector(selectGlobal);
+	const listsState = useAppSelector(selectLists);
 	const user = globalState?.user;
+	const singleList = listsState?.list;
 
 	const [backendError, setBackendError] = useState<string | null>(null);
-	const [singleList, setSingleList] = useState<SingleListInterface | null>(null);
 	const [singleListEditable, setSingleListEditable] =
 		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
 	const [showDone, setShowDone] = useState<'done' | 'unDone' | null>(null);
@@ -72,6 +83,7 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 	const [addNewListItemLoader, setAddNewListItemLoader] = useState(false);
 	const [addNewListLoader, setAddNewListLoader] = useState(false);
 	const [deleteListLoader, setDeleteListLoader] = useState(false);
+	const [listIsLoading, setListIsLoading] = useState(false);
 
 	const {
 		control,
@@ -87,17 +99,12 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 		socketState?.socket.off('listUpdate').once('listUpdate', (data: any) => {
 			const { id, attributes } = data;
 			// UPDATE SINGLE LIST
-			if (singleList) setSingleList({ id, ...attributes });
-			setIsUpdating(false);
-			setEditedSingleList(null);
+			if (singleList) dispatch(listsSetList({ id, ...attributes }));
 
 			// UPDATE LISTS
-			if (lists) {
-				const newLists = updateObjectInArray(lists, 'id', id, (todo: ListInterface) =>
-					updateObject(todo, { id, ...attributes }),
-				);
-				if (newLists && setLists) setLists(newLists);
-			}
+			dispatch(listsSetListsUpdate({ id, ...attributes }));
+			setEditedSingleList(null);
+			setIsUpdating(false);
 		});
 	}
 
@@ -106,66 +113,50 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 
 	useEffect(() => {
 		if (searchUsersValue !== '') {
-			const searchQuery = qs.stringify(
-				{
-					filters: {
-						username: {
-							$contains: searchUsersValue,
-							$ne: user?.username,
-						},
-					},
-				},
-				{
-					encodeValuesOnly: true,
-				},
-			);
-
 			axios
-				.get(`users/?${searchQuery}`)
+				.get(`users/?${searchUserQuery(user?.username!)}`)
 				.then((resp) => setSearchedUsers(resp?.data))
 				.catch((error) => setBackendError(error?.response?.data?.error?.message));
 		} else setSearchedUsers([]);
 	}, [searchUsersValueDebounced]);
 
+	const getLists = () => {
+		setListIsLoading(true);
+		if (globalState?.user?.id)
+			axios
+				.get(`users/${globalState?.user?.id}?${userQuery}`)
+				.then((resp) => dispatch(listsSetLists(resp?.data?.lists)))
+				.catch((error) => console.log(error?.response?.data?.error?.message))
+				.finally(() => setListIsLoading(false));
+	};
+
+	const updateListOrder = (data: ListInterface[]) => {
+		if (globalState?.user?.id) {
+			dispatch(listsSetLists(data));
+			axios
+				.put(`users/${globalState?.user?.id}/?${userQuery}`, { ...globalState?.user, lists: data })
+				.then(() => {})
+				.catch((error) => console.log(error?.response?.data?.error?.message));
+		}
+	};
+
 	const getList = (id: string) => {
 		if (id)
 			axios
 				.get(`lists/${id}?${listQuery}`)
-				.then((resp) => {
-					setIsLoading(false);
-					setSingleList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes });
-				})
-				.catch((error) => setBackendError(error?.response?.data?.error?.message));
+				.then((resp) => dispatch(listsSetList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes })))
+				.catch((error) => setBackendError(error?.response?.data?.error?.message))
+				.finally(() => setIsLoading(false));
 	};
 
-	const deleteList = (
-		id: string,
-		actualist: ListInterface[],
-		setActualList: Dispatch<SetStateAction<ListInterface[]>>,
-		navigation?: any,
-	) => {
+	const deleteList = (id: string) => {
 		if (id) {
 			setDeleteListLoader(true);
 			axios
 				.delete(`lists/${id}`)
-				.then((resp) => {
-					let newList: ListInterface[] = [];
-					if (actualist && actualist?.length > 0) newList = removeObjectFromArray(actualist, 'id', resp?.data?.data?.id);
-					// RESET LISTS
-					setActualList([]);
-					// SET UPDATED LISTS
-					setActualList(newList);
-					// RESET SINGLE LIST
-					setSingleList(null);
-					setDeleteListLoader(false);
-
-					// DONT WORK DONT KNOW WHY
-					if (navigation) navigation?.navigate(listRoute.lists);
-				})
-				.catch((error) => {
-					setDeleteListLoader(false);
-					setBackendError(error?.response?.data?.error?.message);
-				});
+				.then((resp) => dispatch(listsSetListsDelete(resp?.data?.data?.id)))
+				.catch((error) => setBackendError(error?.response?.data?.error?.message))
+				.finally(() => setDeleteListLoader(false));
 		}
 	};
 
@@ -186,29 +177,12 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 					id: resp?.data?.data?.id,
 					...resp?.data?.data?.attributes,
 				};
-				if (lists && setLists) setLists([...lists, newList]);
+				dispatch(listsSetListsAdd(newList));
 				setVisible(!visible);
 				reset();
-				setAddNewListLoader(false);
 			})
-			.catch((error) => {
-				setAddNewListLoader(false);
-				setBackendError(error?.response?.data?.error?.message);
-			});
-	};
-
-	const addNewListFromNofitication = (list: ListInterface) => {
-		if (lists && setLists) setLists([...lists, list]);
-	};
-
-	// TODO
-	const updateListAfterSingleChange = (toUpdate: ListInterface) => {
-		if (toUpdate && lists && setLists) {
-			const newLists = updateObjectInArray(lists, 'id', toUpdate?.id, (todo: ListInterface) =>
-				updateObject(todo, { ...toUpdate }),
-			);
-			setLists(newLists);
-		}
+			.catch((error) => setBackendError(error?.response?.data?.error?.message))
+			.finally(() => setAddNewListLoader(false));
 	};
 
 	// UPDATING LIST
@@ -228,16 +202,17 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 							if (error) alert(error);
 							setSingleListEditable(SingleListEditableInitial);
 						});
-					if (callbackOnSuccess) callbackOnSuccess();
 					const newListToUpdate = {
 						id: resp.data.data?.id,
 						...resp.data.data?.attributes,
 					};
-					updateListAfterSingleChange(newListToUpdate);
+					dispatch(listsSetListsUpdate(newListToUpdate));
 				})
 				.catch((error) => {
-					if (callbackOnSuccess) callbackOnSuccess();
 					console.log(error?.response?.data?.error?.message);
+				})
+				.finally(() => {
+					if (callbackOnSuccess) callbackOnSuccess();
 				});
 	};
 
@@ -378,7 +353,8 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 							if (error) alert(error);
 						});
 				})
-				.catch((error) => console.log(error?.response?.data));
+				.catch((error) => console.log(error?.response?.data))
+				.finally(() => setIsUpdating(false));
 		}
 	};
 
@@ -423,6 +399,9 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 		searchedUsers,
 		deleteListLoader,
 		listUsers,
+		listIsLoading,
+		updateListOrder,
+		getLists,
 		setListUsers,
 		addNewSingleListItem,
 		deleteSingleListItem,
@@ -444,12 +423,11 @@ export const useList = ({ lists, setLists }: UseListInterface) => {
 		sortItemsByCategories,
 		setSortedListItemsByCategories,
 		setSearchIcons,
-		addNewListFromNofitication,
 	};
 };
 
 export const ListsContextData = createContext({} as ReturnType<typeof useList>);
 
-export const ContextProvider = ({ children, lists, setLists }: ListContextProvider) => (
-	<ListsContextData.Provider value={useList({ lists, setLists })}>{children}</ListsContextData.Provider>
+export const ContextProvider = ({ children }: ContextProviderProps) => (
+	<ListsContextData.Provider value={useList()}>{children}</ListsContextData.Provider>
 );

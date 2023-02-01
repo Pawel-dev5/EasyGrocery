@@ -20,9 +20,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { selectGlobal } from 'redux/slices/global';
 import { useAppSelector } from 'redux/hooks';
 
-// CONTEXT
-import { ContextProvider } from 'config/useGlobalContext';
-
 // STYLES
 import { ThemeProvider } from 'styled-components';
 import theme from 'utils/theme/themeDefault';
@@ -83,11 +80,9 @@ const App = () => (
 		<PersistGate loading={null} persistor={persistor}>
 			<ThemeProvider theme={theme}>
 				<GestureHandlerRootView style={{ flex: 1 }}>
-					<ContextProvider>
-						<MenuProvider>
-							<AppComponent />
-						</MenuProvider>
-					</ContextProvider>
+					<MenuProvider>
+						<AppComponent />
+					</MenuProvider>
 				</GestureHandlerRootView>
 			</ThemeProvider>
 		</PersistGate>

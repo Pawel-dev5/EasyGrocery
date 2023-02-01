@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo, useContext } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
 import { Manager } from 'socket.io-client';
@@ -10,9 +10,6 @@ import { selectGlobal } from 'redux/slices/global';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectSocket, setSocket } from 'redux/slices/socket';
 import { notificationsSetCounter, notificationsSetItemsSocketUpdate, selectNotifications } from 'redux/slices/notifications';
-
-// CONTEXT
-import { ListsContextData } from 'components/lists/hooks/useList';
 
 // HOOKS
 import { useNotifications } from 'components/notifications/hooks/useNotifications';
@@ -63,8 +60,7 @@ export const AppWrapper = ({
 	const notifications = notificationsState?.items;
 	const user = globalState?.user;
 
-	const { addNewListFromNofitication } = useContext(ListsContextData);
-	const { getNotificationsCounter } = useNotifications({ addNewListFromNofitication });
+	const { getNotificationsCounter } = useNotifications();
 
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);

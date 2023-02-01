@@ -110,3 +110,18 @@ export const getNotificationsCounterQuery = (value: string) =>
 			encodeValuesOnly: true,
 		},
 	);
+
+export const searchUserQuery = (value: string) =>
+	qs.stringify(
+		{
+			filters: {
+				username: {
+					$contains: value,
+					$ne: value,
+				},
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);

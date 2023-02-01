@@ -4,7 +4,6 @@ import { t } from 'i18next';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 // CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
 import { ContextProvider as ShopContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
 
@@ -27,10 +26,7 @@ import {
 	StyledListDescription,
 } from 'components/lists/items/Styles';
 
-// MODELS
-import { FullListInterface } from 'components/lists/models/items';
-
-export const FullListWrapper = (props: any, { actualList, setLists }: FullListInterface) => {
+export const FullListWrapper = (props: any) => {
 	const {
 		singleList,
 		getList,
@@ -52,7 +48,7 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
 	const [newColor, setNewColor] = useState<string | null>(null);
 
-	const { route, navigation } = props;
+	const { route } = props;
 	const listUuid = route?.params?.id;
 
 	useEffect(() => {
@@ -110,7 +106,7 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 							<StyledActionButton
 								onPress={() =>
 									SubmitAlert({
-										okPressed: () => deleteList(singleList?.id!, actualList, setLists, navigation),
+										okPressed: () => deleteList(singleList?.id!),
 										okText: t('general.delete'),
 										cancelText: t('general.cancel'),
 										cancelPressed: () => {},
@@ -176,17 +172,13 @@ export const FullListWrapper = (props: any, { actualList, setLists }: FullListIn
 	);
 };
 
-export const FullList = (props: any) => {
-	const { lists, setLists } = useContext(GlobalContextData);
-
-	return (
-		<ContextProvider lists={lists} setLists={setLists}>
-			<ShopContextProvider>
-				<FullListWrapper {...props} />
-			</ShopContextProvider>
-		</ContextProvider>
-	);
-};
+export const FullList = (props: any) => (
+	<ContextProvider>
+		<ShopContextProvider>
+			<FullListWrapper {...props} />
+		</ShopContextProvider>
+	</ContextProvider>
+);
 
 const styles = StyleSheet.create({
 	contentContainer: {

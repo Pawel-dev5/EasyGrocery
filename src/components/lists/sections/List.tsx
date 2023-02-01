@@ -1,7 +1,4 @@
-import React, { useContext } from 'react';
-
-// CONTEXT
-import { GlobalContextData } from 'config/useGlobalContext';
+import React from 'react';
 
 // COMPONENTS
 import { FullList, ShortList } from 'components/lists/items';
@@ -10,16 +7,15 @@ import { FullList, ShortList } from 'components/lists/items';
 import { ListVariant, ListWrapperInterface } from 'components/lists/models/sections';
 
 export const List = (props: ListWrapperInterface) => {
-	const { lists } = useContext(GlobalContextData);
-	const { list, variant, lists: actualList, setLists, index } = props;
+	const { list, variant, lists: actualList, index } = props;
 
 	switch (variant) {
 		case ListVariant.PREVIEW:
-			if (list) return <ShortList {...list} lists={actualList} setLists={setLists} index={index} />;
+			if (list) return <ShortList {...list} actualList={actualList} index={index} />;
 
 			return null;
 		case ListVariant.FULL:
-			return <FullList {...props} lists={lists} actualList={actualList} setLists={setLists} />;
+			return <FullList {...props} actualList={actualList} />;
 		default:
 			return null;
 	}

@@ -30,15 +30,15 @@ import { ProgressBarVariant } from 'components/lists/models/sections';
 export const ShortList = (props: any) => {
 	const { deleteList, deleteListLoader, listsView } = useContext(ListsContextData);
 	// eslint-disable-next-line @typescript-eslint/naming-convention
-	const { navigation, title, users_permissions_users, items, id, color, lists, setLists, index } = props;
+	const { navigation, title, users_permissions_users, items, id, color, actualList, index } = props;
 
 	// eslint-disable-next-line no-unsafe-optional-chaining
-	const listsLength = lists?.length + 1;
+	const listsLength = actualList?.length + 1;
 	return (
 		<Swipeable
 			renderRightActions={() => (
 				<RightSwipeDelete
-					onClick={() => deleteList(id, lists, setLists)}
+					onClick={() => deleteList(id)}
 					loader={deleteListLoader}
 					lastElement={index === listsLength}
 					firstElement={index === 0}

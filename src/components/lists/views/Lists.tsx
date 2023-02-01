@@ -10,7 +10,6 @@ import { lists as listRoute } from 'routes/AppRoutes';
 
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
-import { GlobalContextData } from 'config/useGlobalContext';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
@@ -22,8 +21,13 @@ import { Icon, Loader } from 'components/layout/common';
 // STYLES
 import { StyledGridList, StyledAddListWrapper } from 'components/lists/views/Styles';
 import { StyledBottomAddListButton } from 'components/layout/views/Styles';
+import { selectLists } from 'redux/slices/lists';
+import { useAppSelector } from 'redux/hooks';
 
 const ListsWrapper = (props: any) => {
+	const listsState = useAppSelector(selectLists);
+	const lists = listsState?.lists;
+
 	const {
 		addNewListLoader,
 		backendError,
@@ -36,9 +40,10 @@ const ListsWrapper = (props: any) => {
 		setListsView,
 		setIsLoading,
 		setVisible,
+		getLists,
+		updateListOrder,
+		listIsLoading,
 	} = useContext(ListsContextData);
-
-	const { getLists, lists, setLists, updateListOrder, listIsLoading } = useContext(GlobalContextData);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -115,10 +120,7 @@ const ListsWrapper = (props: any) => {
 					<DraggableFlatList
 						data={lists}
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-						onDragEnd={({ data }: { data: ListInterface[] }) => {
-							updateListOrder(data);
-							setLists(data);
-						}}
+						onDragEnd={({ data }: { data: ListInterface[] }) => updateListOrder(data)}
 						contentContainerStyle={{ paddingBottom: 15 }}
 						keyExtractor={(item: ListInterface) => item?.id}
 						renderItem={({ item, drag, isActive, getIndex }: RenderItemParams<ListInterface>) => {
@@ -127,7 +129,6 @@ const ListsWrapper = (props: any) => {
 								navigation,
 								variant: ListVariant.PREVIEW,
 								lists,
-								setLists,
 								index: getIndex()!,
 							};
 							return (
@@ -155,7 +156,6 @@ const ListsWrapper = (props: any) => {
 									navigation,
 									variant: ListVariant.PREVIEW,
 									lists,
-									setLists,
 								};
 								return (
 									<TouchableOpacity
@@ -175,12 +175,8 @@ const ListsWrapper = (props: any) => {
 	);
 };
 
-export const Lists = ({ navigation }: { navigation: any }) => {
-	const { lists, setLists } = useContext(GlobalContextData);
-
-	return (
-		<ContextProvider setLists={setLists} lists={lists} navigation={navigation}>
-			<ListsWrapper navigation={navigation} />
-		</ContextProvider>
-	);
-};
+export const Lists = ({ navigation }: { navigation: any }) => (
+	<ContextProvider>
+		<ListsWrapper navigation={navigation} />
+	</ContextProvider>
+);
