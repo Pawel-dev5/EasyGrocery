@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ItemInterface } from 'components/lists/models/sections';
 import { listQuery } from 'utils/queries';
 
-export const getListData = (id: string, data: ItemInterface[]) =>
+export const updateListItems = (id: string, data: ItemInterface[]) =>
 	axios
 		.put(`lists/${id}?${listQuery}`, {
 			data: {

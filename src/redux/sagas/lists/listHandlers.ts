@@ -7,7 +7,7 @@ import { call, select, takeLatest } from 'redux-saga/effects';
 import { listsSetListUpdateStatus } from 'redux/slices/lists';
 
 // REQUESTS
-import { getListData } from 'redux/sagas/lists/listRequests';
+import { updateListItems } from 'redux/sagas/lists/listRequests';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
@@ -26,7 +26,7 @@ function* handleListFlow() {
 		const socketState: { socket: { emit: any } } = yield select(getSocketState);
 
 		// ---> 2. GET LIST DATA <---
-		const listData: SingleListInterface = yield call(getListData, id, items);
+		const listData: SingleListInterface = yield call(updateListItems, id, items);
 
 		// ---> 4. SET LIST DATA <---
 
