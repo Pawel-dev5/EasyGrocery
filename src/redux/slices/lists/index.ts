@@ -6,7 +6,7 @@ import { logoutAction } from 'redux/actions';
 import { InitialStateInterface } from 'redux/slices/lists/models';
 
 // MODELS
-import { ListInterface } from 'components/lists/models/sections';
+import { ItemInterface, ListInterface } from 'components/lists/models/sections';
 import { SingleListInterface } from 'components/lists/models/items';
 
 // HELPERS
@@ -42,14 +42,28 @@ export const listsSlice = createSlice({
 		listsSetList: (state, action: PayloadAction<SingleListInterface>) => {
 			state.list = action.payload;
 		},
+		listsSetListUpdateStatus: (state, action: PayloadAction<string>) => {
+			if (state?.list) {
+				const newData = updateObjectInArray(state?.list.items, 'id', action.payload, (todo: ItemInterface) =>
+					updateObject(todo, { done: !todo?.done }),
+				);
+				state.list = { ...state.list, items: newData };
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(logoutAction, () => initialState);
 	},
 });
 
-export const { listsSetLists, listsSetListsDelete, listsSetListsAdd, listsSetListsUpdate, listsSetList } =
-	listsSlice.actions;
+export const {
+	listsSetLists,
+	listsSetListsDelete,
+	listsSetListsAdd,
+	listsSetListsUpdate,
+	listsSetList,
+	listsSetListUpdateStatus,
+} = listsSlice.actions;
 
 export const selectLists = (state: RootState) => state.lists;
 

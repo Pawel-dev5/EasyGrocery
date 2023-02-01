@@ -5,7 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import rootReducer from 'redux/reducers';
-// import rootSaga from 'redux/sagas/rootSaga';
+import rootSaga from 'redux/sagas/rootSaga';
 
 const reducers = combineReducers(rootReducer);
 
@@ -30,7 +30,7 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-// sagaMiddleware.run(rootSaga);
+sagaMiddleware.run(rootSaga);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

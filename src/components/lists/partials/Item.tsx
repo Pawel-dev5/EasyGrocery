@@ -31,6 +31,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 		useContext(ListsContextData);
 
 	// LOADERS STATES
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [doneLoading, setDoneLoading] = useState(false);
 	const [trashLoading, setTrashLoading] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
@@ -41,13 +42,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 		<StyledItemsContainer>
 			<StyledListItemsWrapper>
 				<StyledItemTitleWrapper>
-					<StyledCheckButton
-						onPress={() => {
-							setDoneLoading(true);
-							updateSingleListItemStatus(id, () => setDoneLoading(false));
-						}}
-						disabled={doneLoading}
-					>
+					<StyledCheckButton onPress={() => updateSingleListItemStatus(id)} disabled={doneLoading}>
 						{doneLoading ? (
 							<Loader size={32} />
 						) : (

@@ -69,12 +69,15 @@ export const AppWrapper = ({
 	useEffect(() => {
 		if (globalState?.token) {
 			getNotificationsCounter();
-			// SOCKET.IO START
-			const manager = new Manager(REACT_APP_API, {
-				reconnectionDelayMax: 10000,
-			});
-			const newSocket = manager.socket('/');
-			dispatch(setSocket(newSocket));
+
+			if (!socketState?.socket) {
+				// SOCKET.IO START
+				const manager = new Manager(REACT_APP_API, {
+					reconnectionDelayMax: 10000,
+				});
+				const newSocket = manager.socket('/');
+				dispatch(setSocket(newSocket));
+			}
 		}
 	}, []);
 

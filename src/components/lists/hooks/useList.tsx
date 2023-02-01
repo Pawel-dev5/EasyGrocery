@@ -17,6 +17,7 @@ import {
 	listsSetListsAdd,
 	listsSetListsDelete,
 	listsSetListsUpdate,
+	listsSetListUpdateStatus,
 	selectLists,
 } from 'redux/slices/lists';
 
@@ -260,13 +261,8 @@ export const useList = () => {
 			sendSingleListPutRequest([], () => setSortedListItemsByCategories([]));
 	};
 
-	const updateSingleListItemStatus = (id: string, callback: () => void) => {
-		if (singleList?.items) {
-			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
-				updateObject(todo, { done: !todo?.done }),
-			);
-			sendSingleListPutRequest(newData, callback);
-		}
+	const updateSingleListItemStatus = (id: string) => {
+		if (singleList?.items) dispatch(listsSetListUpdateStatus(id));
 	};
 
 	const updateSingleListItemName = (id: string, item: EditItemInterface, callback: () => void) => {
