@@ -29,7 +29,8 @@
 		"addUser": "Add user",
 		"searchUser": "Search user",
 		"accept": "Accept",
-		"reject": "Reject"
+		"reject": "Reject",
+		"error": "Error occured. Try again"
 	},
 	"auth": {
 		"logout": "Logout",

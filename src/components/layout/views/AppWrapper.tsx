@@ -9,13 +9,13 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { selectGlobal } from 'redux/slices/global';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectSocket, setSocket } from 'redux/slices/socket';
-import { notificationsSetCounter, notificationsSetItemsSocketUpdate, selectNotifications } from 'redux/slices/notifications';
+import { notificationsSetCounter, notificationsUpdateItemsSocket, selectNotifications } from 'redux/slices/notifications';
 
 // HOOKS
 import { useNotifications } from 'components/notifications/hooks/useNotifications';
 
 // COMPONENTS
-import { Menu } from 'components/layout/sections';
+import { Alert, Menu } from 'components/layout/sections';
 import { Icon, Loader } from 'components/layout/common';
 
 // MODELS
@@ -58,7 +58,7 @@ export const AppWrapper = ({
 	const socketState = useAppSelector(selectSocket);
 	const notificationsState = useAppSelector(selectNotifications);
 	const notifications = notificationsState?.items;
-	const user = globalState?.user;
+	const { user, token, alerts } = globalState;
 
 	const { getNotifications } = useNotifications();
 
@@ -67,7 +67,7 @@ export const AppWrapper = ({
 	const snapPoints = useMemo(() => ['30%', '58%', '88.8%'], []);
 
 	useEffect(() => {
-		if (globalState?.token) {
+		if (token) {
 			if (notifications?.length === 0) getNotifications();
 
 			if (!socketState?.socket) {
@@ -85,7 +85,7 @@ export const AppWrapper = ({
 	if (socketState?.socket) {
 		socketState?.socket.off('notificationsUpdate').once('notificationsUpdate', (data: any) => {
 			if (data?.attributes?.users_permissions_user?.data?.attributes?.email === user?.email) {
-				dispatch(notificationsSetItemsSocketUpdate(data));
+				dispatch(notificationsUpdateItemsSocket(data));
 			}
 			return null;
 		});
@@ -163,6 +163,8 @@ export const AppWrapper = ({
 					)}
 				</>
 			)}
+
+			{alerts && alerts[0] && <Alert {...alerts[0]} />}
 		</StyledAppLayout>
 	);
 };

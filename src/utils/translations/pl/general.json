@@ -29,7 +29,8 @@
 		"addUser": "Dodaj użytkownika",
 		"searchUser": "Wyszukaj użytkownika",
 		"accept": "Akceptuj",
-		"reject": "Odrzuć"
+		"reject": "Odrzuć",
+		"error": "Wystąpił błąd. Spróbuj ponownie"
 	},
 	"auth": {
 		"logout": "Wyloguj",

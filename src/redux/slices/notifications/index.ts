@@ -27,17 +27,17 @@ export const notificationsSlice = createSlice({
 		notificationsSetItems: (state, action: PayloadAction<NotificationInterface[]>) => {
 			state.items = action.payload;
 		},
-		notificationsSetItemsUpdate: (state, action: PayloadAction<NotificationInterface>) => {
+		notificationsUpdateItems: (state, action: PayloadAction<NotificationInterface>) => {
 			const newArr = updateObjectInArray(state.items, 'id', action.payload?.id, (todo: NotificationInterface[]) =>
 				updateObject(todo, { ...action.payload }),
 			);
 			state.items = newArr;
 		},
-		notificationsSetItemsDelete: (state, action: PayloadAction<NotificationInterface>) => {
+		notificationsDeleteItems: (state, action: PayloadAction<NotificationInterface>) => {
 			const newArr = state.items?.filter((item) => item?.id !== action.payload?.id);
 			state.items = newArr;
 		},
-		notificationsSetItemsSocketUpdate: (state, action: PayloadAction<any>) => {
+		notificationsUpdateItemsSocket: (state, action: PayloadAction<any>) => {
 			const checkedNotification = findObjectInArray(state?.items, 'id', action.payload?.id);
 			if (!checkedNotification || checkedNotification === null || checkedNotification === undefined) {
 				state.items = [action.payload, ...state.items];
@@ -52,9 +52,9 @@ export const notificationsSlice = createSlice({
 export const {
 	notificationsSetCounter,
 	notificationsSetItems,
-	notificationsSetItemsDelete,
-	notificationsSetItemsUpdate,
-	notificationsSetItemsSocketUpdate,
+	notificationsDeleteItems,
+	notificationsUpdateItems,
+	notificationsUpdateItemsSocket,
 } = notificationsSlice.actions;
 
 export const selectNotifications = (state: RootState) => state.notifications;

@@ -5,7 +5,7 @@ export const StyledListCard = styled.View<{ color: string | null; lastElement: b
 	min-height: 80px;
 	border-radius: ${({ theme }) => theme.radius[2]};
 	border: 1px solid ${({ theme }) => theme.grey200};
-	margin: 8.5px 5px;
+	margin: 8.5px 0px;
 	padding: 12px;
 	overflow: hidden;
 	background: ${({ theme }) => theme.white};

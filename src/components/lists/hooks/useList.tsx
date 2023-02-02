@@ -10,14 +10,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // REDUX
 import { selectSocket } from 'redux/slices/socket';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { selectGlobal } from 'redux/slices/global';
+import { globalSetAlert, selectGlobal } from 'redux/slices/global';
 import {
 	listsSetList,
 	listsSetLists,
-	listsSetListsAdd,
-	listsSetListsDelete,
-	listsSetListsUpdate,
-	listsSetListUpdateStatus,
+	listsAddLists,
+	listsDeleteLists,
+	listsUpdateLists,
+	listsUpdateListStatus,
 	selectLists,
 } from 'redux/slices/lists';
 
@@ -28,6 +28,7 @@ import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
 import { ContextProviderProps, User } from 'config/models';
 import { ShopDataInterface } from 'components/shops/models/hooks';
+import { AlertTypes } from 'redux/slices/global/models';
 
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
@@ -87,9 +88,6 @@ export const useList = () => {
 	const [visible, setVisible] = useState(false);
 	const [listsView, setListsView] = useState(true);
 
-	// ERRORS
-	const [backendError, setBackendError] = useState<string | null>(null);
-
 	const {
 		control,
 		handleSubmit,
@@ -106,7 +104,7 @@ export const useList = () => {
 			if (singleList) dispatch(listsSetList(data));
 
 			// UPDATE LISTS
-			dispatch(listsSetListsUpdate(data));
+			dispatch(listsUpdateLists(data));
 			setEditedSingleList(null);
 			setIsUpdating(false);
 		});
@@ -120,7 +118,13 @@ export const useList = () => {
 			axios
 				.get(`users/?${searchUserQuery(user?.username!, searchUsersValueDebounced)}`)
 				.then((resp) => setSearchedUsers(resp?.data))
-				.catch((error) => setBackendError(error?.response?.data?.error?.message));
+				.catch((error) => {
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, name, status } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				});
 		} else setSearchedUsers([]);
 	}, [searchUsersValueDebounced]);
 
@@ -130,7 +134,13 @@ export const useList = () => {
 			axios
 				.get(`users/${globalState?.user?.id}?${userQuery}`)
 				.then((resp) => dispatch(listsSetLists(resp?.data?.lists)))
-				.catch((error) => console.log(error?.response?.data?.error?.message))
+				.catch((error) => {
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, name, status } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				})
 				.finally(() => setListIsLoading(false));
 	};
 
@@ -140,7 +150,13 @@ export const useList = () => {
 			axios
 				.put(`users/${globalState?.user?.id}/?${userQuery}`, { ...globalState?.user, lists: data })
 				.then(() => {})
-				.catch((error) => console.log(error?.response?.data?.error?.message));
+				.catch((error) => {
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				});
 		}
 	};
 
@@ -149,7 +165,13 @@ export const useList = () => {
 			axios
 				.get(`lists/${id}?${listQuery}`)
 				.then((resp) => dispatch(listsSetList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes })))
-				.catch((error) => setBackendError(error?.response?.data?.error?.message))
+				.catch((error) => {
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				})
 				.finally(() => setIsLoading(false));
 	};
 
@@ -158,8 +180,14 @@ export const useList = () => {
 			setDeleteListLoader(true);
 			axios
 				.delete(`lists/${id}`)
-				.then((resp) => dispatch(listsSetListsDelete(resp?.data?.data?.id)))
-				.catch((error) => setBackendError(error?.response?.data?.error?.message))
+				.then((resp) => dispatch(listsDeleteLists(resp?.data?.data?.id)))
+				.catch((error) => {
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				})
 				.finally(() => {
 					setDeleteListLoader(false);
 					if (callback) callback();
@@ -184,11 +212,17 @@ export const useList = () => {
 					id: resp?.data?.data?.id,
 					...resp?.data?.data?.attributes,
 				};
-				dispatch(listsSetListsAdd(newList));
+				dispatch(listsAddLists(newList));
 				setVisible(!visible);
 				reset();
 			})
-			.catch((error) => setBackendError(error?.response?.data?.error?.message))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error);
+				if (error?.response?.data?.error) {
+					const { message, status, name } = error.response.data.error;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => setAddNewListLoader(false));
 	};
 
@@ -218,7 +252,11 @@ export const useList = () => {
 						);
 				})
 				.catch((error) => {
-					console.log(error?.response?.data?.error?.message);
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
 				})
 				.finally(() => {
 					if (callbackOnSuccess) callbackOnSuccess();
@@ -262,7 +300,7 @@ export const useList = () => {
 	};
 
 	const updateSingleListItemStatus = (id: string) => {
-		if (singleList?.items) dispatch(listsSetListUpdateStatus(id));
+		if (singleList?.items) dispatch(listsUpdateListStatus(id));
 	};
 
 	const updateSingleListItemName = (id: string, item: EditItemInterface, callback: () => void) => {
@@ -335,7 +373,13 @@ export const useList = () => {
 									if (error) alert(error);
 								});
 						})
-						.catch((error) => console.log(error?.response?.data));
+						.catch((error) => {
+							// console.log(error?.response?.data?.error);
+							if (error?.response?.data?.error) {
+								const { message, status, name } = error.response.data.error;
+								dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+							}
+						});
 			});
 		}
 
@@ -367,7 +411,13 @@ export const useList = () => {
 							},
 						);
 				})
-				.catch((error) => console.log(error?.response?.data))
+				.catch((error) => {
+					// console.log(error?.response?.data?.error);
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				})
 				.finally(() => setIsUpdating(false));
 		}
 	};
@@ -395,7 +445,6 @@ export const useList = () => {
 	return {
 		singleList,
 		isLoading,
-		backendError,
 		user,
 		singleListItemsEditable,
 		filteredItems,

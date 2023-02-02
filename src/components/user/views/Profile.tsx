@@ -6,10 +6,11 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormData from 'form-data';
+import { v4 as uuidv4 } from 'uuid';
 
 // REDUX
-import { selectGlobal } from 'redux/slices/global';
-import { useAppSelector } from 'redux/hooks';
+import { globalSetAlert, selectGlobal } from 'redux/slices/global';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
@@ -22,6 +23,7 @@ import { StyledLoginContainer, StyledInputWrapper } from 'components/user/views/
 import { userQuery } from 'utils/queries';
 import { uploadImageFromDevice, getBlobFromUri, manageFileUpload } from 'utils/fileUpload';
 import { ImagePicker } from '../elements';
+import { AlertTypes } from 'redux/slices/global/models';
 
 const schema = yup
 	.object({
@@ -32,6 +34,7 @@ const schema = yup
 	.required();
 
 export const Profile = (props: any) => {
+	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const user = globalState?.user;
 
@@ -198,7 +201,13 @@ export const Profile = (props: any) => {
 		axios
 			.put(`users/${id}/?${userQuery}`, getValues())
 			.then((resp) => console.log(resp.data))
-			.catch((error) => console.log(error?.response?.data?.error));
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status }));
+				}
+			});
 	};
 
 	return (
@@ -233,6 +242,12 @@ export const Profile = (props: any) => {
 
 					<Button title="newUpload" onPress={() => handleLocalImageUpload()} />
 					<Button title="newSend" onPress={() => handleCloudImageUpload()} />
+					<Button
+						title="NEW ALERT"
+						onPress={() =>
+							dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message: Math.random(0, 100).toString() }))
+						}
+					/>
 					{/* {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />} */}
 
 					{/* <ImagePicker setFile={setFile} /> */}

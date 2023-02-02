@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, ScrollView, RefreshControl, Platform } from 'react-native';
+import { TouchableOpacity, ScrollView, RefreshControl, Platform } from 'react-native';
 import { t } from 'i18next';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
@@ -30,7 +30,6 @@ const ListsWrapper = (props: any) => {
 
 	const {
 		addNewListLoader,
-		backendError,
 		visible,
 		control,
 		errors,
@@ -110,8 +109,6 @@ const ListsWrapper = (props: any) => {
 					<StyledBottomAddListButton onPress={handleSubmit(setNewList)} disabled={addNewListLoader}>
 						{addNewListLoader ? <Loader size={20} /> : <Icon name="plus" size={20} variant="white" />}
 					</StyledBottomAddListButton>
-
-					{backendError && <Text>{backendError}</Text>}
 				</>
 			}
 		>

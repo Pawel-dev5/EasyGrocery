@@ -4,7 +4,7 @@ import type { RootState } from 'redux/store';
 import { call, select, takeLatest } from 'redux-saga/effects';
 
 // REDUX
-import { listsSetListUpdateStatus } from 'redux/slices/lists';
+import { listsUpdateListStatus } from 'redux/slices/lists';
 
 // REQUESTS
 import { updateListItems } from 'redux/sagas/lists/listRequests';
@@ -51,5 +51,5 @@ function* handleListFlow() {
 }
 
 export default function* watcherLists() {
-	yield takeLatest(listsSetListUpdateStatus, handleListFlow);
+	yield takeLatest(listsUpdateListStatus, handleListFlow);
 }

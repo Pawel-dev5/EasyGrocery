@@ -25,15 +25,15 @@ export const listsSlice = createSlice({
 		listsSetLists: (state, action: PayloadAction<ListInterface[]>) => {
 			state.lists = action.payload;
 		},
-		listsSetListsAdd: (state, action: PayloadAction<ListInterface>) => {
+		listsAddLists: (state, action: PayloadAction<ListInterface>) => {
 			state.lists = [...state.lists, action.payload];
 		},
-		listsSetListsDelete: (state, action: PayloadAction<string>) => {
+		listsDeleteLists: (state, action: PayloadAction<string>) => {
 			const newArr = state.lists?.filter((item) => item?.id !== action.payload);
 			state.lists = newArr;
 			state.list = null;
 		},
-		listsSetListsUpdate: (state, action: PayloadAction<ListInterface>) => {
+		listsUpdateLists: (state, action: PayloadAction<ListInterface>) => {
 			const newArr = updateObjectInArray(state.lists, 'id', action.payload.id, (todo: ListInterface) =>
 				updateObject(todo, { ...action.payload }),
 			);
@@ -42,7 +42,7 @@ export const listsSlice = createSlice({
 		listsSetList: (state, action: PayloadAction<SingleListInterface>) => {
 			state.list = action.payload;
 		},
-		listsSetListUpdateStatus: (state, action: PayloadAction<string>) => {
+		listsUpdateListStatus: (state, action: PayloadAction<string>) => {
 			if (state?.list) {
 				const newData = updateObjectInArray(state?.list.items, 'id', action.payload, (todo: ItemInterface) =>
 					updateObject(todo, { done: !todo?.done }),
@@ -56,14 +56,8 @@ export const listsSlice = createSlice({
 	},
 });
 
-export const {
-	listsSetLists,
-	listsSetListsDelete,
-	listsSetListsAdd,
-	listsSetListsUpdate,
-	listsSetList,
-	listsSetListUpdateStatus,
-} = listsSlice.actions;
+export const { listsSetLists, listsDeleteLists, listsAddLists, listsUpdateLists, listsSetList, listsUpdateListStatus } =
+	listsSlice.actions;
 
 export const selectLists = (state: RootState) => state.lists;
 

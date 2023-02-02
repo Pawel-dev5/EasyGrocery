@@ -5,12 +5,13 @@ import type { RootState } from 'redux/store';
 import { logoutAction } from 'redux/actions';
 
 // MODELS
-import { InitialStateInterface, LanguageTypes } from 'redux/slices/global/models';
+import { AlertsInterface, InitialStateInterface, LanguageTypes } from 'redux/slices/global/models';
 
 const initialState: InitialStateInterface = {
 	token: null,
 	user: null,
 	lang: 'pl',
+	alerts: [],
 };
 
 export const globalSlice = createSlice({
@@ -25,6 +26,19 @@ export const globalSlice = createSlice({
 		globalSetLang: (state, action: PayloadAction<LanguageTypes>) => {
 			state.lang = action.payload;
 		},
+		globalSetAlert: (state, action: PayloadAction<AlertsInterface>) => {
+			if (state.alerts) {
+				state.alerts = [...state.alerts, action.payload];
+			} else {
+				state.alerts = [action.payload];
+			}
+		},
+		globalDeleteAlert: (state, action: PayloadAction<string>) => {
+			if (state.alerts) {
+				const newArr = [...state.alerts]?.filter((item) => item?.id !== action.payload);
+				state.alerts = newArr;
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(logoutAction, (state) => {
@@ -34,7 +48,7 @@ export const globalSlice = createSlice({
 	},
 });
 
-export const { globalSetAuthToken, globalSetLang } = globalSlice.actions;
+export const { globalSetAuthToken, globalSetLang, globalSetAlert, globalDeleteAlert } = globalSlice.actions;
 
 export const selectGlobal = (state: RootState) => state.global;
 

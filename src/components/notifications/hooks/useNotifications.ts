@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 // REDUX
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
@@ -9,10 +10,10 @@ import { selectSocket } from 'redux/slices/socket';
 import {
 	selectNotifications,
 	notificationsSetItems,
-	notificationsSetItemsDelete,
-	notificationsSetItemsUpdate,
+	notificationsDeleteItems,
+	notificationsUpdateItems,
 } from 'redux/slices/notifications';
-import { selectGlobal } from 'redux/slices/global';
+import { globalSetAlert, selectGlobal } from 'redux/slices/global';
 
 // MODELS
 import { NotificationInterface } from 'components/notifications/models/views';
@@ -21,7 +22,8 @@ import { User } from 'config/models';
 // UTILS
 import { removeObjectFromArray } from 'utils/helpers/arrayHelpers';
 import { listQuery, notificationsQuery, notificatioQuery } from 'utils/queries';
-import { listsSetListsAdd } from 'redux/slices/lists';
+import { listsAddLists } from 'redux/slices/lists';
+import { AlertTypes } from 'redux/slices/global/models';
 
 export const useNotifications = () => {
 	const dispatch = useAppDispatch();
@@ -47,7 +49,13 @@ export const useNotifications = () => {
 		axios
 			.get(`notifications/?${notificationsQuery(user?.email!)}`)
 			.then((resp) => dispatch(notificationsSetItems(resp?.data?.data)))
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => setLoadingNotifications(false));
 	};
 
@@ -67,8 +75,14 @@ export const useNotifications = () => {
 					read: !notification?.attributes?.read,
 				},
 			})
-			.then((resp) => dispatch(notificationsSetItemsUpdate(resp?.data?.data)))
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.then((resp) => dispatch(notificationsUpdateItems(resp?.data?.data)))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 	};
 
@@ -77,8 +91,14 @@ export const useNotifications = () => {
 
 		axios
 			.delete(`notifications/${id}?${notificatioQuery}`)
-			.then((resp) => dispatch(notificationsSetItemsDelete(resp?.data?.data)))
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.then((resp) => dispatch(notificationsDeleteItems(resp?.data?.data)))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 	};
 
@@ -94,8 +114,14 @@ export const useNotifications = () => {
 					read: true,
 				},
 			})
-			.then((resp) => dispatch(notificationsSetItemsUpdate(resp?.data?.data)))
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.then((resp) => dispatch(notificationsUpdateItems(resp?.data?.data)))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 
 		// CREATE ACCEPT NOTIFICATION TO INVITATION SENDER
@@ -117,7 +143,13 @@ export const useNotifications = () => {
 						if (error) alert(error);
 					});
 			})
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 
 		// UPDATE LIST ACCESS
@@ -148,8 +180,14 @@ export const useNotifications = () => {
 					invitations: newInvitations || [],
 				},
 			})
-			.then((resp) => dispatch(listsSetListsAdd({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id })))
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.then((resp) => dispatch(listsAddLists({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id })))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 	};
 
@@ -165,8 +203,14 @@ export const useNotifications = () => {
 					read: true,
 				},
 			})
-			.then((resp) => dispatch(notificationsSetItemsUpdate(resp?.data?.data)))
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.then((resp) => dispatch(notificationsUpdateItems(resp?.data?.data)))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 
 		// CREATE REJECT NOTIFICATION TO INVITATION SENDER
@@ -188,7 +232,13 @@ export const useNotifications = () => {
 						if (error) alert(error);
 					});
 			})
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 
 		// UPDATE LIST ACCESS
@@ -205,7 +255,13 @@ export const useNotifications = () => {
 				},
 			})
 			.then(() => {})
-			.catch((error) => console.log(error?.response?.data?.error?.message))
+			.catch((error) => {
+				// console.log(error?.response?.data?.error?.message);
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
 			.finally(() => statusCallback(false));
 	};
 

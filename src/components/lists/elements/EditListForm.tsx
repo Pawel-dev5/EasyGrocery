@@ -50,7 +50,6 @@ export const EditListForm = ({ bottomSheetHeight, setNewColor }: EditListFormInt
 		searchedUsers,
 		submitEditList,
 		setSearchIcons,
-		backendError,
 		setNewShop,
 		listUsers,
 		setListUsers,
@@ -203,8 +202,6 @@ export const EditListForm = ({ bottomSheetHeight, setNewColor }: EditListFormInt
 						</>
 					)}
 				</StyledEditButtonsWrapper>
-
-				{backendError && <Text>{backendError}</Text>}
 			</SafeAreaView>
 		</StyledEditListWrapper>
 	);
