@@ -24,3 +24,7 @@ export interface UserDataInterface {
 	jwt: string | null;
 	user: User | null;
 }
+
+export interface SocketErrorInterface {
+	response: { data: { error: { message: string; status: string; name: string } } };
+}

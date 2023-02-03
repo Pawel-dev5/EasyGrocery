@@ -50,14 +50,27 @@ export const listsSlice = createSlice({
 				state.list = { ...state.list, items: newData };
 			}
 		},
+		listsDeleteListItem: (state, action: PayloadAction<string>) => {
+			if (state?.list) {
+				const newData = state?.list?.items?.filter((item) => item?.id !== action.payload);
+				state.list = { ...state.list, items: newData };
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(logoutAction, () => initialState);
 	},
 });
 
-export const { listsSetLists, listsDeleteLists, listsAddLists, listsUpdateLists, listsSetList, listsUpdateListStatus } =
-	listsSlice.actions;
+export const {
+	listsSetLists,
+	listsDeleteLists,
+	listsAddLists,
+	listsUpdateLists,
+	listsSetList,
+	listsUpdateListStatus,
+	listsDeleteListItem,
+} = listsSlice.actions;
 
 export const selectLists = (state: RootState) => state.lists;
 

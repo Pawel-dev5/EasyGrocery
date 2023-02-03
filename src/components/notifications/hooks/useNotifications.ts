@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,16 +12,16 @@ import {
 	notificationsUpdateItems,
 } from 'redux/slices/notifications';
 import { globalSetAlert, selectGlobal } from 'redux/slices/global';
+import { listsAddLists } from 'redux/slices/lists';
 
 // MODELS
 import { NotificationInterface } from 'components/notifications/models/views';
-import { User } from 'config/models';
+import { SocketErrorInterface, User } from 'config/models';
+import { AlertTypes } from 'redux/slices/global/models';
 
 // UTILS
 import { removeObjectFromArray } from 'utils/helpers/arrayHelpers';
 import { listQuery, notificationsQuery, notificatioQuery } from 'utils/queries';
-import { listsAddLists } from 'redux/slices/lists';
-import { AlertTypes } from 'redux/slices/global/models';
 
 export const useNotifications = () => {
 	const dispatch = useAppDispatch();
@@ -50,7 +48,6 @@ export const useNotifications = () => {
 			.get(`notifications/?${notificationsQuery(user?.email!)}`)
 			.then((resp) => dispatch(notificationsSetItems(resp?.data?.data)))
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -77,7 +74,6 @@ export const useNotifications = () => {
 			})
 			.then((resp) => dispatch(notificationsUpdateItems(resp?.data?.data)))
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -93,7 +89,6 @@ export const useNotifications = () => {
 			.delete(`notifications/${id}?${notificatioQuery}`)
 			.then((resp) => dispatch(notificationsDeleteItems(resp?.data?.data)))
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -116,7 +111,6 @@ export const useNotifications = () => {
 			})
 			.then((resp) => dispatch(notificationsUpdateItems(resp?.data?.data)))
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -139,12 +133,14 @@ export const useNotifications = () => {
 			})
 			.then((resp) => {
 				if (socketState?.socket)
-					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
-						if (error) alert(error);
+					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: SocketErrorInterface) => {
+						if (error?.response?.data?.error) {
+							const { message, status, name } = error.response.data.error;
+							dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+						}
 					});
 			})
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -182,7 +178,6 @@ export const useNotifications = () => {
 			})
 			.then((resp) => dispatch(listsAddLists({ ...resp?.data?.data?.attributes, id: resp?.data?.data?.id })))
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -205,7 +200,6 @@ export const useNotifications = () => {
 			})
 			.then((resp) => dispatch(notificationsUpdateItems(resp?.data?.data)))
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -228,12 +222,14 @@ export const useNotifications = () => {
 			})
 			.then((resp) => {
 				if (socketState?.socket)
-					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
-						if (error) alert(error);
+					socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: SocketErrorInterface) => {
+						if (error?.response?.data?.error) {
+							const { message, status, name } = error.response.data.error;
+							dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+						}
 					});
 			})
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -256,7 +252,6 @@ export const useNotifications = () => {
 			})
 			.then(() => {})
 			.catch((error) => {
-				// console.log(error?.response?.data?.error?.message);
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));

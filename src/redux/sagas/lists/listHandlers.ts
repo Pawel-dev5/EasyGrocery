@@ -1,10 +1,12 @@
 import type { RootState } from 'redux/store';
+import { v4 as uuidv4 } from 'uuid';
 
 // EFFECTS
-import { call, select, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 // REDUX
-import { listsUpdateListStatus } from 'redux/slices/lists';
+import { globalSetAlert } from 'redux/slices/global';
+import { listsUpdateListStatus, listsDeleteListItem } from 'redux/slices/lists';
 
 // REQUESTS
 import { updateListItems } from 'redux/sagas/lists/listRequests';
@@ -12,6 +14,8 @@ import { updateListItems } from 'redux/sagas/lists/listRequests';
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
 import { SingleListInterface } from 'components/lists/models/items';
+import { AlertTypes } from 'redux/slices/global/models';
+import { SocketErrorInterface } from 'config/models';
 
 // STORE
 const getListIdState = (state: RootState) => state.lists?.list?.id;
@@ -29,27 +33,34 @@ function* handleListFlow() {
 		const listData: SingleListInterface = yield call(updateListItems, id, items);
 
 		// ---> 4. SET LIST DATA <---
-
-		// yield put(listsSetList(listData));
-		// SOCKET UPDATE STATES BELOW
+		// SOCKET UPDATE STATES
 		if (socketState?.socket)
 			socketState?.socket.emit(
 				'listUpdate',
 				{
 					data: listData,
 				},
-				(error: any) => {
-					// eslint-disable-next-line no-alert
-					if (error) alert(error);
+				(error: SocketErrorInterface) => {
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name });
+					}
 				},
 			);
 	} catch (err) {
-		// TO DO GLOBAL ERROR
-		// yield put(eventSetError(true));
-		// yield put(eventSetSlug(''));
+		if (err)
+			yield put(
+				globalSetAlert({
+					id: uuidv4(),
+					type: AlertTypes.ERROR,
+					message: 'List items update error',
+					status: '',
+					name: 'SAGA:',
+				}),
+			);
 	}
 }
-
 export default function* watcherLists() {
 	yield takeLatest(listsUpdateListStatus, handleListFlow);
+	yield takeLatest(listsDeleteListItem, handleListFlow);
 }

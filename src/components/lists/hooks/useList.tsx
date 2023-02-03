@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
 import React, { ChangeEvent, createContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -19,6 +17,7 @@ import {
 	listsUpdateLists,
 	listsUpdateListStatus,
 	selectLists,
+	listsDeleteListItem,
 } from 'redux/slices/lists';
 
 // MODELS
@@ -26,7 +25,7 @@ import { ItemInterface, ListInterface } from 'components/lists/models/sections';
 import { SingleListEditableInitialInterface } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
-import { ContextProviderProps, User } from 'config/models';
+import { ContextProviderProps, SocketErrorInterface, User } from 'config/models';
 import { ShopDataInterface } from 'components/shops/models/hooks';
 import { AlertTypes } from 'redux/slices/global/models';
 
@@ -119,7 +118,6 @@ export const useList = () => {
 				.get(`users/?${searchUserQuery(user?.username!, searchUsersValueDebounced)}`)
 				.then((resp) => setSearchedUsers(resp?.data))
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, name, status } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -135,7 +133,6 @@ export const useList = () => {
 				.get(`users/${globalState?.user?.id}?${userQuery}`)
 				.then((resp) => dispatch(listsSetLists(resp?.data?.lists)))
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, name, status } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -151,7 +148,6 @@ export const useList = () => {
 				.put(`users/${globalState?.user?.id}/?${userQuery}`, { ...globalState?.user, lists: data })
 				.then(() => {})
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, status, name } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -166,7 +162,6 @@ export const useList = () => {
 				.get(`lists/${id}?${listQuery}`)
 				.then((resp) => dispatch(listsSetList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes })))
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, status, name } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -182,7 +177,6 @@ export const useList = () => {
 				.delete(`lists/${id}`)
 				.then((resp) => dispatch(listsDeleteLists(resp?.data?.data?.id)))
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, status, name } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -217,7 +211,6 @@ export const useList = () => {
 				reset();
 			})
 			.catch((error) => {
-				// console.log(error?.response?.data?.error);
 				if (error?.response?.data?.error) {
 					const { message, status, name } = error.response.data.error;
 					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -246,13 +239,15 @@ export const useList = () => {
 									...resp.data.data?.attributes,
 								},
 							},
-							(error: any) => {
-								if (error) alert(error);
+							(error: SocketErrorInterface) => {
+								if (error?.response?.data?.error) {
+									const { message, status, name } = error.response.data.error;
+									dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+								}
 							},
 						);
 				})
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, status, name } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -287,16 +282,13 @@ export const useList = () => {
 		}
 	};
 
-	const deleteSingleListItem = (id: string, callback: () => void) => {
-		if (singleList?.items) {
-			const newData = singleList?.items?.filter((item) => item?.id !== id);
-			sendSingleListPutRequest(newData, callback);
-		}
-	};
-
 	const clearSingleListItems = () => {
 		if (singleList?.items && singleList?.items?.length > 0)
 			sendSingleListPutRequest([], () => setSortedListItemsByCategories([]));
+	};
+
+	const deleteSingleListItem = (id: string) => {
+		if (singleList?.items) dispatch(listsDeleteListItem(id));
 	};
 
 	const updateSingleListItemStatus = (id: string) => {
@@ -369,12 +361,18 @@ export const useList = () => {
 						})
 						.then((resp) => {
 							if (socketState?.socket)
-								socketState?.socket.emit('notificationsUpdate', { data: resp?.data?.data }, (error: any) => {
-									if (error) alert(error);
-								});
+								socketState?.socket.emit(
+									'notificationsUpdate',
+									{ data: resp?.data?.data },
+									(error: SocketErrorInterface) => {
+										if (error?.response?.data?.error) {
+											const { message, status, name } = error.response.data.error;
+											dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+										}
+									},
+								);
 						})
 						.catch((error) => {
-							// console.log(error?.response?.data?.error);
 							if (error?.response?.data?.error) {
 								const { message, status, name } = error.response.data.error;
 								dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
@@ -406,13 +404,15 @@ export const useList = () => {
 									...resp.data.data?.attributes,
 								},
 							},
-							(error: any) => {
-								if (error) alert(error);
+							(error: SocketErrorInterface) => {
+								if (error?.response?.data?.error) {
+									const { message, status, name } = error.response.data.error;
+									dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+								}
 							},
 						);
 				})
 				.catch((error) => {
-					// console.log(error?.response?.data?.error);
 					if (error?.response?.data?.error) {
 						const { message, status, name } = error.response.data.error;
 						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
