@@ -10,11 +10,12 @@ export const shadowInline = {
 		width: 0,
 		height: 2,
 	},
-	shadowOpacity: 0.23,
-	shadowRadius: 2.62,
+	shadowOpacity: 0.25,
+	shadowRadius: 3.84,
 
 	elevation: 4,
 };
+
 export const colors = {
 	appBgColor: '#F5F5F5',
 

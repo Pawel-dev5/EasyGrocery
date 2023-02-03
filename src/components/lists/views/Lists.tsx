@@ -94,6 +94,7 @@ const ListsWrapper = (props: any) => {
 			isLoading={listIsLoading}
 			bottomSheetHeader="general.addNewList"
 			floatedItems={floatedItems}
+			customPadding="0 0"
 			bottomSheet={
 				<>
 					<StyledAddListWrapper>

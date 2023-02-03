@@ -22,7 +22,7 @@ import {
 } from 'components/lists/items/Styles';
 
 // UTILS
-import { shadowInline } from 'utils/theme/themeDefault';
+import { generateBoxShadowStyle } from 'utils/helpers/generateBoxShadow';
 
 // MODELS
 import { ProgressBarVariant } from 'components/lists/models/sections';
@@ -46,7 +46,12 @@ export const ShortList = (props: any) => {
 			)}
 		>
 			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard style={shadowInline} color={color} lastElement={index === listsLength} firstElement={index === 0}>
+				<StyledListCard
+					style={generateBoxShadowStyle(-2, 4, '#171717', 0.2, 3, 4, '#171717')}
+					color={color}
+					lastElement={index === listsLength}
+					firstElement={index === 0}
+				>
 					<StyledListCardTitleWrapper>
 						<StyledListCardTitle>{title}</StyledListCardTitle>
 
