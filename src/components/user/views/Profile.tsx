@@ -243,9 +243,32 @@ export const Profile = (props: any) => {
 					<Button title="newUpload" onPress={() => handleLocalImageUpload()} />
 					<Button title="newSend" onPress={() => handleCloudImageUpload()} />
 					<Button
-						title="NEW ALERT"
+						title="NEW ALERT NUMBER"
 						onPress={() =>
-							dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message: Math.random(0, 100).toString() }))
+							dispatch(
+								globalSetAlert({
+									id: uuidv4(),
+									type: AlertTypes.ERROR,
+									message: Math.random(0, 100).toString(),
+									status: '502',
+									name: 'NotFoundError',
+								}),
+							)
+						}
+					/>
+					<Button
+						title="NEW ALERT TEXT"
+						onPress={() =>
+							dispatch(
+								globalSetAlert({
+									id: uuidv4(),
+									type: AlertTypes.ERROR,
+									message:
+										'NotFoundError NotFoundErrorNotFound ErrorNotFoundError NotFound ErrorNot FoundError NotFoundE rrorNotFoundError',
+									status: '404',
+									name: 'NotFoundError',
+								}),
+							)
 						}
 					/>
 					{/* {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />} */}

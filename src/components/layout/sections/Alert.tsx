@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { t } from 'i18next';
+import { ScrollView } from 'react-native';
 
 // REDUX
 import { useAppDispatch } from 'redux/hooks';
@@ -9,25 +10,25 @@ import { globalDeleteAlert } from 'redux/slices/global';
 import { AlertsInterface } from 'redux/slices/global/models';
 
 // STYLES
-import { StyledAlertMessage, StyledAlertWrapper } from 'components/layout/sections/Styles';
+import { StyledAlertMessage, StyledAlertWrapper, StyledCircleWrapper } from 'components/layout/sections/Styles';
 
 // COMPONENTS
-import { Icon } from 'components/layout/common/index';
-import { t } from 'i18next';
+import { CircleProgressBar } from 'components/layout/common/index';
 
 export const Alert = ({ id, message, name, status, bottomSheet, type }: AlertsInterface) => {
 	const dispatch = useAppDispatch();
 
 	return (
 		<StyledAlertWrapper type={type} bottomSheet={bottomSheet || false}>
-			<StyledAlertMessage>
-				{name} {status && `${status}:`} {message || t('general.error')}
-			</StyledAlertMessage>
-			{/* <CircleProgressBar id={id} onFinish={() => dispatch(globalDeleteAlert(id))}> */}
-			<TouchableOpacity onPress={() => dispatch(globalDeleteAlert(id))}>
-				<Icon name="times" size={15} />
-			</TouchableOpacity>
-			{/* </CircleProgressBar> */}
+			<ScrollView style={{ position: 'relative', maxWidth: '95%' }}>
+				<StyledAlertMessage>
+					{name} {status && `${status}:`} {message || t('general.error')}
+				</StyledAlertMessage>
+
+				<StyledCircleWrapper>
+					<CircleProgressBar onFinish={() => dispatch(globalDeleteAlert(id))} />
+				</StyledCircleWrapper>
+			</ScrollView>
 		</StyledAlertWrapper>
 	);
 };

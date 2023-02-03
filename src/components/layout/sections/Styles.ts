@@ -21,7 +21,6 @@ export const StyledAlertWrapper = styled.View<{ bottomSheet: boolean; type: Aler
 	elevation: 1000;
 	margin-left: ${({ theme }) => theme.globalPadding};
 	margin-right: ${({ theme }) => theme.globalPadding};
-	padding: ${({ theme }) => theme.globalPadding};
 	left: 0;
 	width: 92.5%;
 	min-height: 50px;
@@ -48,7 +47,6 @@ export const StyledAlertWrapper = styled.View<{ bottomSheet: boolean; type: Aler
 				return null;
 		}
 	}}
-
 	${({ bottomSheet }) =>
 		bottomSheet
 			? css`
@@ -56,7 +54,24 @@ export const StyledAlertWrapper = styled.View<{ bottomSheet: boolean; type: Aler
 			  `
 			: css`
 					bottom: 5%;
-			  `}
+			  `};
 `;
 
-export const StyledAlertMessage = styled.Text``;
+export const StyledAlertMessage = styled.Text`
+	color: ${({ theme }) => theme.white};
+	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+	max-width: 95%;
+	min-width: 95%;
+	padding: ${({ theme }) => theme.globalPadding};
+`;
+
+export const StyledCircleWrapper = styled.View`
+	width: 30px;
+	height: 100%;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	position: absolute;
+	right: 0px;
+	top: 0;
+`;

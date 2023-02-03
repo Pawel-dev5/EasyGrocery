@@ -194,3 +194,14 @@ export const StyledCounter = styled.Text<{ variant?: 'small' }>`
 		}
 	}}
 `;
+
+export const StyledCircleProgressWrapper = styled.TouchableOpacity`
+	transform: rotate(-90deg);
+	position: relative;
+`;
+
+export const StyledIconWrapper = styled.View`
+	position: absolute;
+	top: 4.25px;
+	right: 13px;
+`;

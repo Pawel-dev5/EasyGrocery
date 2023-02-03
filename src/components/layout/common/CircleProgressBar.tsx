@@ -1,90 +1,78 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+/* eslint-disable import/no-duplicates */
+import React, { useEffect, useState } from 'react';
+import Svg, { Circle } from 'react-native-svg';
+import Figure from 'react-native-svg';
 
-export const CircleProgressBar = ({ children, onFinish, id }: { children: ReactNode; onFinish: () => void; id: string }) => {
-	const [fill, setFill] = useState(1);
+// COMPONENTS
+import { Icon } from 'components/layout/common/Icon';
 
-	// setTimeout(() => {
-	// 	if (fill === 100) {
-	// 		setFill(0);
-	// 		console.log('elo');
-	// 	} else {
-	// 		setFill(fill + 1);
-	// 	}
-	// }, 500);
-	// console.log(fill);
+// STYLES
+import { StyledCircleProgressWrapper, StyledIconWrapper } from 'components/layout/common/Styles';
 
-	// useEffect(() => {
-	// 	console.log('effect');
-	// 	setFill(fill + 1);
-	// 	return () => {
-	// 		setFill(0);
-	// 	};
-	// }, [5000]);
+// UTILS
+import theme from 'utils/theme/themeDefault';
 
-	// useEffect(() => {
-	// 	const interval = setInterval(() => {
-	// 		if (fill === 100) {
-	// 			onFinish();
-	// 			setFill(0);
-	// 		} else {
-	// 			setFill((filld) => filld + 1);
-	// 		}
-	// 	}, 25);
-	// 	return () => clearInterval(interval);
-	// }, []);
-	// console.log(fill);
-	// if (fill === 0) {
-	// 	onFinish();
-	// }
-	// useEffect(() => {
-	// 	const interval = setInterval(() => {
-	// 		setFill((prevCounter) => prevCounter + 1);
-	// 	}, 1000);
+export const CircleProgressBar = ({ onFinish }: { onFinish: () => void }) => {
+	const [progress, setProgress] = useState(0);
 
-	// 	return () => clearInterval(interval);
-	// }, []);
-	const [start, setStart] = useState<any>(null);
-	// useEffect(() => {
-	// 	setFill(0);
-	// 	console.log(start);
-	// 	if (start) {
-	// 		console.log('elo');
-	// 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-	// 		start.reAnimate(100, 8000); // Will fill the progress bar linearly in 8 seconds
-	// 	}
-	// }, [id]);
+	const circleConfig = {
+		viewBox: '0 -10 100 100',
+		cx: '40',
+		cy: '40',
+		radio: '45',
+	};
+	const daysDashArray = Number(circleConfig?.radio) * Math.PI * 2;
+	const daysDashOffset = daysDashArray - (daysDashArray * progress) / 100;
+	const loadingDuration = 10000;
+
 	useEffect(() => {
-		setFill(1);
-		console.log('elo2');
-	}, [id]);
-	useEffect(() => {
-		setFill(1);
-		console.log('elo2');
-	}, []);
-	console.log(id);
-	console.log(fill);
-	if (fill === 1) {
-		return (
-			<AnimatedCircularProgress
-				size={25}
-				width={3}
-				// fill={fill}
-				fill={100}
-				duration={5000}
-				tintColor="#00e0ff"
-				backgroundColor="#3d5875"
-				ref={(ref) => setStart(ref)}
-				// ref={(ref) => {}}
-				onAnimationComplete={() => {
-					onFinish();
-					// setFill(0);
-				}}
-			>
-				{() => <View>{children}</View>}
-			</AnimatedCircularProgress>
-		);
+		const loadingTimeout = setTimeout(() => setProgress(progress + 1), loadingDuration / 100);
+		return () => {
+			clearTimeout(loadingTimeout);
+		};
+	}, [progress]);
+
+	if (progress === 100) {
+		setTimeout(() => {
+			onFinish();
+			setProgress(0);
+		}, 300);
 	}
-	return null;
+
+	return (
+		<StyledCircleProgressWrapper
+			onPress={() => {
+				onFinish();
+				setProgress(0);
+			}}
+		>
+			<Figure width={30}>
+				<Svg viewBox={circleConfig.viewBox} height={20} width={30}>
+					<Circle
+						stroke={theme.grey500}
+						strokeWidth={10}
+						fill="transparent"
+						cx={circleConfig.cx}
+						cy={circleConfig.cy}
+						r={circleConfig.radio}
+					/>
+
+					<Circle
+						stroke={theme.white}
+						strokeWidth={10}
+						fill="transparent"
+						cx={circleConfig.cx}
+						cy={circleConfig.cy}
+						r={circleConfig.radio}
+						strokeDasharray={daysDashArray}
+						strokeDashoffset={daysDashOffset}
+					/>
+				</Svg>
+			</Figure>
+
+			<StyledIconWrapper>
+				<Icon name="times" size={11} variant="white" />
+			</StyledIconWrapper>
+		</StyledCircleProgressWrapper>
+	);
 };
