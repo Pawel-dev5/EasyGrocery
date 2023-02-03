@@ -4,15 +4,17 @@ import 'intl-pluralrules';
 import { initReactI18next } from 'react-i18next';
 
 import generalPl from 'utils/translations/pl/general.json';
+import categoriesPl from 'utils/translations/pl/categories.json';
 import generalEn from 'utils/translations/en/general.json';
+import categoriesEn from 'utils/translations/en/categories.json';
 
 export const defaultNS = 'translation';
 export const resources = {
 	pl: {
-		translation: generalPl,
+		translation: { ...generalPl, ...categoriesPl },
 	},
 	en: {
-		translation: generalEn,
+		translation: { ...generalEn, ...categoriesEn },
 	},
 } as const;
 
