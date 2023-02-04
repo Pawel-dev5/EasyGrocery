@@ -52,6 +52,7 @@ export const AppWrapper = ({
 	customPadding,
 	isLoading,
 	bottomSheetHeader,
+	stopSwipe,
 }: AppLayoutInterface) => {
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
@@ -96,7 +97,11 @@ export const AppWrapper = ({
 	}, [notifications]);
 
 	const onSwipeLeft = () => {};
-	const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();
+	const onSwipeRight = () => {
+		if (!stopSwipe && navigation && navigation?.goBack) return navigation?.goBack();
+		return null;
+	};
+	// const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();
 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
 
 	const handleClosePress = () => {

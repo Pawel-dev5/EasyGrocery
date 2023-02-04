@@ -5,6 +5,9 @@ export interface ShopDataInterface {
 	attributes: {
 		uuid: string;
 		title: string;
+		description: string;
+		imageUrl: string | undefined;
+		apiUrl: string;
 		image: {
 			data: {
 				id: string;

@@ -109,3 +109,28 @@ export const searchUserQuery = (currentUser: string, value: string) =>
 			encodeValuesOnly: true,
 		},
 	);
+
+// SHOPS QUERIES
+export const shopsQuery = (shopName: string, category: string[], paginationStart: number) =>
+	qs.stringify(
+		{
+			populate: {
+				[`${shopName}Prices`]: {
+					populate: '*',
+				},
+			},
+			filters: {
+				category: {
+					$in: category,
+				},
+			},
+			sort: ['title:asc', 'id:asc'],
+			pagination: {
+				page: paginationStart,
+				pageSize: 50,
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);

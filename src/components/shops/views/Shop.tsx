@@ -56,7 +56,13 @@ export const Shop = (props: any) => {
 						{shop?.attributes?.orders?.map(({ id, value }) => (
 							<Pressable
 								key={id}
-								onPress={() => navigation?.navigate(shopsRoutes.productsList, { id: shop?.id })}
+								onPress={() =>
+									navigation?.navigate(shopsRoutes.productsList, {
+										id: shop?.id,
+										slug: shop?.attributes?.apiUrl,
+										category: value,
+									})
+								}
 								style={{ width: '45%', height: 150, marginBottom: 10, marginRight: 5, marginLeft: 5 }}
 							>
 								<StyledShopCategories>

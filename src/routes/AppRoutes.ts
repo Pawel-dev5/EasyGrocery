@@ -22,7 +22,7 @@ export const lists = {
 export const shops = {
 	shops: '/shops',
 	shop: '/shop/:id',
-	productsList: '/shop/:id/productsList',
+	productsList: '/shop/:id/productsList/:slug/:category',
 };
 
 export const notifications = {
