@@ -32,7 +32,7 @@ import { Profile } from 'components/user';
 import { ListVariant } from 'components/lists/models/sections';
 import { Lists } from 'components/lists';
 import { List } from 'components/lists/sections';
-import { Shops } from 'components/shops';
+import { Shops, Shop, ProductsList } from 'components/shops';
 import { Notifications } from 'components/notifications';
 
 const { Screen, Navigator } = createNativeStackNavigator();
@@ -56,6 +56,8 @@ const AppComponent = () => {
 						<Screen name={lists.singleList}>{(props) => <List variant={ListVariant.FULL} {...props} />}</Screen>
 						<Screen name={profile.profile}>{(props) => <Profile {...props} />}</Screen>
 						<Screen name={shops.shops}>{(props) => <Shops {...props} />}</Screen>
+						<Screen name={shops.shop}>{(props) => <Shop {...props} />}</Screen>
+						<Screen name={shops.productsList}>{(props) => <ProductsList {...props} />}</Screen>
 						<Screen name={notifications.notifications}>{(props) => <Notifications {...props} />}</Screen>
 					</>
 				)}

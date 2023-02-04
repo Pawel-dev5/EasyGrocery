@@ -5,7 +5,7 @@ export const StyledListCard = styled.View<{ color: string | null; lastElement: b
 	min-height: 80px;
 	border-radius: ${({ theme }) => theme.radius[2]};
 	border: 1px solid ${({ theme }) => theme.grey200};
-	margin: 8px 14px;
+	margin: 10px 14px;
 	padding: 12px;
 	overflow: hidden;
 	background: ${({ theme }) => theme.white};
@@ -56,7 +56,6 @@ export const StyledListCardItemElement = styled.View`
 `;
 
 // ========= START FULL LIST ===========
-
 export const StyledFullListWrapper = styled.View`
 	width: 100%;
 	max-width: 100%;
@@ -124,7 +123,6 @@ export const StyledListDescription = styled.Text`
 `;
 
 // ========= END FULL LIST ===========
-
 export const StyledUserCounter = styled.Text`
 	font-size: 16px;
 	margin-left: 5px;

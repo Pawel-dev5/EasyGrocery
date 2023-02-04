@@ -1,17 +1,20 @@
 import React, { useContext } from 'react';
 import { ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
 
+// REDUX
+import { selectShops } from 'redux/slices/shops';
+import { useAppSelector } from 'redux/hooks';
+
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
 
 // MODELS
-import { ShopsContextData } from 'components/shops/hooks/useShops';
 import { StyledListShopCategories, StyledShopImage } from 'components/lists/partials/Styles';
 
 export const ListShops = () => {
+	const shopState = useAppSelector(selectShops);
+	const { shops } = shopState;
 	const { editedSingleList, setNewShop, newShop } = useContext(ListsContextData);
-
-	const { shops } = useContext(ShopsContextData);
 
 	return (
 		<>

@@ -12,7 +12,6 @@ export const auth = {
 
 export const profile = {
 	profile: '/profile',
-	notifications: '/profile/notifications',
 };
 
 export const lists = {
@@ -22,7 +21,8 @@ export const lists = {
 
 export const shops = {
 	shops: '/shops',
-	singleShop: '/shop/:id',
+	shop: '/shop/:id',
+	productsList: '/shop/:id/productsList',
 };
 
 export const notifications = {

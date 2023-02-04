@@ -6,9 +6,15 @@ import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 // ROUTER
 import { lists } from 'routes/AppRoutes';
 
+// REDUX
+import { selectShops } from 'redux/slices/shops';
+import { useAppSelector } from 'redux/hooks';
+
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
-import { ContextProvider as ShopContextProvider, ShopsContextData } from 'components/shops/hooks/useShops';
+
+// HOOKS
+import { useShops } from 'components/shops/hooks/useShops';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
@@ -30,6 +36,9 @@ import {
 } from 'components/lists/items/Styles';
 
 export const FullListWrapper = (props: any) => {
+	const shopState = useAppSelector(selectShops);
+	const { shops } = shopState;
+
 	const {
 		singleList,
 		getList,
@@ -46,7 +55,7 @@ export const FullListWrapper = (props: any) => {
 		sortedListItemsByCategories,
 		isLoading,
 	} = useContext(ListsContextData);
-	const { getShops, shops } = useContext(ShopsContextData);
+	const { getShops } = useShops();
 
 	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
 	const [newColor, setNewColor] = useState<string | null>(null);
@@ -177,9 +186,7 @@ export const FullListWrapper = (props: any) => {
 
 export const FullList = (props: any) => (
 	<ContextProvider>
-		<ShopContextProvider>
-			<FullListWrapper {...props} />
-		</ShopContextProvider>
+		<FullListWrapper {...props} />
 	</ContextProvider>
 );
 

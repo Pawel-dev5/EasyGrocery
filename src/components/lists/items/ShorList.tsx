@@ -26,6 +26,7 @@ import { generateBoxShadowStyle } from 'utils/helpers/generateBoxShadow';
 
 // MODELS
 import { ProgressBarVariant } from 'components/lists/models/sections';
+import { View } from 'react-native';
 
 export const ShortList = (props: any) => {
 	const { deleteList, deleteListLoader, listsView } = useContext(ListsContextData);
@@ -45,28 +46,29 @@ export const ShortList = (props: any) => {
 				/>
 			)}
 		>
-			<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
-				<StyledListCard
-					style={generateBoxShadowStyle(-2, 4, '#171717', 0.2, 3, 4, '#171717')}
-					color={color}
-					lastElement={index === listsLength}
-					firstElement={index === 0}
-				>
-					<StyledListCardTitleWrapper>
-						<StyledListCardTitle>{title}</StyledListCardTitle>
+			<View
+				style={{
+					...generateBoxShadowStyle(-2, 4, '#171717', 0.3, 3, 4, '#171717'),
+				}}
+			>
+				<TapGestureHandler onHandlerStateChange={() => navigation?.navigate(listRoute.singleList, { id })}>
+					<StyledListCard color={color} lastElement={index === listsLength} firstElement={index === 0}>
+						<StyledListCardTitleWrapper>
+							<StyledListCardTitle>{title}</StyledListCardTitle>
 
-						<StyledListCardItem>
-							<Icon name="users" size={15} />
+							<StyledListCardItem>
+								<Icon name="users" size={15} />
 
-							<StyledUserCounter>
-								{users_permissions_users?.length || users_permissions_users?.data?.length}
-							</StyledUserCounter>
-						</StyledListCardItem>
-					</StyledListCardTitleWrapper>
+								<StyledUserCounter>
+									{users_permissions_users?.length || users_permissions_users?.data?.length}
+								</StyledUserCounter>
+							</StyledListCardItem>
+						</StyledListCardTitleWrapper>
 
-					<ProgressBar items={items} variant={listsView ? ProgressBarVariant.LONG : ProgressBarVariant.SHORT} />
-				</StyledListCard>
-			</TapGestureHandler>
+						<ProgressBar items={items} variant={listsView ? ProgressBarVariant.LONG : ProgressBarVariant.SHORT} />
+					</StyledListCard>
+				</TapGestureHandler>
+			</View>
 		</Swipeable>
 	);
 };

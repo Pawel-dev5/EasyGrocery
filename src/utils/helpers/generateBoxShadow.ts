@@ -1,13 +1,13 @@
 import { Platform } from 'react-native';
 
 export const generateBoxShadowStyle = (
-	xOffset: any,
-	yOffset: any,
-	shadowColorIos: any,
-	shadowOpacity: any,
-	shadowRadius: any,
-	elevation: any,
-	shadowColorAndroid: any,
+	xOffset: number,
+	yOffset: number,
+	shadowColorIos: string,
+	shadowOpacity: number,
+	shadowRadius: number,
+	elevation: number,
+	shadowColorAndroid: string,
 ) => {
 	let styles = {};
 	if (Platform.OS === 'ios') {
@@ -21,6 +21,9 @@ export const generateBoxShadowStyle = (
 		styles = {
 			elevation,
 			shadowColor: shadowColorAndroid,
+			shadowOffset: { width: xOffset, height: yOffset },
+			shadowOpacity,
+			shadowRadius,
 		};
 	}
 	return { ...styles };
