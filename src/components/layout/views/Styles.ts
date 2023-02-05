@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native';
 
 export const StyledChildren = styled.View<{ customPadding?: string }>`
-	height: 80.5%;
+	height: 81.5%;
 	width: 100%;
 	background-color: ${({ theme }) => theme.white};
 	align-items: center;

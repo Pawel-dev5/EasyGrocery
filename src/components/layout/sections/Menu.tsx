@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { t } from 'i18next';
-import { TouchableOpacity } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
 
@@ -14,7 +13,7 @@ import { lists, notifications as notificationsRoutes, profile, shops } from 'rou
 import { NotificationCounter } from 'components/layout/common';
 
 // STYLES
-import { StyledTabMenuWrapper, StyledMenuIcon, StyledMenuOption } from 'components/layout/sections/Styles';
+import { StyledTabMenuWrapper, StyledMenuIcon, StyledMenuOption, StyledMenuButton } from 'components/layout/sections/Styles';
 
 // MODELS
 import { MenuElementsInterface } from 'components/layout/models/sections';
@@ -69,15 +68,16 @@ export const Menu = ({ navigation }: { navigation: any }) => {
 		<StyledTabMenuWrapper>
 			{menuElements?.map(({ id, icon, counter, link }) => (
 				<StyledMenuOption key={id}>
-					<TouchableOpacity
+					<StyledMenuButton
 						onPress={() => {
 							link();
 							dispatch(globalSetMenuRoute(id));
 						}}
+						disabled={menuRoute === id}
 					>
 						{icon && <StyledMenuIcon name={icon} color={setColor(id)} />}
 						{counter ? <NotificationCounter counter={counter} variant="small" /> : null}
-					</TouchableOpacity>
+					</StyledMenuButton>
 				</StyledMenuOption>
 			))}
 		</StyledTabMenuWrapper>

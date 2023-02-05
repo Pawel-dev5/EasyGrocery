@@ -133,7 +133,6 @@ export const StyledLangTitle = styled.Text`
 
 export const StyledNotificationCounter = styled.View<{ variant?: 'small' }>`
 	position: absolute;
-
 	background-color: ${({ theme }) => theme.warning};
 	display: flex;
 	align-items: center;
@@ -143,8 +142,8 @@ export const StyledNotificationCounter = styled.View<{ variant?: 'small' }>`
 		switch (variant) {
 			case 'small':
 				return css`
-					top: -7px;
-					right: -4px;
+					top: 6px;
+					right: 5px;
 					width: 15px;
 					height: 15px;
 					border-radius: 15px;

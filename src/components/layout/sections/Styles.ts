@@ -79,11 +79,11 @@ export const StyledCircleWrapper = styled.View`
 
 export const StyledTabMenuWrapper = styled.View`
 	width: 100%;
-	height: 70px;
-	padding: 13px 50px;
+	height: 60px;
+	padding: 0px 40px;
 	display: flex;
 	flex-direction: row;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: space-between;
 	background-color: ${({ theme }) => theme.grey100};
 `;
@@ -91,15 +91,24 @@ export const StyledTabMenuWrapper = styled.View`
 export const StyledMenuOption = styled.View`
 	position: relative;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
+	height: 100%;
 `;
 
 export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
 	width: 20px;
-	height: 100%;
 	text-align: center;
-	font-size: 16px;
+	vertical-align: center;
+	font-size: 18px;
 	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
 	margin-bottom: -3px;
+`;
+
+export const StyledMenuButton = styled.TouchableOpacity`
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
