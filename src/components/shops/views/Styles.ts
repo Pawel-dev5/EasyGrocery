@@ -17,53 +17,24 @@ export const StyledShopsWrapper = styled.View`
 `;
 
 // SHOP
-
-export const StyledShopImageFull = styled(StyledShopImage)`
-	width: 80px;
-	height: 80px;
+export const StyledShopImageFull = styled.Image`
+	width: 100%;
+	height: 140px;
 	margin-bottom: 0;
+	object-fit: cover;
 `;
 
-export const StyledSingleShopHeaderWrapper = styled.View`
-	min-width: 100%;
-	max-width: 100%;
-	flex-flow: row nowrap;
-	align-items: flex-start;
-	justify-content: space-between;
-	margin-bottom: 16px;
-`;
 export const StyledHeader = styled.View`
 	flex-flow: row nowrap;
 	align-items: center;
 `;
 
-export const SingleShopWrapper = styled.ScrollView`
-	width: 100%;
-`;
-
-export const StyledSingleShopHeader = styled.Text`
-	font-size: 28px;
-	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
-	margin-left: 16px;
-`;
-
-export const StyledShopCategories = styled.View`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	border: 1px solid black;
-	text-align: center;
-	margin-bottom: 10px;
-	border-radius: ${({ theme }) => theme.radius[2]};
-	/* width: 45%; */
-	height: 150px;
-`;
-
 export const StyledShopCategoriesWrapper = styled.View`
+	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
+	align-items: flex-end;
 	margin-top: 24px;
 	width: 100%;
 	max-width: 100%;

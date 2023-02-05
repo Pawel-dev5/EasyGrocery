@@ -31,9 +31,6 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 		useContext(ListsContextData);
 
 	// LOADERS STATES
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [doneLoading, setDoneLoading] = useState(false);
-	const [trashLoading, setTrashLoading] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 
 	const categories = singleList?.shop?.data?.attributes?.orders;
@@ -42,12 +39,8 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 		<StyledItemsContainer>
 			<StyledListItemsWrapper>
 				<StyledItemTitleWrapper>
-					<StyledCheckButton onPress={() => updateSingleListItemStatus(id)} disabled={doneLoading}>
-						{doneLoading ? (
-							<Loader size={32} />
-						) : (
-							<Icon variant={done ? 'done' : 'unDone'} name={done ? 'check-circle' : 'circle'} size={30} />
-						)}
+					<StyledCheckButton onPress={() => updateSingleListItemStatus(id)}>
+						<Icon variant={done ? 'done' : 'unDone'} name={done ? 'check-circle' : 'circle'} size={30} />
 					</StyledCheckButton>
 
 					{editableItem !== null ? (
@@ -92,14 +85,8 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 						</StyledItemButton>
 					)}
 
-					<StyledItemButton
-						onPress={() => {
-							setTrashLoading(true);
-							deleteSingleListItem(id, () => setTrashLoading(false));
-						}}
-						disabled={trashLoading}
-					>
-						{trashLoading ? <Loader size={25} /> : <Icon name="trash" variant="unDone" size={20} />}
+					<StyledItemButton onPress={() => deleteSingleListItem(id)}>
+						<Icon name="trash" variant="unDone" size={20} />
 					</StyledItemButton>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
@@ -108,7 +95,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 
 			{editableItem !== null && categories && categories?.length > 0 && (
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				<ScrollView contentContainerStyle={styles.scrollView} horizontal>
+				<ScrollView contentContainerStyle={styles?.scrollView} horizontal>
 					{categories?.map(({ id: catId, value: catValue }) => (
 						<StyledItemsCategory
 							key={catId}
