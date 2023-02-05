@@ -134,7 +134,8 @@ export const ProductsList = (props: any) => {
 
 			{expandedList && (
 				<FlatList
-					columnWrapperStyle={{ justifyContent: 'space-evenly' }}
+					style={{ height: '100%', paddingLeft: '7%', paddingRight: '7%' }}
+					columnWrapperStyle={{ justifyContent: 'space-between' }}
 					ItemSeparatorComponent={() => <View style={{ height: 20, width: 16 }} />}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					contentContainerStyle={styles.contentContainer}
@@ -155,6 +156,7 @@ export const ProductsList = (props: any) => {
 
 			{!expandedList && (
 				<FlatList
+					style={{ height: '100%' }}
 					columnWrapperStyle={{ justifyContent: 'space-evenly' }}
 					ItemSeparatorComponent={() => <View style={{ height: 20, width: 16 }} />}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

@@ -52,7 +52,7 @@ const theme = {
 	fontFeatured: '"Roboto Condensed", sans-serif',
 
 	navbarHeight: '100px',
-	globalPadding: '16px',
+	globalPadding: '8px',
 
 	fontWeight: {
 		light: 300,

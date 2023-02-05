@@ -59,7 +59,7 @@ export const Menu = ({ navigation }: { navigation: any }) => {
 
 	const setColor = useCallback(
 		(id: number) => {
-			if (menuRoute === id) return 'success';
+			if (menuRoute === id) return 'base2';
 			return 'black';
 		},
 		[menuRoute],

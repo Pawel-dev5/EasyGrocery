@@ -34,7 +34,7 @@ export const StyledShopCategoriesWrapper = styled.View`
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
-	align-items: flex-end;
+	align-items: flex-start;
 	margin-top: 24px;
 	width: 100%;
 	max-width: 100%;
@@ -70,6 +70,6 @@ export const StyledCategoryWrapper = styled.View<{ active: boolean }>`
 	${({ active }) =>
 		active &&
 		css`
-			background-color: ${({ theme }) => theme.grey300};
+			background-color: ${({ theme }) => theme.base2};
 		`}
 `;

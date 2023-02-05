@@ -59,7 +59,7 @@ export const CarrefourCategories = {
 		'frostPizzaCarrefour',
 		'frostReadyMealsCarrefour',
 	],
-	meatCarrefout: [
+	meatCarrefour: [
 		'hamCarrefour',
 		'sausagesCarrefour',
 		'drySausagesCarrefour',

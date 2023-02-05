@@ -1,9 +1,8 @@
 import { CarrefourCategories } from 'utils/productCategoriesHandler';
 
-export const categoriesHandler = (url: string, category: string) => {
+export const categoriesHandler = (category: string) => {
 	const newArr = [];
-
-	if (url === 'carrefours') {
+	if (category.includes('Carrefour')) {
 		Object.entries(CarrefourCategories).forEach(([key, value]) => {
 			if (key === category) newArr.push(...value);
 		});

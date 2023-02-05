@@ -32,7 +32,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 
 		axios({
 			method: 'get',
-			url: `${baseApi}?${shopsQuery(url, categoriesHandler(url, category), 1)}`,
+			url: `${baseApi}?${shopsQuery(url, categoriesHandler(category), 1)}`,
 			headers: {
 				Authorization: null,
 			},
@@ -51,7 +51,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 
 		axios({
 			method: 'get',
-			url: `${baseApi}?${shopsPromotionQuery(url, categoriesHandler(url, category), 1)}`,
+			url: `${baseApi}?${shopsPromotionQuery(url, categoriesHandler(category), 1)}`,
 			headers: {
 				Authorization: null,
 			},
@@ -72,7 +72,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 	const getProductsOffset = (start: number, callback: () => void) => {
 		axios({
 			method: 'get',
-			url: `${baseApi}?${shopsQuery(url, categoriesHandler(url, category), start)}`,
+			url: `${baseApi}?${shopsQuery(url, categoriesHandler(category), start)}`,
 			headers: {
 				Authorization: null,
 			},
@@ -91,7 +91,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 
 		axios({
 			method: 'get',
-			url: `${baseApi}?${shopsPromotionQuery(url, categoriesHandler(url, category), start)}`,
+			url: `${baseApi}?${shopsPromotionQuery(url, categoriesHandler(category), start)}`,
 			headers: {
 				Authorization: null,
 			},

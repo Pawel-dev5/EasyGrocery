@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView } from 'react-native';
 
 // ROUTER
@@ -20,9 +20,11 @@ export const Shop = (props: any) => {
 	const { shop } = shopState;
 	const { navigation } = props;
 
+	const [current, setCurrent] = useState<string | null>(null);
+
 	if (!shop) return null;
 	return (
-		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0">
+		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0" stopSwipe>
 			<ScrollView>
 				<StyledHeader>
 					<StyledShopImageFull
@@ -33,21 +35,40 @@ export const Shop = (props: any) => {
 
 				{shop?.attributes?.orders?.length > 0 && (
 					<StyledShopCategoriesWrapper>
-						{shop?.attributes?.orders?.map(({ id, value }) => (
-							<Pressable
-								key={id}
-								onPress={() =>
-									navigation?.navigate(shopsRoutes.productsList, {
-										id: shop?.id,
-										slug: shop?.attributes?.apiUrl,
-										category: value,
-									})
-								}
-								style={{ width: '45%', height: 150, marginBottom: 10, marginRight: 5, marginLeft: 5 }}
-							>
-								<Category value={value} />
-							</Pressable>
-						))}
+						{shop?.attributes?.orders?.map(({ id, value }) => {
+							const categoryProps = {
+								value,
+								active: current === id,
+								...props,
+							};
+							return (
+								<Pressable
+									key={id}
+									onPress={() => {
+										if (current !== id) {
+											navigation?.navigate(shopsRoutes.productsList, {
+												id: shop?.id,
+												slug: shop?.attributes?.apiUrl,
+												category: value,
+											});
+											setCurrent(null);
+										}
+									}}
+									onLongPress={() => {
+										if (value?.includes('Carrefour')) setCurrent(id);
+									}}
+									style={{
+										width: current === id ? '100%' : '45%',
+										height: 150,
+										marginBottom: 10,
+										marginRight: 5,
+										marginLeft: 5,
+									}}
+								>
+									<Category {...categoryProps} />
+								</Pressable>
+							);
+						})}
 					</StyledShopCategoriesWrapper>
 				)}
 			</ScrollView>

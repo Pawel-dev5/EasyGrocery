@@ -3,12 +3,16 @@ import styled, { css } from 'styled-components/native';
 export const StyledProductWrapper = styled.View`
 	width: 45%;
 	border-radius: ${({ theme }) => theme.radius[3]};
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 `;
 
 export const StyledProdTitle = styled.Text`
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: ${({ theme }) => theme.fontWeight.bold};
 	margin: 16px 0 4px;
+	white-space: nowrap;
 `;
 
 export const StyledProdDescription = styled.Text`
@@ -48,4 +52,11 @@ export const StyledAddButton = styled.TouchableOpacity`
 	height: 40px;
 	border-radius: 40px;
 	background-color: ${({ theme }) => theme.white};
+`;
+
+export const StyledHeader = styled.View`
+	height: auto;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
 `;

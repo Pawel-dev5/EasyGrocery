@@ -3,15 +3,13 @@ import styled, { css } from 'styled-components/native';
 export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SENDREQUEST' | 'ACCEPT' | 'REJECT' | null }>`
 	position: relative;
 	border-radius: ${({ theme }) => theme.radius[2]};
-	margin: 10px 0px;
+	margin: 8px 4px;
 	display: flex;
 	align-items: center;
-	width: 100%;
 	padding: 0px 5px;
-
 	padding-right: 0;
-	margin-left: 5px;
-	width: 97.7%;
+	width: auto;
+
 	${({ variant }) => {
 		switch (variant) {
 			case 'UNREAD':
@@ -31,7 +29,9 @@ export const StyledNotificationWrapper = styled.View<{ variant: 'UNREAD' | 'SEND
 					background-color: ${({ theme }) => theme.accent3};
 				`;
 			default:
-				return null;
+				return css`
+					padding-left: 0;
+				`;
 		}
 	}}
 `;

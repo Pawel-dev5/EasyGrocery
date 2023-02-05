@@ -16,6 +16,7 @@ import {
 	StyledProdPromotionPrice,
 	StyledPricesWrapper,
 	StyledAddButton,
+	StyledHeader,
 } from 'components/shops/sections/Styles';
 import { shadowInline } from 'utils/theme/themeDefault';
 
@@ -25,9 +26,12 @@ const Product = ({ attributes }: ShopDataAttributes) => {
 
 	return (
 		<StyledProductWrapper>
-			<ProductImage imageUrl={imageUrl} />
-			{title && <StyledProdTitle>{title} </StyledProdTitle>}
-			{description && <StyledProdDescription>{description}</StyledProdDescription>}
+			<StyledHeader>
+				<ProductImage imageUrl={imageUrl} />
+
+				{title && <StyledProdTitle>{title} </StyledProdTitle>}
+				{description && <StyledProdDescription>{description}</StyledProdDescription>}
+			</StyledHeader>
 
 			<StyledPricesWrapper>
 				{sortedPrices && sortedPrices?.length > 0 && (
