@@ -30,7 +30,9 @@
 		"searchUser": "Search user",
 		"accept": "Accept",
 		"reject": "Reject",
-		"error": "Error occured. Try again"
+		"error": "Error occured. Try again",
+		"restProducts": "Rest product:",
+		"promotionProducts": "Last week's deals:"
 	},
 	"auth": {
 		"logout": "Logout",

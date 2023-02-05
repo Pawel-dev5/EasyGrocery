@@ -40,3 +40,19 @@ export const StyledShopCategoriesWrapper = styled.View`
 	max-width: 100%;
 	height: 100%;
 `;
+
+export const StyledListHeaderWrapper = styled.TouchableOpacity`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 16px;
+	width: 100%;
+	height: 50px;
+	background-color: ${({ theme }) => theme.grey100};
+`;
+
+export const StyledListHeader = styled.Text`
+	font-size: 14px;
+	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+`;

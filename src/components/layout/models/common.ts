@@ -3,7 +3,7 @@ import { ChangeEvent, RefObject } from 'react';
 import { TextInput } from 'react-native';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 
-export type VariantType = 'white' | 'grey' | 'transparent' | 'done' | 'unDone';
+export type VariantType = 'white' | 'grey' | 'transparent' | 'done' | 'unDone' | 'black';
 
 export interface IconInterface {
 	name: string;

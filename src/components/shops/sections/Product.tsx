@@ -1,25 +1,45 @@
 import React, { memo } from 'react';
-import { View, Text } from 'react-native';
 
 // COMPONENTS
 import { ProductImage } from 'components/shops/items';
 
 // MODELS
-import { ProductInterface } from 'components/shops/models/sections';
 
-const Product = ({ attributes, category }: ProductInterface) => {
+import { ShopDataAttributes } from 'components/shops/models/hooks';
+
+// STYLES
+import {
+	StyledProductWrapper,
+	StyledProdTitle,
+	StyledProdDescription,
+	StyledProdPrice,
+	StyledProdPromotionPrice,
+	StyledPricesWrapper,
+} from './Styles';
+
+const Product = ({ attributes }: ShopDataAttributes) => {
 	const { imageUrl, title, description, prices } = attributes;
 	const sortedPrices = prices?.reverse();
 
 	return (
-		<View>
-			<ProductImage imageUrl={imageUrl} category={category} />
-			{title && <Text>{title} </Text>}
-			{description && <Text>{description}</Text>}
-			{sortedPrices && sortedPrices?.length > 0 && <Text>Cena: {sortedPrices[0]?.price}</Text>}
-			{sortedPrices[0]?.promotion !== 'null' && <Text>Promocja: {sortedPrices[0]?.promotion}</Text>}
-			{sortedPrices[0]?.promotionDescription !== 'null' && <Text>{sortedPrices[0]?.promotionDescription}</Text>}
-		</View>
+		<StyledProductWrapper>
+			<ProductImage imageUrl={imageUrl} />
+			{title && <StyledProdTitle>{title} </StyledProdTitle>}
+			{description && <StyledProdDescription>{description}</StyledProdDescription>}
+
+			<StyledPricesWrapper>
+				{sortedPrices && sortedPrices?.length > 0 && (
+					<StyledProdPrice promotion={sortedPrices[0]?.promotion !== 'null'}>{sortedPrices[0]?.price}</StyledProdPrice>
+				)}
+				{sortedPrices[0]?.promotion !== 'null' && (
+					<StyledProdPromotionPrice> {sortedPrices[0]?.promotion}</StyledProdPromotionPrice>
+				)}
+			</StyledPricesWrapper>
+
+			{sortedPrices[0]?.promotionDescription !== 'null' && (
+				<StyledProdDescription>{sortedPrices[0]?.promotionDescription}</StyledProdDescription>
+			)}
+		</StyledProductWrapper>
 	);
 };
 
