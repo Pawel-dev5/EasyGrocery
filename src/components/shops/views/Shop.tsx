@@ -10,7 +10,7 @@ import { selectShops } from 'redux/slices/shops';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { Category } from 'components/shops/sections';
+import { Category } from 'components/shops/items';
 
 // STYLES
 import { StyledShopImageFull, StyledHeader, StyledShopCategoriesWrapper } from 'components/shops/views/Styles';

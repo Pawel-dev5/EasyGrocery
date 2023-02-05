@@ -26,7 +26,7 @@ export interface ShopDataInterface extends ShopDataAttributes {
 	id: string;
 }
 
-interface OrderInterface {
+export interface OrderInterface {
 	id: string;
 	value: string;
 	priority: number;

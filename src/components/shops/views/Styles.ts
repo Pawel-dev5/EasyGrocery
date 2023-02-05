@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const StyledShopImage = styled.Image`
 	width: 100%;
@@ -55,4 +55,21 @@ export const StyledListHeaderWrapper = styled.TouchableOpacity`
 export const StyledListHeader = styled.Text`
 	font-size: 14px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
+`;
+
+export const StyledCategoryWrapper = styled.View<{ active: boolean }>`
+	width: auto;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 5px 10px;
+	border-radius: ${({ theme }) => theme.radius[3]};
+	border: 1px solid ${({ theme }) => theme.black};
+
+	${({ active }) =>
+		active &&
+		css`
+			background-color: ${({ theme }) => theme.grey300};
+		`}
 `;

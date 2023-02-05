@@ -6,6 +6,6 @@ import { StyledProdImageWrapper } from 'components/shops/items/Styles';
 
 export const ProductImage = ({ imageUrl }: { imageUrl?: string }) => (
 	<StyledProdImageWrapper>
-		{imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 70, height: 70 }} />}
+		{imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} />}
 	</StyledProdImageWrapper>
 );

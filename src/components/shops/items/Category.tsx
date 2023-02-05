@@ -2,7 +2,7 @@ import React from 'react';
 import { t } from 'i18next';
 
 // STYLES
-import { StyledCategoryText, StyledShopCategories } from 'components/shops/sections/Styles';
+import { StyledCategoryText, StyledShopCategories } from 'components/shops/items/Styles';
 import { shadowInline } from 'utils/theme/themeDefault';
 
 // HELPERS

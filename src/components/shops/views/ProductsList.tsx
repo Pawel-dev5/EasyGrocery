@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, RefreshControl, FlatList, Platform, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { View, Text, RefreshControl, FlatList, Platform, StyleSheet, Pressable } from 'react-native';
 import { t } from 'i18next';
+
+// ROUTER
+import { shops as shopsRoutes } from 'routes/AppRoutes';
+
+// REDUX
+import { selectShops } from 'redux/slices/shops';
+import { useAppSelector } from 'redux/hooks';
 
 // HOOKS
 import { useProductsList } from 'components/shops/hooks/useProductsList';
@@ -12,14 +19,18 @@ import { Product } from 'components/shops/sections';
 import { Icon } from 'components/layout/common';
 
 // STYLES
-import { StyledListHeaderWrapper, StyledListHeader } from 'components/shops/views/Styles';
+import { StyledListHeaderWrapper, StyledListHeader, StyledCategoryWrapper } from 'components/shops/views/Styles';
 
 export const ProductsList = (props: any) => {
 	const {
 		route: {
 			params: { slug, category },
 		},
+		navigation,
 	} = props;
+
+	const shopState = useAppSelector(selectShops);
+	const { shop } = shopState;
 
 	const {
 		isLoading,
@@ -39,7 +50,10 @@ export const ProductsList = (props: any) => {
 	const [offsetLoading, setOffsetLoading] = useState(false);
 	const [expandedList, setExpandedList] = useState(true); // IF TRUE SHOW PROMOTION IF FALSE SHOW REST
 	const [page, setPage] = useState(1);
+	const flatList = useRef<FlatList>(null);
+
 	const itemElementHeight = 150;
+	const index = shop?.attributes?.orders?.findIndex((element) => element?.value === category);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
@@ -55,7 +69,7 @@ export const ProductsList = (props: any) => {
 
 	useEffect(() => {
 		getProducts();
-	}, []);
+	}, [category]);
 
 	useEffect(() => {
 		if (scrollOffset > layoutHeight() - 500 && productsList && productsList?.length > 40) {
@@ -77,6 +91,40 @@ export const ProductsList = (props: any) => {
 			customPadding="0 0"
 			stopSwipe={Platform.OS === 'ios'}
 		>
+			<FlatList
+				ref={flatList}
+				initialScrollIndex={index || 0}
+				initialNumToRender={shop?.attributes?.orders?.length}
+				onScrollToIndexFailed={(info) => {
+					// eslint-disable-next-line no-promise-executor-return
+					const wait = new Promise((resolve) => setTimeout(resolve, 500));
+					wait.then(() => {
+						flatList.current?.scrollToIndex({ index: info.index, animated: true });
+					});
+				}}
+				contentContainerStyle={styles.categoriesContainer}
+				horizontal
+				ItemSeparatorComponent={() => <View style={{ height: 10, width: 8 }} />}
+				data={shop?.attributes?.orders}
+				renderItem={({ item }) => (
+					<Pressable
+						key={item?.id}
+						onPress={() =>
+							navigation?.navigate(shopsRoutes.productsList, {
+								id: shop?.id,
+								slug: shop?.attributes?.apiUrl,
+								category: item?.value,
+							})
+						}
+					>
+						<StyledCategoryWrapper active={category === item?.value}>
+							<Text>{t<string>(`shopCategories.${item?.value}`)}</Text>
+						</StyledCategoryWrapper>
+					</Pressable>
+				)}
+				keyExtractor={(item) => item?.id}
+			/>
+
 			<StyledListHeaderWrapper onPress={() => setExpandedList(!expandedList!)}>
 				<StyledListHeader>
 					{t('general.promotionProducts')} {totalPromotionsCount}
@@ -95,7 +143,6 @@ export const ProductsList = (props: any) => {
 					renderItem={({ item }) => <Product {...item} />}
 					keyExtractor={(item) => item?.id}
 					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
-					getItemLayout={(data, index) => ({ length: itemElementHeight, offset: itemElementHeight * index, index })}
 				/>
 			)}
 
@@ -117,7 +164,6 @@ export const ProductsList = (props: any) => {
 					renderItem={({ item }) => <Product {...item} />}
 					keyExtractor={(item) => item?.id}
 					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
-					getItemLayout={(data, index) => ({ length: itemElementHeight, offset: itemElementHeight * index, index })}
 				/>
 			)}
 		</AppWrapper>
@@ -130,5 +176,10 @@ const styles = StyleSheet.create({
 		minWidth: '100%',
 		justifyContent: 'space-evenly',
 		paddingTop: 16,
+	},
+	categoriesContainer: {
+		paddingBottom: 20,
+		paddingLeft: 16,
+		justifyContent: 'space-evenly',
 	},
 });

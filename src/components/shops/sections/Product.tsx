@@ -2,9 +2,9 @@ import React, { memo } from 'react';
 
 // COMPONENTS
 import { ProductImage } from 'components/shops/items';
+import { Icon } from 'components/layout/common';
 
 // MODELS
-
 import { ShopDataAttributes } from 'components/shops/models/hooks';
 
 // STYLES
@@ -15,7 +15,9 @@ import {
 	StyledProdPrice,
 	StyledProdPromotionPrice,
 	StyledPricesWrapper,
-} from './Styles';
+	StyledAddButton,
+} from 'components/shops/sections/Styles';
+import { shadowInline } from 'utils/theme/themeDefault';
 
 const Product = ({ attributes }: ShopDataAttributes) => {
 	const { imageUrl, title, description, prices } = attributes;
@@ -39,6 +41,10 @@ const Product = ({ attributes }: ShopDataAttributes) => {
 			{sortedPrices[0]?.promotionDescription !== 'null' && (
 				<StyledProdDescription>{sortedPrices[0]?.promotionDescription}</StyledProdDescription>
 			)}
+
+			<StyledAddButton style={shadowInline}>
+				<Icon name="plus" size={20} variant="black" />
+			</StyledAddButton>
 		</StyledProductWrapper>
 	);
 };

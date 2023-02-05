@@ -98,7 +98,8 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		})
 			.then((resp) => {
 				setTotalPromotionsCount(resp?.data?.meta?.pagination?.total);
-				if (productsList) setLastWeekPromotions([...productsList, ...convertPrices({ url, data: resp?.data?.data })]);
+				if (lastWeekPromotions)
+					setLastWeekPromotions([...lastWeekPromotions, ...convertPrices({ url, data: resp?.data?.data })]);
 			})
 			.catch((error) => {
 				if (error?.response?.data?.error?.message) {
