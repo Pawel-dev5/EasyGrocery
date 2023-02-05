@@ -1,12 +1,11 @@
 import { ListInterface } from 'components/lists/models/sections';
 
-export interface ShopDataInterface {
-	id: string;
+export interface ShopDataAttributes {
 	attributes: {
 		uuid: string;
 		title: string;
 		description: string;
-		imageUrl: string | undefined;
+		imageUrl?: string;
 		apiUrl: string;
 		image: {
 			data: {
@@ -17,9 +16,14 @@ export interface ShopDataInterface {
 				};
 			};
 		};
+		prices: any;
 		lists: ListInterface[];
 		orders: OrderInterface[];
 	};
+}
+
+export interface ShopDataInterface extends ShopDataAttributes {
+	id: string;
 }
 
 interface OrderInterface {

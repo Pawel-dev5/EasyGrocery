@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, RefreshControl, FlatList } from 'react-native';
+import { Text, RefreshControl, FlatList, Platform } from 'react-native';
+import { t } from 'i18next';
 
 // HOOKS
 import { useProductsList } from 'components/shops/hooks/useProductsList';
@@ -15,7 +16,15 @@ export const ProductsList = (props: any) => {
 		},
 	} = props;
 
-	const { isLoading, productsList, totalProductsCount, getProducts, getProductsOffset } = useProductsList({
+	const {
+		isLoading,
+		productsList,
+		lastWeekPromotions,
+		totalProductsCount,
+		totalPromotionsCount,
+		getProducts,
+		getProductsOffset,
+	} = useProductsList({
 		url: slug,
 		category,
 	});
@@ -55,15 +64,34 @@ export const ProductsList = (props: any) => {
 	}, [offsetLoading]);
 
 	return (
-		<AppWrapper {...props} routeName={category} isLoading={isLoading} customPadding="0 0">
-			<Text>Wszystkie produkty:</Text>
+		<AppWrapper
+			{...props}
+			routeName={t<string>(`shopCategories.${category}`)}
+			isLoading={isLoading}
+			customPadding="0 0"
+			stopSwipe={Platform.OS === 'ios'}
+		>
+			<Text>Promocje z ostatniego tygodnia:</Text>
+			<Text>{totalPromotionsCount}</Text>
+
+			<FlatList
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				contentContainerStyle={{ width: '100%' }}
+				data={lastWeekPromotions}
+				renderItem={({ item }) => <Product {...item} category={category} />}
+				keyExtractor={(item) => item?.id}
+				onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
+				getItemLayout={(data, index) => ({ length: itemElementHeight, offset: itemElementHeight * index, index })}
+			/>
+
+			<Text>Pozostałe produkty:</Text>
 			<Text>{totalProductsCount}</Text>
 
 			<FlatList
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				contentContainerStyle={{ width: '100%' }}
 				data={productsList}
-				renderItem={({ item }) => <Product {...item} />}
+				renderItem={({ item }) => <Product {...item} category={category} />}
 				keyExtractor={(item) => item?.id}
 				onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
 				getItemLayout={(data, index) => ({ length: itemElementHeight, offset: itemElementHeight * index, index })}

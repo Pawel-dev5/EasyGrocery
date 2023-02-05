@@ -1,16 +1,24 @@
 import React, { memo } from 'react';
-import { View, Image, Text } from 'react-native';
-import { ShopDataInterface } from '../models/hooks';
+import { View, Text } from 'react-native';
 
-const Product = (item: ShopDataInterface) => {
-	const {
-		attributes: { imageUrl, title, description },
-	} = item;
+// COMPONENTS
+import { ProductImage } from 'components/shops/items';
+
+// MODELS
+import { ProductInterface } from 'components/shops/models/sections';
+
+const Product = ({ attributes, category }: ProductInterface) => {
+	const { imageUrl, title, description, prices } = attributes;
+	const sortedPrices = prices?.reverse();
+
 	return (
 		<View>
-			{imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} />}
-			{title && <Text>{title}</Text>}
+			<ProductImage imageUrl={imageUrl} category={category} />
+			{title && <Text>{title} </Text>}
 			{description && <Text>{description}</Text>}
+			{sortedPrices && sortedPrices?.length > 0 && <Text>Cena: {sortedPrices[0]?.price}</Text>}
+			{sortedPrices[0]?.promotion !== 'null' && <Text>Promocja: {sortedPrices[0]?.promotion}</Text>}
+			{sortedPrices[0]?.promotionDescription !== 'null' && <Text>{sortedPrices[0]?.promotionDescription}</Text>}
 		</View>
 	);
 };

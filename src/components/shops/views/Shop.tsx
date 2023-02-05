@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { t } from 'i18next';
 
 // ROUTER
 import { shops as shopsRoutes } from 'routes/AppRoutes';
@@ -29,16 +30,11 @@ export const Shop = (props: any) => {
 
 	if (!shop) return null;
 	return (
-		<AppWrapper
-			{...props}
-			routeName={shop?.attributes?.title}
-			// isLoading={isLoading}
-			customPadding="0 0"
-		>
+		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0">
 			<View>
-				<Text>Elo</Text>
 				<Text>{shop?.attributes?.title}</Text>
 			</View>
+
 			<SingleShopWrapper>
 				<StyledSingleShopHeaderWrapper>
 					<StyledHeader>
@@ -66,7 +62,7 @@ export const Shop = (props: any) => {
 								style={{ width: '45%', height: 150, marginBottom: 10, marginRight: 5, marginLeft: 5 }}
 							>
 								<StyledShopCategories>
-									<Text>{value}</Text>
+									<Text>{t<string>(`shopCategories.${value}`)}</Text>
 								</StyledShopCategories>
 							</Pressable>
 						))}

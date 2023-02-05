@@ -123,6 +123,11 @@ export const shopsQuery = (shopName: string, category: string[], paginationStart
 				category: {
 					$in: category,
 				},
+				[`${shopName}Prices`]: {
+					promotion: {
+						$eq: 'null',
+					},
+				},
 			},
 			sort: ['title:asc', 'id:asc'],
 			pagination: {
@@ -134,3 +139,55 @@ export const shopsQuery = (shopName: string, category: string[], paginationStart
 			encodeValuesOnly: true,
 		},
 	);
+
+export const shopsPromotionQuery = (shopName: string, category: string[], paginationStart: number) => {
+	const daysTimeAgo = 7; // Days you want to subtract
+	const currentDate = new Date();
+	const last = new Date(currentDate.getTime() - daysTimeAgo * 24 * 60 * 60 * 1000);
+	const lastDay = last.getDate();
+	const lastMonth = last.getMonth() + 1;
+	const lastYear = last.getFullYear();
+	const currentYear = currentDate.getFullYear();
+	const currentMonth = currentDate.getMonth();
+	const currentDay = currentDate.getDate();
+
+	const handleZero = (value: number) => {
+		if (value >= 10) return value;
+		return `0${value}`;
+	};
+
+	const weekAgo = `${lastYear}-${handleZero(lastMonth)}-${handleZero(lastDay)}`;
+	const currentFinalDate = `${currentYear}-${handleZero(currentMonth + 1)}-${handleZero(currentDay)}`;
+
+	return qs.stringify(
+		{
+			populate: {
+				[`${shopName}Prices`]: {
+					populate: '*',
+				},
+			},
+			filters: {
+				category: {
+					$in: category,
+				},
+				[`${shopName}Prices`]: {
+					promotion: {
+						$ne: 'null',
+					},
+					date: {
+						$gte: weekAgo,
+						$lte: currentFinalDate,
+					},
+				},
+			},
+			sort: ['title:asc', 'id:asc'],
+			pagination: {
+				page: paginationStart,
+				pageSize: 50,
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);
+};
