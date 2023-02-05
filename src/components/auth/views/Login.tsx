@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
 import { useForm } from 'react-hook-form';
@@ -32,13 +32,9 @@ const schema = yup
 	.required();
 
 export const Login = (props: any) => {
-	const { submitLogin, backendError, loginStoredUser, loginStatus } = useAuth();
+	const { submitLogin, backendError, loginStatus } = useAuth();
 
 	const { navigation } = props;
-
-	useEffect(() => {
-		loginStoredUser();
-	}, []);
 
 	const {
 		control,

@@ -34,10 +34,13 @@ import {
 	StyledUsersWrapper,
 	StyledListDescription,
 } from 'components/lists/items/Styles';
+import { selectGlobal } from 'redux/slices/global';
 
 export const FullListWrapper = (props: any) => {
 	const shopState = useAppSelector(selectShops);
+	const globalState = useAppSelector(selectGlobal);
 	const { shops } = shopState;
+	const { token } = globalState;
 
 	const {
 		singleList,
@@ -64,7 +67,7 @@ export const FullListWrapper = (props: any) => {
 	const listUuid = route?.params?.id;
 
 	useEffect(() => {
-		if (listUuid) {
+		if (listUuid && token) {
 			setIsLoading(true);
 			getList(listUuid);
 			if (shops?.length === 0) getShops();
@@ -193,7 +196,7 @@ export const FullList = (props: any) => (
 const styles = StyleSheet.create({
 	contentContainer: {
 		width: '100%',
-		maxHeight: '100%',
+		maxHeight: '97.5%',
 		flexDirection: 'column',
 		paddingRight: 16,
 		paddingLeft: 16,

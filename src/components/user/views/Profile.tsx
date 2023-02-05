@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { t } from 'i18next';
-import { Button, SafeAreaView, Image } from 'react-native';
+import { Button, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -15,15 +15,18 @@ import { useAppDispatch, useAppSelector } from 'redux/hooks';
 // COMPONENTS
 import { ControllerWrapper } from 'components/auth/sections';
 import { AppWrapper } from 'components/layout';
-import { Loader } from 'components/layout/common';
+import { Loader, LangSwitcher } from 'components/layout/common';
 
 // STYLES
 import { StyledLoginContainer, StyledInputWrapper } from 'components/user/views/Styles';
 
 import { userQuery } from 'utils/queries';
 import { uploadImageFromDevice, getBlobFromUri, manageFileUpload } from 'utils/fileUpload';
-import { ImagePicker } from '../elements';
 import { AlertTypes } from 'redux/slices/global/models';
+import { ImagePicker } from '../elements';
+import { SubmitAlert } from 'components/lists/partials';
+import { logoutAction } from 'redux/actions';
+import { useAuth } from 'components/auth/hooks/useAuth';
 
 const schema = yup
 	.object({
@@ -37,6 +40,8 @@ export const Profile = (props: any) => {
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const user = globalState?.user;
+
+	const { signOut } = useAuth();
 
 	const [file, setFile] = useState<any>(null);
 	const [image, setImage] = useState<any>(null);
@@ -212,7 +217,7 @@ export const Profile = (props: any) => {
 
 	return (
 		<AppWrapper routeName={t('profile.profile')} {...props}>
-			<SafeAreaView>
+			<SafeAreaView style={{ maxHeight: '91.5%' }}>
 				<StyledLoginContainer>
 					<StyledInputWrapper>
 						<ControllerWrapper
@@ -271,6 +276,22 @@ export const Profile = (props: any) => {
 							)
 						}
 					/>
+					<Button
+						onPress={() =>
+							SubmitAlert({
+								okPressed: () => {
+									signOut();
+									dispatch(logoutAction());
+								},
+								okText: t('auth.logout'),
+								cancelText: t('general.cancel'),
+								cancelPressed: () => {},
+								alertTitle: t('auth.confirmSignOut'),
+							})
+						}
+						title={t('auth.logout')}
+					/>
+					<LangSwitcher />
 					{/* {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />} */}
 
 					{/* <ImagePicker setFile={setFile} /> */}

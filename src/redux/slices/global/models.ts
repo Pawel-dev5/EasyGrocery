@@ -25,4 +25,5 @@ export interface InitialStateInterface extends LanguageInterface {
 	token?: string | null;
 	user: User | null;
 	alerts: AlertsInterface[];
+	menuRoute: number;
 }

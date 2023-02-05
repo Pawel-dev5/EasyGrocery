@@ -23,10 +23,13 @@ import { StyledGridList, StyledAddListWrapper } from 'components/lists/views/Sty
 import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 import { selectLists } from 'redux/slices/lists';
 import { useAppSelector } from 'redux/hooks';
+import { selectGlobal } from 'redux/slices/global';
 
 const ListsWrapper = (props: any) => {
 	const listsState = useAppSelector(selectLists);
+	const globalState = useAppSelector(selectGlobal);
 	const lists = listsState?.lists;
+	const { token } = globalState;
 
 	const {
 		addNewListLoader,
@@ -49,14 +52,18 @@ const ListsWrapper = (props: any) => {
 	const { navigation } = props;
 
 	const onRefresh = useCallback(async () => {
-		await setRefreshing(true);
-		await getLists();
-		await setRefreshing(false);
+		if (token) {
+			await setRefreshing(true);
+			await getLists();
+			await setRefreshing(false);
+		}
 	}, []);
 
 	useEffect(() => {
-		setIsLoading(true);
-		getLists();
+		if (token) {
+			setIsLoading(true);
+			getLists();
+		}
 	}, []);
 
 	const floatedItems = [
@@ -120,6 +127,7 @@ const ListsWrapper = (props: any) => {
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						onDragEnd={({ data }: { data: ListInterface[] }) => updateListOrder(data)}
 						contentContainerStyle={{ paddingBottom: 15 }}
+						style={{ maxHeight: '100%' }}
 						keyExtractor={(item: ListInterface) => item?.id}
 						renderItem={({ item, drag, isActive, getIndex }: RenderItemParams<ListInterface>) => {
 							const newProps = {

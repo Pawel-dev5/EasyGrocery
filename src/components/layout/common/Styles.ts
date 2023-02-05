@@ -1,30 +1,15 @@
 import styled, { css } from 'styled-components/native';
-import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 // MODELS
 import { VariantType } from 'components/layout/models/common';
 import { ColorsKeys } from 'utils/theme/themeDefault';
 import { ProgressBarVariant } from 'components/lists/models/sections';
 
-export const StyledMenuOption = styled.View`
-	position: relative;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-`;
 export const StyledText = styled.Text<{ color?: ColorsKeys }>`
 	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 	font-size: 16px;
-`;
-
-export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
-	width: 20px;
-	height: 100%;
-	text-align: center;
-	font-size: 16px;
-	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
-	margin-bottom: -3px;
 `;
 
 export const StyledIcon = styled(FontAwesome5)<{ variant?: VariantType }>`

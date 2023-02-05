@@ -12,6 +12,7 @@ const initialState: InitialStateInterface = {
 	user: null,
 	lang: 'pl',
 	alerts: [],
+	menuRoute: 1,
 };
 
 export const globalSlice = createSlice({
@@ -39,6 +40,9 @@ export const globalSlice = createSlice({
 				state.alerts = newArr;
 			}
 		},
+		globalSetMenuRoute: (state, action: PayloadAction<number>) => {
+			state.menuRoute = action.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(logoutAction, (state) => {
@@ -48,7 +52,8 @@ export const globalSlice = createSlice({
 	},
 });
 
-export const { globalSetAuthToken, globalSetLang, globalSetAlert, globalDeleteAlert } = globalSlice.actions;
+export const { globalSetAuthToken, globalSetLang, globalSetAlert, globalDeleteAlert, globalSetMenuRoute } =
+	globalSlice.actions;
 
 export const selectGlobal = (state: RootState) => state.global;
 

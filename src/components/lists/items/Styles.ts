@@ -25,7 +25,7 @@ export const StyledListCard = styled.View<{ color: string | null; lastElement: b
 	${({ firstElement }) =>
 		firstElement &&
 		css`
-			margin-top: 21px;
+			margin-top: 10px;
 		`}
 `;
 

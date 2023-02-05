@@ -43,7 +43,6 @@ import { filterUnRead } from 'utils/helpers/arrayHelpers';
 export const AppWrapper = ({
 	children,
 	routeName,
-	variant = 'grey',
 	navigation,
 	bottomSheet,
 	visible,
@@ -101,7 +100,6 @@ export const AppWrapper = ({
 		if (!stopSwipe && navigation && navigation?.goBack) return navigation?.goBack();
 		return null;
 	};
-	// const onSwipeRight = () => navigation && navigation?.goBack && navigation?.goBack();
 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
 
 	const handleClosePress = () => {
@@ -111,30 +109,40 @@ export const AppWrapper = ({
 
 	return (
 		<StyledAppLayout>
-			<StyledAppNavbar variant={variant}>
-				<View style={{ width: 45, aspectRatio: 1 }}>
-					{navigation?.canGoBack() && (
+			<StyledAppNavbar>
+				{navigation?.canGoBack() && routeName !== t<string>('general.myLists') && (
+					<View style={{ width: 45, aspectRatio: 1 }}>
 						<StyledButton onPress={() => navigation?.goBack()}>
-							<Icon variant={variant} name="angle-left" size={30} />
+							<Icon variant="grey" name="angle-left" size={30} />
 						</StyledButton>
-					)}
-				</View>
+					</View>
+				)}
 
-				<StyledText variant={variant}>{routeName}</StyledText>
-
-				<Menu variant={variant} navigation={navigation} />
+				<StyledText
+					customMarginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? '16px' : null}
+				>
+					{routeName}
+				</StyledText>
 			</StyledAppNavbar>
 
 			{isLoading ? (
-				<StyledChildren customPadding={customPadding}>
-					<Loader size={120} />
-				</StyledChildren>
+				<>
+					<StyledChildren customPadding={customPadding}>
+						<Loader size={120} />
+					</StyledChildren>
+
+					<Menu navigation={navigation} />
+				</>
 			) : (
 				<>
 					{children && (
-						<StyledChildren onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} customPadding={customPadding}>
-							{children}
-						</StyledChildren>
+						<>
+							<StyledChildren onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} customPadding={customPadding}>
+								{children}
+							</StyledChildren>
+
+							<Menu navigation={navigation} />
+						</>
 					)}
 
 					{bottomSheet && visible && (

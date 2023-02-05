@@ -1,83 +1,85 @@
-import React from 'react';
-import { Menu as MenuComponent, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import React, { useCallback } from 'react';
 import { t } from 'i18next';
+import { TouchableOpacity } from 'react-native';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
 
 // REDUX
-import { selectGlobal } from 'redux/slices/global';
 import { selectNotifications } from 'redux/slices/notifications';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-
-// ACTIONS
-import { logoutAction } from 'redux/actions';
 
 // ROUTER
-import { lists, notifications, profile, shops } from 'routes/AppRoutes';
-
-// HOOKS
-import { useAuth } from 'components/auth/hooks/useAuth';
+import { lists, notifications as notificationsRoutes, profile, shops } from 'routes/AppRoutes';
 
 // COMPONENTS
-import { Icon, MenuOption, LangSwitcher, NotificationCounter } from 'components/layout/common';
-import { SubmitAlert } from 'components/lists/partials';
+import { NotificationCounter } from 'components/layout/common';
 
 // STYLES
-import { StyledMenuTrigger } from 'components/layout/sections/Styles';
+import { StyledTabMenuWrapper, StyledMenuIcon, StyledMenuOption } from 'components/layout/sections/Styles';
 
 // MODELS
-import { MenuInterface } from 'components/layout/models/sections';
+import { MenuElementsInterface } from 'components/layout/models/sections';
 
-export const Menu = ({ variant, navigation }: MenuInterface) => {
+export const Menu = ({ navigation }: { navigation: any }) => {
 	const dispatch = useAppDispatch();
+
 	const globalState = useAppSelector(selectGlobal);
-	const notificationState = useAppSelector(selectNotifications);
-	const notificationsCounter = notificationState?.counter;
+	const notificationsState = useAppSelector(selectNotifications);
+	const notificationsCounter = notificationsState?.counter;
+	const { token, menuRoute } = globalState;
+	let menuElements: MenuElementsInterface[] = [];
 
-	const { signOut } = useAuth();
+	if (token) {
+		menuElements = [
+			{
+				id: 1,
+				text: t('general.myLists'),
+				icon: 'list',
+				link: () => navigation?.navigate(lists.lists),
+			},
+			{
+				id: 2,
+				text: t('shops.shops'),
+				icon: 'shopping-basket',
+				link: () => navigation?.navigate(shops.shops),
+			},
+			{
+				id: 3,
+				text: t('notifications.title'),
+				icon: 'bell',
+				counter: notificationsCounter,
+				link: () => navigation?.navigate(notificationsRoutes.notifications),
+			},
+			{
+				id: 4,
+				text: t('profile.profile'),
+				icon: 'user',
+				link: () => navigation?.navigate(profile.profile),
+			},
+		];
+	}
 
+	const setColor = useCallback(
+		(id: number) => {
+			if (menuRoute === id) return 'success';
+			return 'black';
+		},
+		[menuRoute],
+	);
 	return (
-		<>
-			{globalState?.token ? (
-				<MenuComponent>
-					<MenuTrigger>
-						<StyledMenuTrigger>
-							<Icon variant={variant} name="ellipsis-v" size={20} />
-							<NotificationCounter counter={notificationsCounter} />
-						</StyledMenuTrigger>
-					</MenuTrigger>
-
-					<MenuOptions optionsContainerStyle={{ marginTop: 40, padding: 10 }}>
-						<MenuOption onSelect={() => navigation?.navigate(lists.lists)} text={t('general.myLists')} icon="list" />
-						<MenuOption
-							onSelect={() => navigation?.navigate(notifications.notifications)}
-							text={t('notifications.title')}
-							icon="bell"
-							counter={notificationsCounter}
-						/>
-						<MenuOption onSelect={() => navigation?.navigate(profile.profile)} text={t('profile.profile')} icon="user" />
-						<MenuOption onSelect={() => navigation?.navigate(shops.shops)} text={t('shops.shops')} icon="shopping-basket" />
-						<MenuOption
-							onSelect={() =>
-								SubmitAlert({
-									okPressed: () => {
-										signOut();
-										dispatch(logoutAction());
-									},
-									okText: t('auth.logout'),
-									cancelText: t('general.cancel'),
-									cancelPressed: () => {},
-									alertTitle: t('auth.confirmSignOut'),
-								})
-							}
-							text={t('auth.logout')}
-							icon="sign-out"
-						/>
-
-						<LangSwitcher expanded />
-					</MenuOptions>
-				</MenuComponent>
-			) : (
-				<LangSwitcher />
-			)}
-		</>
+		<StyledTabMenuWrapper>
+			{menuElements?.map(({ id, icon, counter, link }) => (
+				<StyledMenuOption key={id}>
+					<TouchableOpacity
+						onPress={() => {
+							link();
+							dispatch(globalSetMenuRoute(id));
+						}}
+					>
+						{icon && <StyledMenuIcon name={icon} color={setColor(id)} />}
+						{counter ? <NotificationCounter counter={counter} variant="small" /> : null}
+					</TouchableOpacity>
+				</StyledMenuOption>
+			))}
+		</StyledTabMenuWrapper>
 	);
 };

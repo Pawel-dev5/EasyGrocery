@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AlertTypes } from 'redux/slices/global/models';
+import { ColorsKeys } from 'utils/theme/themeDefault';
 
 export const StyledIcon = styled(FontAwesome)`
 	font-size: 24px;
@@ -74,4 +75,31 @@ export const StyledCircleWrapper = styled.View`
 	position: absolute;
 	right: 0px;
 	top: 0;
+`;
+
+export const StyledTabMenuWrapper = styled.View`
+	width: 100%;
+	height: 70px;
+	padding: 13px 50px;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: space-between;
+	background-color: ${({ theme }) => theme.grey100};
+`;
+
+export const StyledMenuOption = styled.View`
+	position: relative;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
+	width: 20px;
+	height: 100%;
+	text-align: center;
+	font-size: 16px;
+	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
+	margin-bottom: -3px;
 `;

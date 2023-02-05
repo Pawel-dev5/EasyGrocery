@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { t } from 'i18next';
 import axios from 'axios';
@@ -34,6 +34,7 @@ import { Lists } from 'components/lists';
 import { List } from 'components/lists/sections';
 import { Shops, Shop, ProductsList } from 'components/shops';
 import { Notifications } from 'components/notifications';
+import { useAuth } from 'components/auth/hooks/useAuth';
 
 const { Screen, Navigator } = createNativeStackNavigator();
 
@@ -41,6 +42,11 @@ setupInterceptorsTo(axios);
 
 const AppComponent = () => {
 	const globalState = useAppSelector(selectGlobal);
+	const { loginStoredUser } = useAuth();
+
+	useEffect(() => {
+		loginStoredUser();
+	}, []);
 
 	return (
 		<NavigationContainer>

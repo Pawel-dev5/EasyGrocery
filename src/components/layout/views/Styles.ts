@@ -1,10 +1,7 @@
 import styled, { css } from 'styled-components/native';
 
-// MODELS
-import { VariantType } from 'components/layout/models/common';
-
 export const StyledChildren = styled.View<{ customPadding?: string }>`
-	height: 88.5%;
+	height: 80.5%;
 	width: 100%;
 	background-color: ${({ theme }) => theme.white};
 	align-items: center;
@@ -25,35 +22,28 @@ export const StyledAppLayout = styled.View`
 	max-height: 100%;
 `;
 
-export const StyledAppNavbar = styled.View<{ variant: VariantType }>`
+export const StyledAppNavbar = styled.View`
+	display: flex;
 	align-items: center;
+	justify-content: flex-start;
 	flex-direction: row;
-	padding: 0 ${({ theme }) => theme.globalPadding};
-	padding-top: 30px;
+	padding-top: 50px;
 	height: ${({ theme }) => theme.navbarHeight};
 	background-color: ${({ theme }) => theme.white};
 	width: 100%;
-
-	${({ variant }) =>
-		variant === 'transparent' &&
-		css`
-			position: absolute;
-			z-index: 2;
-			background-color: ${({ theme }) => theme.transparent};
-		`}
-
-	${({ variant }) =>
-		variant === 'grey' &&
-		css`
-			background-color: ${({ theme }) => theme.appBgColor};
-		`}
 `;
-export const StyledText = styled.Text<{ variant?: VariantType }>`
-	text-align: center;
+export const StyledText = styled.Text<{ customMarginLeft: string | null }>`
+	text-align: left;
 	flex: 1;
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
-	color: ${({ theme, variant }) => (variant === 'transparent' ? theme.white : theme.base1)};
+	color: ${({ theme }) => theme.base1};
+
+	${({ customMarginLeft }) =>
+		customMarginLeft &&
+		css`
+			margin-left: ${customMarginLeft};
+		`}
 `;
 
 export const StyledMain = styled.View`
@@ -106,6 +96,12 @@ export const StyledFloatingAddListButtonWrapper = styled.View`
 	position: absolute;
 	z-index: 999;
 	elevation: 999;
-	bottom: 10px;
+	bottom: 70px;
 	right: 10px;
+`;
+
+export const StyledTabMenuItem = styled.View`
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
