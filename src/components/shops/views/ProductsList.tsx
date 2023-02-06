@@ -90,17 +90,19 @@ export const ProductsList = (props: any) => {
 			isLoading={isLoading}
 			customPadding="0 0"
 			stopSwipe={Platform.OS === 'ios'}
+			searchActive
 		>
 			<FlatList
 				ref={flatList}
-				initialScrollIndex={index || 0}
+				initialScrollIndex={index}
 				initialNumToRender={shop?.attributes?.orders?.length}
 				onScrollToIndexFailed={(info) => {
 					// eslint-disable-next-line no-promise-executor-return
 					const wait = new Promise((resolve) => setTimeout(resolve, 500));
-					wait.then(() => {
-						flatList.current?.scrollToIndex({ index: info.index, animated: true });
-					});
+					if (info.index)
+						wait.then(() => {
+							flatList.current?.scrollToIndex({ index: info.index, animated: true });
+						});
 				}}
 				contentContainerStyle={styles.categoriesContainer}
 				horizontal

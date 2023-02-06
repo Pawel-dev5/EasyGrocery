@@ -31,4 +31,5 @@ export interface AppLayoutInterface {
 	bottomSheetHeader?: string;
 	onClose?: () => void;
 	stopSwipe?: boolean;
+	searchActive?: boolean;
 }

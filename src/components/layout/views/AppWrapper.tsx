@@ -52,6 +52,7 @@ export const AppWrapper = ({
 	isLoading,
 	bottomSheetHeader,
 	stopSwipe,
+	searchActive,
 }: AppLayoutInterface) => {
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
@@ -110,19 +111,23 @@ export const AppWrapper = ({
 	return (
 		<StyledAppLayout>
 			<StyledAppNavbar>
-				{navigation?.canGoBack() && routeName !== t<string>('general.myLists') && (
-					<View style={{ width: 45, aspectRatio: 1 }}>
-						<StyledButton onPress={() => navigation?.goBack()}>
-							<Icon variant="grey" name="angle-left" size={30} />
-						</StyledButton>
-					</View>
-				)}
+				<View style={{ width: '100%', display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center' }}>
+					{navigation?.canGoBack() && routeName !== t<string>('general.myLists') && (
+						<View style={{ width: 45, aspectRatio: 1 }}>
+							<StyledButton onPress={() => navigation?.goBack()}>
+								<Icon variant="grey" name="angle-left" size={30} />
+							</StyledButton>
+						</View>
+					)}
 
-				<StyledText
-					customMarginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? '16px' : null}
-				>
-					{routeName}
-				</StyledText>
+					<StyledText
+						customMarginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? '16px' : null}
+					>
+						{routeName}
+					</StyledText>
+				</View>
+
+				{searchActive && <Icon name="search" size={20} />}
 			</StyledAppNavbar>
 
 			{isLoading ? (

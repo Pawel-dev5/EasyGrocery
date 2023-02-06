@@ -25,16 +25,18 @@ export const StyledAppLayout = styled.View`
 export const StyledAppNavbar = styled.View`
 	display: flex;
 	align-items: center;
-	justify-content: flex-start;
+	justify-content: space-around;
 	flex-direction: row;
+	flex-wrap: nowrap;
 	padding-top: 50px;
 	height: ${({ theme }) => theme.navbarHeight};
 	background-color: ${({ theme }) => theme.white};
 	width: 100%;
+	padding-right: 16px;
 `;
 export const StyledText = styled.Text<{ customMarginLeft: string | null }>`
 	text-align: left;
-	flex: 1;
+
 	font-size: 22px;
 	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
 	color: ${({ theme }) => theme.base1};
@@ -57,7 +59,6 @@ export const StyledButton = styled.TouchableOpacity`
 `;
 
 // BOTTOM SHEET
-
 export const StyledBottomSheetBody = styled.View`
 	padding: ${({ theme }) => theme.globalPadding};
 	align-items: center;
@@ -82,8 +83,6 @@ export const StyledBottomSheetClose = styled.TouchableOpacity`
 
 	height: 40px;
 	width: 40px;
-	/* background: ${({ theme }) => theme.grey200}; */
-	/* border-radius: 5px; */
 `;
 
 export const StyledBottomSheetHeader = styled.Text`
