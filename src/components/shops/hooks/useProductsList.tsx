@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { REACT_APP_SHOPS_API } from '@env';
 
 // REDUX
 import { useAppDispatch } from 'redux/hooks';
@@ -19,7 +20,7 @@ import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
 
 export const useProductsList = ({ url, category }: { url: string; category: string }) => {
 	const dispatch = useAppDispatch();
-	const baseApi = `http://localhost:1337/api/${url}`;
+	const baseApi = `${REACT_APP_SHOPS_API}api/${url}`;
 
 	const [productsList, setProductsList] = useState<ShopDataInterface[] | null>(null);
 	const [lastWeekPromotions, setLastWeekPromotions] = useState<ShopDataInterface[] | null>(null);
