@@ -48,7 +48,8 @@ export const ProductsList = (props: any) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [scrollOffset, setScrollOffset] = useState(0);
 	const [offsetLoading, setOffsetLoading] = useState(false);
-	const [expandedList, setExpandedList] = useState(true); // IF TRUE SHOW PROMOTION IF FALSE SHOW REST
+	// IF TRUE SHOW PROMOTION IF FALSE SHOW REST AND IF PROMOTION === 0 SHOW REST
+	const [expandedList, setExpandedList] = useState(!!(lastWeekPromotions && lastWeekPromotions?.length === 0));
 	const [page, setPage] = useState(1);
 	const flatList = useRef<FlatList>(null);
 
@@ -126,34 +127,42 @@ export const ProductsList = (props: any) => {
 				)}
 				keyExtractor={(item) => item?.id}
 			/>
+			{lastWeekPromotions && lastWeekPromotions?.length > 0 && (
+				<>
+					<StyledListHeaderWrapper onPress={() => setExpandedList(!expandedList!)}>
+						<StyledListHeader>
+							{t('general.promotionProducts')} {totalPromotionsCount}
+						</StyledListHeader>
+						<Icon name={expandedList ? 'angle-up' : 'angle-down'} size={16} variant="black" />
+					</StyledListHeaderWrapper>
 
-			<StyledListHeaderWrapper onPress={() => setExpandedList(!expandedList!)}>
-				<StyledListHeader>
-					{t('general.promotionProducts')} {totalPromotionsCount}
-				</StyledListHeader>
-				<Icon name={expandedList ? 'angle-up' : 'angle-down'} size={16} variant="black" />
-			</StyledListHeaderWrapper>
-
-			{expandedList && (
-				<FlatList
-					style={{ height: '100%', paddingLeft: '7%', paddingRight: '7%' }}
-					columnWrapperStyle={{ justifyContent: 'space-between' }}
-					ItemSeparatorComponent={() => <View style={{ height: 20, width: 16 }} />}
-					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-					contentContainerStyle={styles.contentContainer}
-					data={lastWeekPromotions}
-					numColumns={2}
-					renderItem={({ item }) => <Product {...item} />}
-					keyExtractor={(item) => item?.id}
-					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
-				/>
+					{expandedList && (
+						<FlatList
+							style={{ height: '100%', paddingLeft: '7%', paddingRight: '7%' }}
+							columnWrapperStyle={{ justifyContent: 'space-between' }}
+							ItemSeparatorComponent={() => <View style={{ height: 20, width: 16 }} />}
+							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+							contentContainerStyle={styles.contentContainer}
+							data={lastWeekPromotions}
+							numColumns={2}
+							renderItem={({ item }) => <Product {...item} />}
+							keyExtractor={(item) => item?.id}
+							onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
+						/>
+					)}
+				</>
 			)}
 
-			<StyledListHeaderWrapper onPress={() => setExpandedList(!expandedList)}>
+			<StyledListHeaderWrapper
+				onPress={() => lastWeekPromotions && lastWeekPromotions?.length > 0 && setExpandedList(!expandedList)}
+			>
 				<StyledListHeader>
 					{t('general.restProducts')} {totalProductsCount}
 				</StyledListHeader>
-				<Icon name={expandedList ? 'angle-up' : 'angle-down'} size={16} variant="black" />
+
+				{lastWeekPromotions && lastWeekPromotions?.length > 0 && (
+					<Icon name={expandedList ? 'angle-up' : 'angle-down'} size={16} variant="black" />
+				)}
 			</StyledListHeaderWrapper>
 
 			{!expandedList && (

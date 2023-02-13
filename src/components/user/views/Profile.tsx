@@ -21,9 +21,8 @@ import { Loader, LangSwitcher } from 'components/layout/common';
 import { StyledLoginContainer, StyledInputWrapper } from 'components/user/views/Styles';
 
 import { userQuery } from 'utils/queries';
-import { uploadImageFromDevice, getBlobFromUri, manageFileUpload } from 'utils/fileUpload';
+import { uploadImageFromDevice } from 'utils/fileUpload';
 import { AlertTypes } from 'redux/slices/global/models';
-import { ImagePicker } from '../elements';
 import { SubmitAlert } from 'components/lists/partials';
 import { logoutAction } from 'redux/actions';
 import { useAuth } from 'components/auth/hooks/useAuth';

@@ -1,4 +1,4 @@
-import * as ImagePicker from 'expo-image-picker';
+// import * as ImagePicker from 'expo-image-picker';
 import { hasMediaLibraryPermissionGranted } from 'utils/fileUpload/hasMediaLibraryPermissionGranted';
 
 export const uploadImageFromDevice = async () => {
@@ -8,17 +8,17 @@ export const uploadImageFromDevice = async () => {
 	// Discard execution when  media library permission denied
 	if (!storagePermissionGranted) return null;
 
-	const result = await ImagePicker.launchImageLibraryAsync({
-		mediaTypes: ImagePicker.MediaTypeOptions.Images,
-		allowsEditing: true,
-		aspect: [4, 4],
-		quality: 1,
-		base64: true,
-	});
+	// const result = await ImagePicker.launchImageLibraryAsync({
+	// 	mediaTypes: ImagePicker.MediaTypeOptions.Images,
+	// 	allowsEditing: true,
+	// 	aspect: [4, 4],
+	// 	quality: 1,
+	// 	base64: true,
+	// });
 
-	if (!result.canceled) {
-		img = result;
-	}
+	// if (!result.canceled) {
+	// 	img = result;
+	// }
 
 	return img;
 };
