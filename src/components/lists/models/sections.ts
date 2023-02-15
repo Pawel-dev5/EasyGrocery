@@ -1,5 +1,6 @@
 import { User } from 'config/models';
 import { Dispatch, SetStateAction } from 'react';
+import { PriceInterface, ShopDataInterface } from 'components/shops/models/hooks';
 
 export enum ListVariant {
 	PREVIEW = 'Preview',
@@ -19,10 +20,11 @@ export interface ProgressBarIterface {
 export interface ItemInterface {
 	id: string;
 	uuid: string;
-	value: string;
+	title: string;
 	done: boolean;
 	category: string | null;
 	withCategories?: boolean;
+	prices?: PriceInterface[];
 }
 
 export interface ListInterface {
@@ -35,6 +37,9 @@ export interface ListInterface {
 	description: string;
 	items: ItemInterface[];
 	variant: ListVariant;
+	shop: {
+		data: ShopDataInterface;
+	};
 }
 
 export interface ListWrapperInterface {

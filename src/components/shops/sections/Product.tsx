@@ -20,7 +20,11 @@ import {
 } from 'components/shops/sections/Styles';
 import { shadowInline } from 'utils/theme/themeDefault';
 
-const Product = ({ attributes }: ShopDataAttributes) => {
+interface ProductPropsInterface extends ShopDataAttributes {
+	setBottomSheetState: ({ visible, product }: { visible: boolean; product: ShopDataAttributes }) => void;
+}
+
+const Product = ({ id, attributes, setBottomSheetState }: ProductPropsInterface) => {
 	const { imageUrl, title, description, prices } = attributes;
 	const sortedPrices = prices?.reverse();
 
@@ -30,6 +34,7 @@ const Product = ({ attributes }: ShopDataAttributes) => {
 				<ProductImage imageUrl={imageUrl} />
 
 				{title && <StyledProdTitle>{title} </StyledProdTitle>}
+
 				{description && <StyledProdDescription>{description}</StyledProdDescription>}
 			</StyledHeader>
 
@@ -46,7 +51,12 @@ const Product = ({ attributes }: ShopDataAttributes) => {
 				<StyledProdDescription>{sortedPrices[0]?.promotionDescription}</StyledProdDescription>
 			)}
 
-			<StyledAddButton style={shadowInline}>
+			<StyledAddButton
+				style={shadowInline}
+				onPress={() => {
+					setBottomSheetState({ visible: true, product: { id, attributes } });
+				}}
+			>
 				<Icon name="plus" size={20} variant="black" />
 			</StyledAddButton>
 		</StyledProductWrapper>

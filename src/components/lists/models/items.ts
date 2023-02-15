@@ -1,8 +1,6 @@
-import { Dispatch, SetStateAction } from 'react';
-
 // MODELS
 import { User } from 'config/models';
-import { ItemInterface, ListInterface } from 'components/lists/models/sections';
+import { ItemInterface } from 'components/lists/models/sections';
 import { ShopDataInterface } from 'components/shops/models/hooks';
 
 export interface InvitationUser {

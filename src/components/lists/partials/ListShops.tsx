@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { t } from 'i18next';
 
 // REDUX
 import { selectShops } from 'redux/slices/shops';
@@ -36,7 +37,7 @@ export const ListShops = () => {
 						<TouchableOpacity key={shop?.id} onPress={() => setNewShop(shop)}>
 							<StyledShopImage
 								source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
-								style={[{ resizeMode: 'contain' }, isActiveShop()]}
+								style={[{ resizeMode: 'cover' }, isActiveShop()]}
 							/>
 						</TouchableOpacity>
 					);
@@ -46,7 +47,7 @@ export const ListShops = () => {
 				{newShop !== null && (
 					<View>
 						{newShop?.attributes?.orders?.map(({ id, value }) => (
-							<StyledListShopCategories key={id}>{value}</StyledListShopCategories>
+							<StyledListShopCategories key={id}>{t<string>(`shopCategories.${value}`)}</StyledListShopCategories>
 						))}
 					</View>
 				)}

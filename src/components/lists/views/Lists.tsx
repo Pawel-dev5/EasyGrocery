@@ -96,12 +96,12 @@ const ListsWrapper = (props: any) => {
 		<AppWrapper
 			{...props}
 			routeName={t('general.myLists')}
-			onClose={() => setVisible(false)}
-			visible={visible}
 			isLoading={listIsLoading}
-			bottomSheetHeader="general.addNewList"
 			floatedItems={floatedItems}
 			customPadding="0 0"
+			onClose={() => setVisible(false)}
+			visible={visible}
+			bottomSheetHeader="general.addNewList"
 			bottomSheet={
 				<>
 					<StyledAddListWrapper>

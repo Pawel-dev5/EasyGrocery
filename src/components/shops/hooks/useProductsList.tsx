@@ -4,22 +4,27 @@ import axios from 'axios';
 import { REACT_APP_SHOPS_API } from '@env';
 
 // REDUX
-import { useAppDispatch } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { globalSetAlert } from 'redux/slices/global';
+import { selectSocket } from 'redux/slices/socket';
 import { AlertTypes } from 'redux/slices/global/models';
 
 // MODELS
-import { ShopDataInterface } from 'components/shops/models/hooks';
+import { AddProductInterface, ShopDataInterface } from 'components/shops/models/hooks';
 
 // UTILS
-import { shopsPromotionQuery, shopsQuery } from 'utils/queries';
+import { listQuery, shopsPromotionQuery, shopsQuery } from 'utils/queries';
 
 // HELPERS
 import { convertPrices } from 'components/shops/helpers/convertPrices';
 import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
 
+// MODELS
+import { SocketErrorInterface } from 'config/models';
+
 export const useProductsList = ({ url, category }: { url: string; category: string }) => {
 	const dispatch = useAppDispatch();
+	const socketState = useAppSelector(selectSocket);
 	const baseApi = `${REACT_APP_SHOPS_API}api/${url}`;
 
 	const [productsList, setProductsList] = useState<ShopDataInterface[] | null>(null);
@@ -111,6 +116,51 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 			.finally(() => callback());
 	};
 
+	const addProductToList = ({ list, product, callbackOnSuccess }: AddProductInterface) => {
+		if (product && product !== null) {
+			const deletePricesId = () =>
+				product?.attributes?.prices?.map((item) => {
+					delete item?.id;
+					return item;
+				});
+
+			axios
+				.put(`lists/${list?.id}?${listQuery}`, {
+					data: {
+						items: [...list.items, { ...product?.attributes, prices: deletePricesId() }],
+					},
+				})
+				.then((resp) => {
+					// SOCKET UPDATE STATES BELOW
+					if (socketState?.socket)
+						socketState?.socket.emit(
+							'listUpdate',
+							{
+								data: {
+									id: resp.data.data?.id,
+									...resp.data.data?.attributes,
+								},
+							},
+							(error: SocketErrorInterface) => {
+								if (error?.response?.data?.error) {
+									const { message, status, name } = error.response.data.error;
+									dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+								}
+							},
+						);
+				})
+				.catch((error) => {
+					if (error?.response?.data?.error) {
+						const { message, status, name } = error.response.data.error;
+						dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+					}
+				})
+				.finally(() => {
+					if (callbackOnSuccess) callbackOnSuccess();
+				});
+		}
+	};
+
 	return {
 		isLoading,
 		productsList,
@@ -119,5 +169,6 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		totalPromotionsCount,
 		getProducts,
 		getProductsOffset,
+		addProductToList,
 	};
 };

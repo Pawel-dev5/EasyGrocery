@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useCallback } from 'react';
 import { t } from 'i18next';
 import { View } from 'react-native';
 import { Manager } from 'socket.io-client';
@@ -108,6 +108,10 @@ export const AppWrapper = ({
 		if (onClose) onClose();
 	};
 
+	const handleSheetChanges = useCallback((index: number) => {
+		if (index === -1 && onClose) onClose();
+	}, []);
+
 	return (
 		<StyledAppLayout>
 			<StyledAppNavbar>
@@ -153,6 +157,7 @@ export const AppWrapper = ({
 					{bottomSheet && visible && (
 						<BottomSheet
 							ref={bottomSheetRef}
+							onChange={handleSheetChanges}
 							index={1}
 							snapPoints={snapPoints}
 							style={shadowInline}

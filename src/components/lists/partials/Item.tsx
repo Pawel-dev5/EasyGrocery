@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Text, ScrollView, StyleSheet } from 'react-native';
+import { t } from 'i18next';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
@@ -25,7 +26,7 @@ import {
 import { ItemInterface } from 'components/lists/models/sections';
 import { EditItemInterface } from 'components/lists/models/elements';
 
-export const Item = ({ id, value, done, category, withCategories }: ItemInterface) => {
+export const Item = ({ id, title, done, category, withCategories }: ItemInterface) => {
 	const [editableItem, setEditableItem] = useState<EditItemInterface | null>(null);
 	const { updateSingleListItemName, deleteSingleListItem, updateSingleListItemStatus, singleList } =
 		useContext(ListsContextData);
@@ -54,7 +55,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							/>
 						</StyledEditInputWrapper>
 					) : (
-						<StyledItemTitle>{value}</StyledItemTitle>
+						<StyledItemTitle>{title}</StyledItemTitle>
 					)}
 				</StyledItemTitleWrapper>
 
@@ -64,7 +65,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							onPress={() => {
 								setEditLoading(true);
 
-								if (value === editableItem?.title && category === editableItem?.category) {
+								if (title === editableItem?.title && category === editableItem?.category) {
 									setEditLoading(false);
 									setEditableItem(null);
 									return null;
@@ -80,7 +81,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							{editLoading ? <Loader size={25} /> : <Icon name="check" size={20} />}
 						</StyledItemButton>
 					) : (
-						<StyledItemButton onPress={() => setEditableItem({ title: value, category })}>
+						<StyledItemButton onPress={() => setEditableItem({ title, category })}>
 							<Icon name="edit" size={20} />
 						</StyledItemButton>
 					)}
@@ -91,7 +92,9 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
 
-			{withCategories && <StyledCategory>{editableItem?.category || category}</StyledCategory>}
+			{withCategories && (
+				<StyledCategory>{t<string>(`shopCategories.${editableItem?.category || category}`)}</StyledCategory>
+			)}
 
 			{editableItem !== null && categories && categories?.length > 0 && (
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -102,7 +105,7 @@ export const Item = ({ id, value, done, category, withCategories }: ItemInterfac
 							onPress={() => setEditableItem({ ...editableItem, category: catValue })}
 							active={(catValue === category && editableItem === null) || editableItem?.category === catValue}
 						>
-							<Text>{catValue}</Text>
+							<Text>{t<string>(`shopCategories.${catValue}`)}</Text>
 						</StyledItemsCategory>
 					))}
 				</ScrollView>

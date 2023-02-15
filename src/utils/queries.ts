@@ -18,7 +18,7 @@ export const userQuery = qs.stringify(
 
 export const listQuery = qs.stringify(
 	{
-		populate: ['items', 'users_permissions_users', 'shop.orders', 'shop.image', 'invitations'],
+		populate: ['items', 'items.prices', 'users_permissions_users', 'shop.orders', 'shop.image', 'invitations'],
 	},
 	{
 		encodeValuesOnly: true,

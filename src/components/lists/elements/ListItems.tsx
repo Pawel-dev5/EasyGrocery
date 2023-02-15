@@ -32,7 +32,7 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 		<StyledAddNewItem>
 			<Input
 				inputRef={ref}
-				value={singleListItemsEditable?.value?.newItem.value!}
+				value={singleListItemsEditable?.value?.newItem.title!}
 				name="title"
 				placeholder={t('general.add')}
 				textContentType="nickname"
@@ -56,7 +56,7 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 					<ScrollView keyboardShouldPersistTaps="always">
 						{sortedListItemsByCategories?.map((item: any) => (
 							<View key={item?.category}>
-								<StyledSortedCategoryTitle>{item?.category}</StyledSortedCategoryTitle>
+								<StyledSortedCategoryTitle>{t<string>(`shopCategories.${item?.category}`)}</StyledSortedCategoryTitle>
 								{item?.items?.map((newItem: ItemInterface) => (
 									<Item key={newItem?.id} {...newItem} />
 								))}

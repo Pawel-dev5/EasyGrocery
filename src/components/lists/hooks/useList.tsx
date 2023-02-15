@@ -46,7 +46,7 @@ const SingleListEditableInitial: SingleListEditableInitialInterface = {
 	value: {
 		title: null,
 		newItem: {
-			value: null,
+			title: null,
 			done: false,
 		},
 	},
@@ -260,7 +260,7 @@ export const useList = () => {
 
 	const inputHandler = (title: ChangeEvent<HTMLInputElement> | string) => {
 		const newItem = {
-			value: title as string,
+			title: title as string,
 			done: false,
 		};
 		setSingleListItemsEditable({

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, RefreshControl, FlatList, Platform, StyleSheet, Pressable } from 'react-native';
+import { View, RefreshControl, FlatList, Platform, StyleSheet, Pressable } from 'react-native';
 import { t } from 'i18next';
 
 // ROUTER
@@ -9,17 +9,27 @@ import { shops as shopsRoutes } from 'routes/AppRoutes';
 // REDUX
 import { selectShops } from 'redux/slices/shops';
 import { useAppSelector } from 'redux/hooks';
+import { selectLists } from 'redux/slices/lists';
 
 // HOOKS
 import { useProductsList } from 'components/shops/hooks/useProductsList';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { Product } from 'components/shops/sections';
+import { BottomSheetRenderItem, Product } from 'components/shops/sections';
 import { Icon } from 'components/layout/common';
 
 // STYLES
-import { StyledListHeaderWrapper, StyledListHeader, StyledCategoryWrapper } from 'components/shops/views/Styles';
+import {
+	StyledListHeaderWrapper,
+	StyledListHeader,
+	StyledCategoryWrapper,
+	StyledListSeparator,
+	StyledCategoryText,
+} from 'components/shops/views/Styles';
+
+// MODELS
+import { BottomSheetInterface } from 'components/shops/models/views';
 
 export const ProductsList = (props: any) => {
 	const {
@@ -30,7 +40,9 @@ export const ProductsList = (props: any) => {
 	} = props;
 
 	const shopState = useAppSelector(selectShops);
+	const listsState = useAppSelector(selectLists);
 	const { shop } = shopState;
+	const { lists } = listsState;
 
 	const {
 		isLoading,
@@ -40,17 +52,22 @@ export const ProductsList = (props: any) => {
 		totalPromotionsCount,
 		getProducts,
 		getProductsOffset,
+		addProductToList,
 	} = useProductsList({
 		url: slug,
 		category,
 	});
 
+	const initialBottomSheetState = { visible: false, product: null };
+
+	const [bottomSheetState, setBottomSheetState] = useState<BottomSheetInterface>(initialBottomSheetState);
 	const [refreshing, setRefreshing] = useState(false);
 	const [scrollOffset, setScrollOffset] = useState(0);
 	const [offsetLoading, setOffsetLoading] = useState(false);
 	// IF TRUE SHOW PROMOTION IF FALSE SHOW REST AND IF PROMOTION === 0 SHOW REST
 	const [expandedList, setExpandedList] = useState(!!(lastWeekPromotions && lastWeekPromotions?.length === 0));
 	const [page, setPage] = useState(1);
+
 	const flatList = useRef<FlatList>(null);
 
 	const itemElementHeight = 150;
@@ -92,6 +109,21 @@ export const ProductsList = (props: any) => {
 			customPadding="0 0"
 			stopSwipe={Platform.OS === 'ios'}
 			searchActive
+			onClose={() => setBottomSheetState(initialBottomSheetState)}
+			visible={bottomSheetState?.visible}
+			bottomSheetHeader="general.chooseList"
+			bottomSheet={
+				<FlatList
+					style={{ height: '100%' }}
+					ItemSeparatorComponent={() => <StyledListSeparator />}
+					contentContainerStyle={styles.bottomSheetBody}
+					data={lists}
+					renderItem={({ item }) => (
+						<BottomSheetRenderItem item={item} bottomSheetState={bottomSheetState} addProductToList={addProductToList} />
+					)}
+					keyExtractor={(item) => item?.id}
+				/>
+			}
 		>
 			<FlatList
 				ref={flatList}
@@ -121,7 +153,9 @@ export const ProductsList = (props: any) => {
 						}
 					>
 						<StyledCategoryWrapper active={category === item?.value}>
-							<Text>{t<string>(`shopCategories.${item?.value}`)}</Text>
+							<StyledCategoryText active={category === item?.value}>
+								{t<string>(`shopCategories.${item?.value}`)}
+							</StyledCategoryText>
 						</StyledCategoryWrapper>
 					</Pressable>
 				)}
@@ -145,7 +179,7 @@ export const ProductsList = (props: any) => {
 							contentContainerStyle={styles.contentContainer}
 							data={lastWeekPromotions}
 							numColumns={2}
-							renderItem={({ item }) => <Product {...item} />}
+							renderItem={({ item }) => <Product {...item} setBottomSheetState={setBottomSheetState} />}
 							keyExtractor={(item) => item?.id}
 							onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
 						/>
@@ -174,7 +208,7 @@ export const ProductsList = (props: any) => {
 					contentContainerStyle={styles.contentContainer}
 					data={productsList}
 					numColumns={2}
-					renderItem={({ item }) => <Product {...item} />}
+					renderItem={({ item }) => <Product {...item} setBottomSheetState={setBottomSheetState} />}
 					keyExtractor={(item) => item?.id}
 					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
 				/>
@@ -194,5 +228,13 @@ const styles = StyleSheet.create({
 		paddingBottom: 20,
 		paddingLeft: 16,
 		justifyContent: 'space-evenly',
+	},
+	bottomSheetBody: {
+		display: 'flex',
+		minWidth: '100%',
+		justifyContent: 'space-evenly',
+		paddingTop: 16,
+		paddingLeft: 8,
+		paddingRight: 8,
 	},
 });

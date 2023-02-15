@@ -65,11 +65,27 @@ export const StyledCategoryWrapper = styled.View<{ active: boolean }>`
 	justify-content: center;
 	padding: 5px 10px;
 	border-radius: ${({ theme }) => theme.radius[3]};
-	border: 1px solid ${({ theme }) => theme.black};
+	border: 1px solid ${({ theme }) => theme.grey900};
 
 	${({ active }) =>
 		active &&
 		css`
-			background-color: ${({ theme }) => theme.base2};
+			border: 1px solid ${({ theme }) => theme.base2};
 		`}
+`;
+
+export const StyledCategoryText = styled.Text<{ active: boolean }>`
+	color: ${({ theme }) => theme.grey900};
+
+	${({ active }) =>
+		active &&
+		css`
+			color: ${({ theme }) => theme.base2};
+		`}
+`;
+
+export const StyledListSeparator = styled.View`
+	width: 100%;
+	height: 1px;
+	background-color: ${({ theme }) => theme.grey400};
 `;
