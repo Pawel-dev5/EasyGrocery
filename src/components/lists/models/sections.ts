@@ -23,7 +23,6 @@ export interface ItemInterface {
 	title: string;
 	done: boolean;
 	category: string | null;
-	withCategories?: boolean;
 	prices?: PriceInterface[];
 }
 
@@ -38,6 +37,7 @@ export interface ListInterface {
 	items: ItemInterface[];
 	variant: ListVariant;
 	shop: {
+		image: { url: string };
 		data: ShopDataInterface;
 	};
 }

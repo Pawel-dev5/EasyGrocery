@@ -22,15 +22,14 @@ import { BottomSheetRenderItemInterface } from 'components/shops/models/sections
 
 export const BottomSheetRenderItem = ({ item, bottomSheetState, addProductToList }: BottomSheetRenderItemInterface) => {
 	const [addListLoader, setAddListLoader] = useState(false);
-	const findElement = findObjectInArray(item?.items, 'title' as never, bottomSheetState.product?.attributes.title);
+	const findElement = findObjectInArray(item?.items, 'title' as never, bottomSheetState.product?.attributes?.title?.trim());
 
 	return (
 		<StyledListContainer>
 			<StyledListWrapper>
-				<StyledListCover
-					source={{ uri: item?.shop?.data?.attributes?.image?.data?.attributes?.url }}
-					style={[{ resizeMode: 'cover' }]}
-				/>
+				{item?.shop?.image?.url && (
+					<StyledListCover source={{ uri: item?.shop?.image?.url }} style={[{ resizeMode: 'cover' }]} />
+				)}
 
 				<StyledTitleWrapper>
 					<StyledListButtonText>{item?.title}</StyledListButtonText>

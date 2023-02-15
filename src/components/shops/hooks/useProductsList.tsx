@@ -132,14 +132,31 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 				})
 				.then((resp) => {
 					// SOCKET UPDATE STATES BELOW
+					const response = resp?.data?.data;
+					const responseShop = response?.attributes?.shop?.data;
+					const responseImage = responseShop?.attributes?.image?.data;
+					const newValues = {
+						id: response?.id,
+						...{
+							...response?.attributes,
+							shop: {
+								id: responseShop?.id,
+								...{
+									...responseShop?.attributes,
+									image: {
+										id: responseImage?.id,
+										...responseImage?.attributes,
+									},
+								},
+							},
+						},
+					};
+
 					if (socketState?.socket)
 						socketState?.socket.emit(
 							'listUpdate',
 							{
-								data: {
-									id: resp.data.data?.id,
-									...resp.data.data?.attributes,
-								},
+								data: newValues,
 							},
 							(error: SocketErrorInterface) => {
 								if (error?.response?.data?.error) {

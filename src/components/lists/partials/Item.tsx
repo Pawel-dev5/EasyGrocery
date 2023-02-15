@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Text, ScrollView, StyleSheet } from 'react-native';
+import { Text, ScrollView, StyleSheet, View } from 'react-native';
 import { t } from 'i18next';
 
 // CONTEXT
@@ -20,13 +20,17 @@ import {
 	StyledCheckButton,
 	StyledEditInputWrapper,
 	StyledItemButton,
+	StyledItemPrice,
+	StyledItemPricePromotion,
+	StyledItemPricePromotionDescription,
 } from 'components/lists/partials/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
 import { EditItemInterface } from 'components/lists/models/elements';
+import { ItemTitleVariants } from 'components/lists/models/partials';
 
-export const Item = ({ id, title, done, category, withCategories }: ItemInterface) => {
+export const Item = ({ id, title, done, category, prices }: ItemInterface) => {
 	const [editableItem, setEditableItem] = useState<EditItemInterface | null>(null);
 	const { updateSingleListItemName, deleteSingleListItem, updateSingleListItemStatus, singleList } =
 		useContext(ListsContextData);
@@ -35,6 +39,32 @@ export const Item = ({ id, title, done, category, withCategories }: ItemInterfac
 	const [editLoading, setEditLoading] = useState(false);
 
 	const categories = singleList?.shop?.data?.attributes?.orders;
+
+	const pricesHandler = () => {
+		let price;
+		let promotionPrice;
+		let promotionPriceDescription;
+
+		if (prices && prices[0]) {
+			price = prices[0].price;
+			promotionPrice = prices[0].promotion === 'null' ? null : prices[0].promotion;
+			promotionPriceDescription = prices[0].promotionDescription === 'null' ? null : prices[0].promotionDescription;
+		}
+		return { price, promotionPrice, promotionPriceDescription };
+	};
+
+	const titleLengthHandler = (length: number) => {
+		let titleSize: ItemTitleVariants = ItemTitleVariants.DEFAULT;
+		if (length) {
+			if (length > 0 && length <= 15) {
+				titleSize = ItemTitleVariants.LARGE;
+			} else if (length > 15 && length <= 30) {
+				titleSize = ItemTitleVariants.MEDIUM;
+			} else titleSize = ItemTitleVariants.SMALL;
+		}
+
+		return titleSize;
+	};
 
 	return (
 		<StyledItemsContainer>
@@ -55,7 +85,29 @@ export const Item = ({ id, title, done, category, withCategories }: ItemInterfac
 							/>
 						</StyledEditInputWrapper>
 					) : (
-						<StyledItemTitle>{title}</StyledItemTitle>
+						<View style={{ flexDirection: 'column', marginLeft: 5, width: '100%' }}>
+							<StyledItemTitle length={titleLengthHandler(title?.length)}>{title}</StyledItemTitle>
+
+							<StyledCategory>
+								{!pricesHandler().price && <Text>{t<string>(`shopCategories.${editableItem?.category || category}`)}</Text>}
+
+								{pricesHandler().price && (
+									<StyledItemPrice overpriced={!!pricesHandler().promotionPrice}>{pricesHandler().price}</StyledItemPrice>
+								)}
+
+								{pricesHandler().promotionPrice && (
+									<StyledItemPricePromotion>{pricesHandler().promotionPrice}</StyledItemPricePromotion>
+								)}
+							</StyledCategory>
+
+							<View>
+								{pricesHandler().promotionPriceDescription && (
+									<StyledItemPricePromotionDescription>
+										{pricesHandler().promotionPriceDescription}
+									</StyledItemPricePromotionDescription>
+								)}
+							</View>
+						</View>
 					)}
 				</StyledItemTitleWrapper>
 
@@ -91,10 +143,6 @@ export const Item = ({ id, title, done, category, withCategories }: ItemInterfac
 					</StyledItemButton>
 				</StyledListItemsOptions>
 			</StyledListItemsWrapper>
-
-			{withCategories && (
-				<StyledCategory>{t<string>(`shopCategories.${editableItem?.category || category}`)}</StyledCategory>
-			)}
 
 			{editableItem !== null && categories && categories?.length > 0 && (
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define

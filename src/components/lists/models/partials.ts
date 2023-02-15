@@ -2,6 +2,13 @@
 import { ItemInterface } from 'components/lists/models/sections';
 import { Dispatch, SetStateAction } from 'react';
 
+export enum ItemTitleVariants {
+	LARGE = 'LARGE',
+	MEDIUM = 'MEDIUM',
+	SMALL = 'SMALL',
+	DEFAULT = 'DEFAULT',
+}
+
 export interface ListItemInterface {
 	listItems: ItemInterface[];
 	bottomSheetHeight: number;

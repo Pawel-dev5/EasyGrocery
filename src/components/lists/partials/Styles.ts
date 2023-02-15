@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components/native';
+import { ItemTitleVariants } from 'components/lists/models/partials';
 
 export const StyledRadioButtonWrapper = styled.View`
 	flex-direction: row;
@@ -38,18 +39,38 @@ export const StyledListShopCategories = styled.Text`
 	border: 1px solid ${({ theme }) => theme.grey300};
 `;
 
-export const StyledItemTitle = styled.Text`
+export const StyledItemTitle = styled.Text<{ length: ItemTitleVariants }>`
 	max-width: 90%;
-	font-size: 18px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-left: 5px;
+
+	${({ length }) => {
+		switch (length) {
+			case 'LARGE':
+				return css`
+					font-size: 16px;
+				`;
+			case 'MEDIUM':
+				return css`
+					font-size: 15px;
+				`;
+			case 'SMALL':
+				return css`
+					font-size: 14px;
+				`;
+			default:
+				return css`
+					font-size: 16px;
+				`;
+		}
+	}}
 `;
 
-export const StyledCategory = styled.Text`
-	font-size: 14px;
-	margin-left: 40px;
+export const StyledCategory = styled.View`
+	flex-direction: row;
+	align-items: flex-end;
+	justify-content: flex-start;
 `;
 
 export const StyledItemTitleWrapper = styled.View`
@@ -136,4 +157,26 @@ export const StyledItemButton = styled.TouchableOpacity`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+`;
+
+export const StyledItemPrice = styled.Text<{ overpriced: boolean }>`
+	font-size: 14px;
+	margin-right: 4px;
+
+	${({ overpriced }) =>
+		overpriced &&
+		css`
+			font-size: 12px;
+			text-decoration: line-through;
+		`}
+`;
+
+export const StyledItemPricePromotion = styled.Text`
+	font-size: 15.5px;
+	color: ${({ theme }) => theme.danger};
+`;
+
+export const StyledItemPricePromotionDescription = styled.Text`
+	font-size: 11px;
+	margin-top: 4px;
 `;

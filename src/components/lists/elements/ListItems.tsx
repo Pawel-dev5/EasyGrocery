@@ -70,7 +70,7 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 
 					<StyledItemsWrapper keyboardShouldPersistTaps="always" bottomSheetHeight={bottomSheetHeight}>
 						{listItems?.map((item: ItemInterface) => (
-							<Item key={item?.id} {...item} withCategories={item?.category !== null ?? true} />
+							<Item key={item?.id} {...item} />
 						))}
 					</StyledItemsWrapper>
 				</StyledEditInoutWrapper>

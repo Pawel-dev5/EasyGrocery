@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useMemo, useCallback, useState } from 'react';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, View } from 'react-native';
 import { t } from 'i18next';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
@@ -81,20 +81,54 @@ export const FullListWrapper = (props: any) => {
 
 	const listItems = filteredItems || singleList?.items;
 
+	const listPricesSum = () => {
+		let sum = 0;
+
+		listItems?.forEach((item) => {
+			if (item.prices && item?.prices[0]) {
+				const itemPrice = Number(item.prices[0].price?.replace('zł', '')?.replace(',', '.'));
+				const itemPricePromotion = Number(item.prices[0].promotion?.replace('zł', '')?.replace(',', '.'));
+				if (itemPricePromotion) {
+					sum += itemPricePromotion;
+				} else sum += itemPrice;
+			}
+		});
+
+		if (sum > 0) {
+			const allSum = (Math.round(sum * 100) / 100)?.toString()?.replace('.', ',');
+			return `${allSum} zł`;
+		}
+		return null;
+	};
+
 	return (
 		<AppWrapper {...props} isLoading={isLoading} routeName={singleList?.title || t('general.myLists')} customPadding="0">
 			<StyledListBackground color={newColor || singleList?.color!}>
 				<StyledFullListWrapper>
 					<StyledInputTitleWrapper>
-						<StyledUsersWrapper>
-							<StyledListCardItemElement>
-								<Icon name="users" size={20} />
-							</StyledListCardItemElement>
+						<View style={{ flexDirection: 'row' }}>
+							<StyledUsersWrapper>
+								<StyledListCardItemElement>
+									<Icon name="users" size={20} />
+								</StyledListCardItemElement>
 
-							<StyledListCardItemElement>
-								<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
-							</StyledListCardItemElement>
-						</StyledUsersWrapper>
+								<StyledListCardItemElement>
+									<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
+								</StyledListCardItemElement>
+							</StyledUsersWrapper>
+
+							{listPricesSum() && (
+								<StyledUsersWrapper>
+									<StyledListCardItemElement>
+										<Icon name="money-bill-wave" size={20} />
+									</StyledListCardItemElement>
+
+									<StyledListCardItemElement>
+										<StyledUsersCounter>{listPricesSum()}</StyledUsersCounter>
+									</StyledListCardItemElement>
+								</StyledUsersWrapper>
+							)}
+						</View>
 
 						<StyledListOptionWrapper>
 							<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>

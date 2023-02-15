@@ -77,8 +77,8 @@ export const StyledButtonContainer = styled.Pressable<{ variant: VariantType }>`
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 	border-radius: 50%;
 
 	${({ variant }) => {
@@ -130,5 +130,5 @@ export const StyledTitleWrapper = styled.View`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	max-width: 90%;
+	width: 90%;
 `;

@@ -4,7 +4,7 @@ export const userQuery = qs.stringify(
 	{
 		populate: {
 			lists: {
-				populate: ['items', 'users_permissions_users'],
+				populate: ['items', 'users_permissions_users', 'shop.orders', 'shop.image'],
 			},
 			cover: {
 				populate: ['ext', 'alternativeText', 'id', 'url'],

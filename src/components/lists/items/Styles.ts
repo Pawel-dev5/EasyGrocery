@@ -53,6 +53,7 @@ export const StyledListCardItemElement = styled.View`
 	align-items: flex-start;
 	justify-content: center;
 	margin-bottom: 5px;
+	margin-right: 10px;
 `;
 
 // ========= START FULL LIST ===========
@@ -110,12 +111,11 @@ export const StyledListOptionWrapper = styled.View`
 export const StyledUsersWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
-	justify-content: space-between;
-	width: 45px;
+	margin-right: 16px;
 `;
 
 export const StyledUsersCounter = styled.Text`
-	font-size: 16px;
+	font-size: 17px;
 `;
 
 export const StyledListDescription = styled.Text`
