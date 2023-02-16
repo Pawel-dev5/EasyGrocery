@@ -20,7 +20,8 @@ interface FloatedItem {
 export interface AppLayoutInterface {
 	routeName: string;
 	children: ReactNode | ReactNode[];
-	navigation: any;
+	navigation: { navigate: any; goBack: any; canGoBack: any };
+	route: { name: string };
 	variant?: VariantType;
 	setRefresh?: () => void;
 	bottomSheet?: ReactNode | ReactNode[];

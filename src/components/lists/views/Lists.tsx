@@ -5,6 +5,9 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
+// REDUX
+import { globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
+
 // ROUTER
 import { lists as listRoute } from 'routes/AppRoutes';
 
@@ -22,10 +25,10 @@ import { Icon, Loader } from 'components/layout/common';
 import { StyledGridList, StyledAddListWrapper } from 'components/lists/views/Styles';
 import { StyledBottomAddListButton } from 'components/layout/views/Styles';
 import { selectLists } from 'redux/slices/lists';
-import { useAppSelector } from 'redux/hooks';
-import { selectGlobal } from 'redux/slices/global';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 
 const ListsWrapper = (props: any) => {
+	const dispatch = useAppDispatch();
 	const listsState = useAppSelector(selectLists);
 	const globalState = useAppSelector(selectGlobal);
 	const lists = listsState?.lists;
@@ -63,6 +66,7 @@ const ListsWrapper = (props: any) => {
 		if (token) {
 			setIsLoading(true);
 			getLists();
+			dispatch(globalSetMenuRoute(1));
 		}
 	}, []);
 

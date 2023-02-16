@@ -34,19 +34,6 @@ export const StyledAppNavbar = styled.View`
 	width: 100%;
 	padding-right: 16px;
 `;
-export const StyledText = styled.Text<{ customMarginLeft: string | null }>`
-	text-align: left;
-
-	font-size: 22px;
-	font-weight: ${({ theme }) => theme.fontWeight.semiBold};
-	color: ${({ theme }) => theme.base1};
-
-	${({ customMarginLeft }) =>
-		customMarginLeft &&
-		css`
-			margin-left: ${customMarginLeft};
-		`}
-`;
 
 export const StyledMain = styled.View`
 	flex: 1;

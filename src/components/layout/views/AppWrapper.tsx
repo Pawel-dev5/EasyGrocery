@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useEffect, useRef, useMemo, useCallback, useState } from 'react';
 import { t } from 'i18next';
-import { View } from 'react-native';
+import { Animated, Pressable, View, StyleSheet } from 'react-native';
 import { Manager } from 'socket.io-client';
 import { REACT_APP_API } from '@env';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -15,7 +15,7 @@ import { notificationsSetCounter, notificationsUpdateItemsSocket, selectNotifica
 import { useNotifications } from 'components/notifications/hooks/useNotifications';
 
 // COMPONENTS
-import { Alert, Menu } from 'components/layout/sections';
+import { Alert, Menu, SearchBar } from 'components/layout/sections';
 import { Icon, Loader } from 'components/layout/common';
 
 // MODELS
@@ -27,7 +27,6 @@ import {
 	StyledAppNavbar,
 	StyledButton,
 	StyledChildren,
-	StyledText,
 	StyledBottomAddListButton,
 	StyledBottomSheetBody,
 	StyledBottomSheetClose,
@@ -36,7 +35,7 @@ import {
 } from 'components/layout/views/Styles';
 
 // UTILS
-import { shadowInline } from 'utils/theme/themeDefault';
+import theme, { shadowInline } from 'utils/theme/themeDefault';
 import { useSwipe } from 'utils/hooks/useSwipe';
 import { filterUnRead } from 'utils/helpers/arrayHelpers';
 
@@ -112,10 +111,109 @@ export const AppWrapper = ({
 		if (index === -1 && onClose) onClose();
 	}, []);
 
+	const [animationStart, setAnimationStart] = useState(false);
+	const fontSize = useRef(new Animated.Value(22)).current;
+	const borderRadius = useRef(new Animated.Value(0)).current;
+	const borderWidth = useRef(new Animated.Value(0)).current;
+	const paddingX = useRef(new Animated.Value(0)).current;
+	const borderColourIndex = useRef(new Animated.Value(0)).current;
+	const backgroundColourIndex = useRef(new Animated.Value(0)).current;
+
+	const backgroundColor = backgroundColourIndex.interpolate({
+		inputRange: [0, 1],
+		outputRange: [theme.white, theme.grey100],
+	});
+	const borderColor = borderColourIndex.interpolate({
+		inputRange: [0, 1],
+		outputRange: [theme.white, theme.grey300],
+	});
+
+	const baseAnimation = { duration: 500, useNativeDriver: false };
+
+	useEffect(() => {
+		if (animationStart) {
+			Animated.parallel(
+				[
+					Animated.timing(fontSize, {
+						toValue: 16,
+						...baseAnimation,
+					}),
+					Animated.timing(borderRadius, {
+						toValue: 16,
+						...baseAnimation,
+					}),
+					Animated.timing(borderWidth, {
+						toValue: 1,
+						...baseAnimation,
+					}),
+					Animated.timing(backgroundColourIndex, {
+						toValue: 1,
+						...baseAnimation,
+					}),
+					Animated.timing(borderColourIndex, {
+						toValue: 1,
+						...baseAnimation,
+					}),
+					Animated.timing(paddingX, {
+						toValue: 12,
+						...baseAnimation,
+					}),
+				],
+				{ stopTogether: false },
+			).start();
+		} else {
+			Animated.parallel(
+				[
+					Animated.timing(fontSize, {
+						toValue: 22,
+						...baseAnimation,
+					}),
+					Animated.timing(borderRadius, {
+						toValue: 0,
+						...baseAnimation,
+					}),
+					Animated.timing(borderRadius, {
+						toValue: 0,
+						...baseAnimation,
+					}),
+					Animated.timing(backgroundColourIndex, {
+						toValue: 0,
+						...baseAnimation,
+					}),
+					Animated.timing(borderColourIndex, {
+						toValue: 0,
+						...baseAnimation,
+					}),
+					Animated.timing(paddingX, {
+						toValue: 0,
+						...baseAnimation,
+					}),
+				],
+				{ stopTogether: false },
+			).start();
+		}
+	}, [animationStart]);
+
+	const styles = StyleSheet.create({
+		componentWrapper: {
+			width: '89%',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			overflow: 'hidden',
+		},
+		componentContainer: { width: '100%', display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center' },
+		componentButton: { width: 35, height: 35, justifyContent: 'center', alignItems: 'flex-end' },
+	});
+
+	const AnimatedSearchBar = Animated.createAnimatedComponent(SearchBar);
+
+	const [globalInputValue, setGlobalInputValue] = useState('');
+
 	return (
 		<StyledAppLayout>
 			<StyledAppNavbar>
-				<View style={{ width: '100%', display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center' }}>
+				<View style={styles.componentContainer}>
 					{navigation?.canGoBack() && routeName !== t<string>('general.myLists') && (
 						<View style={{ width: 45, aspectRatio: 1 }}>
 							<StyledButton onPress={() => navigation?.goBack()}>
@@ -124,14 +222,31 @@ export const AppWrapper = ({
 						</View>
 					)}
 
-					<StyledText
-						customMarginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? '16px' : null}
+					<Animated.View
+						style={{
+							backgroundColor,
+							borderRadius,
+							borderWidth,
+							borderColor,
+							paddingLeft: paddingX,
+							paddingRight: paddingX,
+							...styles.componentWrapper,
+						}}
 					>
-						{routeName}
-					</StyledText>
-				</View>
+						<AnimatedSearchBar
+							globalInputValue={globalInputValue}
+							setGlobalInputValue={setGlobalInputValue}
+							searchActive={animationStart}
+							fontSize={fontSize}
+							routeName={routeName}
+							marginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? 16 : undefined}
+						/>
 
-				{searchActive && <Icon name="search" size={20} />}
+						<Pressable onPress={() => setAnimationStart(!animationStart)} style={styles.componentButton}>
+							{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
+						</Pressable>
+					</Animated.View>
+				</View>
 			</StyledAppNavbar>
 
 			{isLoading ? (

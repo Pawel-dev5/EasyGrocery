@@ -47,7 +47,7 @@ export const Register = (props: any) => {
 
 	return (
 		<AppWrapper routeName={t('auth.register')} {...props} customPadding="0">
-			<ScreenWrapper props={props}>
+			<ScreenWrapper>
 				<StyledLoginContainer>
 					<StyledInputWrapper>
 						<ControllerWrapper
