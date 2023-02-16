@@ -1,6 +1,11 @@
+import { StyleSheet } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import { FontAwesome } from '@expo/vector-icons';
+
+// MODELS
 import { AlertTypes } from 'redux/slices/global/models';
+
+// UTILS
 import { ColorsKeys } from 'utils/theme/themeDefault';
 
 export const StyledIcon = styled(FontAwesome)`
@@ -112,3 +117,12 @@ export const StyledMenuButton = styled.TouchableOpacity`
 	align-items: center;
 	justify-content: center;
 `;
+
+export const searchBarInlineStyles = StyleSheet.create({
+	componentTitle: {
+		textAlign: 'left',
+		fontWeight: '500',
+		overflow: 'hidden',
+		width: '80%',
+	},
+});

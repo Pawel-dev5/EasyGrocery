@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 export const StyledChildren = styled.View<{ customPadding?: string }>`
@@ -91,3 +92,15 @@ export const StyledTabMenuItem = styled.View`
 	align-items: center;
 	justify-content: center;
 `;
+
+export const styles = StyleSheet.create({
+	componentWrapper: {
+		width: '89%',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		overflow: 'hidden',
+	},
+	componentContainer: { width: '100%', display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center' },
+	componentButton: { width: 35, height: 35, justifyContent: 'center', alignItems: 'flex-end' },
+});

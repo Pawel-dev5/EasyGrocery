@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useMemo, useCallback, useState } from 'react';
 import { t } from 'i18next';
-import { Animated, Pressable, View, StyleSheet } from 'react-native';
+import { Animated, Pressable, View } from 'react-native';
 import { Manager } from 'socket.io-client';
 import { REACT_APP_API } from '@env';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -13,9 +13,10 @@ import { notificationsSetCounter, notificationsUpdateItemsSocket, selectNotifica
 
 // HOOKS
 import { useNotifications } from 'components/notifications/hooks/useNotifications';
+import { useSearchBarAnimation } from 'components/layout/hooks/useSearchBarAnimation';
 
 // COMPONENTS
-import { Alert, Menu } from 'components/layout/sections';
+import { Alert, Menu, SearchBar } from 'components/layout/sections';
 import { Icon, Loader } from 'components/layout/common';
 
 // MODELS
@@ -32,13 +33,13 @@ import {
 	StyledBottomSheetClose,
 	StyledBottomSheetHeader,
 	StyledFloatingAddListButtonWrapper,
+	styles,
 } from 'components/layout/views/Styles';
 
 // UTILS
 import theme, { shadowInline } from 'utils/theme/themeDefault';
 import { useSwipe } from 'utils/hooks/useSwipe';
 import { filterUnRead } from 'utils/helpers/arrayHelpers';
-import SearchBar from '../sections/SearchBar';
 
 export const AppWrapper = ({
 	children,
@@ -61,11 +62,45 @@ export const AppWrapper = ({
 	const notifications = notificationsState?.items;
 	const { user, token, alerts } = globalState;
 
-	const { getNotifications } = useNotifications();
-
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const snapPoints = useMemo(() => ['30%', '58%', '88.8%'], []);
+
+	// SEARCH BAR ANIMATION CONFIG
+	const AnimatedSearchBar = Animated.createAnimatedComponent(SearchBar);
+	const [animationStart, setAnimationStart] = useState(false);
+	const fontSize = useRef(new Animated.Value(16)).current;
+	const borderRadius = useRef(new Animated.Value(0)).current;
+	const borderWidth = useRef(new Animated.Value(0)).current;
+	const paddingX = useRef(new Animated.Value(0)).current;
+	const borderColourIndex = useRef(new Animated.Value(0)).current;
+	const backgroundColourIndex = useRef(new Animated.Value(0)).current;
+	const backgroundColor = backgroundColourIndex.interpolate({
+		inputRange: [0, 1],
+		outputRange: [theme.white, theme.grey100],
+	});
+	const borderColor = borderColourIndex.interpolate({
+		inputRange: [0, 1],
+		outputRange: [theme.white, theme.grey300],
+	});
+
+	const { getNotifications } = useNotifications();
+	const { animationOnStart, animationOnReverse } = useSearchBarAnimation({
+		fontSize,
+		borderRadius,
+		borderWidth,
+		backgroundColourIndex,
+		borderColourIndex,
+		paddingX,
+	});
+
+	useEffect(() => {
+		if (animationStart) {
+			Animated.parallel(animationOnStart(), { stopTogether: false }).start();
+		} else {
+			Animated.parallel(animationOnReverse(), { stopTogether: false }).start();
+		}
+	}, [animationStart]);
 
 	useEffect(() => {
 		if (token) {
@@ -112,107 +147,6 @@ export const AppWrapper = ({
 		if (index === -1 && onClose) onClose();
 	}, []);
 
-	const [animationStart, setAnimationStart] = useState(false);
-	const fontSize = useRef(new Animated.Value(22)).current;
-	const borderRadius = useRef(new Animated.Value(0)).current;
-	const borderWidth = useRef(new Animated.Value(0)).current;
-	const paddingX = useRef(new Animated.Value(0)).current;
-	const borderColourIndex = useRef(new Animated.Value(0)).current;
-	const backgroundColourIndex = useRef(new Animated.Value(0)).current;
-
-	const backgroundColor = backgroundColourIndex.interpolate({
-		inputRange: [0, 1],
-		outputRange: [theme.white, theme.grey100],
-	});
-	const borderColor = borderColourIndex.interpolate({
-		inputRange: [0, 1],
-		outputRange: [theme.white, theme.grey300],
-	});
-
-	const baseAnimation = { duration: 500, useNativeDriver: false };
-
-	useEffect(() => {
-		if (animationStart) {
-			Animated.parallel(
-				[
-					Animated.timing(fontSize, {
-						toValue: 22,
-						...baseAnimation,
-					}),
-					Animated.timing(borderRadius, {
-						toValue: 16,
-						...baseAnimation,
-					}),
-					Animated.timing(borderWidth, {
-						toValue: 1,
-						...baseAnimation,
-					}),
-					Animated.timing(backgroundColourIndex, {
-						toValue: 1,
-						...baseAnimation,
-					}),
-					Animated.timing(borderColourIndex, {
-						toValue: 1,
-						...baseAnimation,
-					}),
-					Animated.timing(paddingX, {
-						toValue: 12,
-						...baseAnimation,
-					}),
-				],
-				{ stopTogether: false },
-			).start();
-		} else {
-			Animated.parallel(
-				[
-					Animated.timing(fontSize, {
-						toValue: 16,
-						...baseAnimation,
-					}),
-					Animated.timing(borderRadius, {
-						toValue: 0,
-						...baseAnimation,
-					}),
-					Animated.timing(borderRadius, {
-						toValue: 0,
-						...baseAnimation,
-					}),
-					Animated.timing(backgroundColourIndex, {
-						toValue: 0,
-						...baseAnimation,
-					}),
-					Animated.timing(borderColourIndex, {
-						toValue: 0,
-						...baseAnimation,
-					}),
-					Animated.timing(paddingX, {
-						toValue: 0,
-						...baseAnimation,
-					}),
-				],
-				{ stopTogether: false },
-			).start();
-		}
-		console.log('elo');
-	}, [animationStart]);
-
-	const styles = StyleSheet.create({
-		componentWrapper: {
-			width: '89%',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center',
-			overflow: 'hidden',
-		},
-		componentContainer: { width: '100%', display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center' },
-		componentButton: { width: 35, height: 35, justifyContent: 'center', alignItems: 'flex-end' },
-	});
-
-	// const AnimatedSearchBar = Animated.createAnimatedComponent(SearchBar);
-
-	const AnimatedSearchBar = useMemo(() => Animated.createAnimatedComponent(SearchBar), []);
-
-	console.log(animationStart);
 	return (
 		<StyledAppLayout>
 			<StyledAppNavbar>

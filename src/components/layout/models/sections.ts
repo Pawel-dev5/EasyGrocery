@@ -11,6 +11,4 @@ export type SearchBarProps = {
 	fontSize: number;
 	routeName: string;
 	marginLeft: number | undefined;
-	value: string;
-	handleInput: (e: string) => void;
 };
