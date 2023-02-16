@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
-
 export interface MenuElementsInterface {
 	id: number;
 	icon: string;
@@ -9,10 +7,10 @@ export interface MenuElementsInterface {
 }
 
 export type SearchBarProps = {
-	globalInputValue: string;
-	setGlobalInputValue: Dispatch<SetStateAction<string>>;
 	searchActive: boolean;
 	fontSize: number;
 	routeName: string;
 	marginLeft: number | undefined;
+	value: string;
+	handleInput: (e: string) => void;
 };

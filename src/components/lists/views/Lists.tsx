@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
 // REDUX
-import { globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
+import { globalSetGlobalSearchInput, globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
 
 // ROUTER
 import { lists as listRoute } from 'routes/AppRoutes';
@@ -67,6 +67,7 @@ const ListsWrapper = (props: any) => {
 			setIsLoading(true);
 			getLists();
 			dispatch(globalSetMenuRoute(1));
+			dispatch(globalSetGlobalSearchInput(''));
 		}
 	}, []);
 

@@ -23,6 +23,7 @@ export const Shop = (props: any) => {
 	const [current, setCurrent] = useState<string | null>(null);
 
 	if (!shop) return null;
+
 	return (
 		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0" stopSwipe searchActive>
 			<ScrollView>

@@ -6,7 +6,7 @@ import { REACT_APP_API } from '@env';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 
 // REDUX
-import { selectGlobal } from 'redux/slices/global';
+import { globalSetGlobalSearchInput, selectGlobal } from 'redux/slices/global';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { selectSocket, setSocket } from 'redux/slices/socket';
 import { notificationsSetCounter, notificationsUpdateItemsSocket, selectNotifications } from 'redux/slices/notifications';
@@ -15,7 +15,7 @@ import { notificationsSetCounter, notificationsUpdateItemsSocket, selectNotifica
 import { useNotifications } from 'components/notifications/hooks/useNotifications';
 
 // COMPONENTS
-import { Alert, Menu, SearchBar } from 'components/layout/sections';
+import { Alert, Menu } from 'components/layout/sections';
 import { Icon, Loader } from 'components/layout/common';
 
 // MODELS
@@ -38,6 +38,7 @@ import {
 import theme, { shadowInline } from 'utils/theme/themeDefault';
 import { useSwipe } from 'utils/hooks/useSwipe';
 import { filterUnRead } from 'utils/helpers/arrayHelpers';
+import SearchBar from '../sections/SearchBar';
 
 export const AppWrapper = ({
 	children,
@@ -135,7 +136,7 @@ export const AppWrapper = ({
 			Animated.parallel(
 				[
 					Animated.timing(fontSize, {
-						toValue: 16,
+						toValue: 22,
 						...baseAnimation,
 					}),
 					Animated.timing(borderRadius, {
@@ -165,7 +166,7 @@ export const AppWrapper = ({
 			Animated.parallel(
 				[
 					Animated.timing(fontSize, {
-						toValue: 22,
+						toValue: 16,
 						...baseAnimation,
 					}),
 					Animated.timing(borderRadius, {
@@ -192,6 +193,7 @@ export const AppWrapper = ({
 				{ stopTogether: false },
 			).start();
 		}
+		console.log('elo');
 	}, [animationStart]);
 
 	const styles = StyleSheet.create({
@@ -206,10 +208,11 @@ export const AppWrapper = ({
 		componentButton: { width: 35, height: 35, justifyContent: 'center', alignItems: 'flex-end' },
 	});
 
-	const AnimatedSearchBar = Animated.createAnimatedComponent(SearchBar);
+	// const AnimatedSearchBar = Animated.createAnimatedComponent(SearchBar);
 
-	const [globalInputValue, setGlobalInputValue] = useState('');
+	const AnimatedSearchBar = useMemo(() => Animated.createAnimatedComponent(SearchBar), []);
 
+	console.log(animationStart);
 	return (
 		<StyledAppLayout>
 			<StyledAppNavbar>
@@ -234,15 +237,19 @@ export const AppWrapper = ({
 						}}
 					>
 						<AnimatedSearchBar
-							globalInputValue={globalInputValue}
-							setGlobalInputValue={setGlobalInputValue}
 							searchActive={animationStart}
 							fontSize={fontSize}
 							routeName={routeName}
 							marginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? 16 : undefined}
 						/>
 
-						<Pressable onPress={() => setAnimationStart(!animationStart)} style={styles.componentButton}>
+						<Pressable
+							onPress={() => {
+								setAnimationStart(!animationStart);
+								dispatch(globalSetGlobalSearchInput(''));
+							}}
+							style={styles.componentButton}
+						>
 							{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
 						</Pressable>
 					</Animated.View>

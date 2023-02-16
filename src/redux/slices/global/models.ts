@@ -26,4 +26,5 @@ export interface InitialStateInterface extends LanguageInterface {
 	user: User | null;
 	alerts: AlertsInterface[];
 	menuRoute: number;
+	globalSearchInput: string;
 }

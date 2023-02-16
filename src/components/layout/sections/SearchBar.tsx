@@ -1,19 +1,24 @@
-import React, { createRef, RefObject, Component } from 'react';
+import React, { Component } from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-import theme from 'utils/theme/themeDefault';
+import { connect } from 'react-redux';
+
+// REDUX
+import { globalSetGlobalSearchInput } from 'redux/slices/global';
 
 // MODELS
 import { SearchBarProps } from 'components/layout/models/sections';
 
-export class SearchBar extends Component<SearchBarProps> {
-	inputRef: RefObject<TextInput> = createRef();
+// UTILS
+import theme from 'utils/theme/themeDefault';
 
-	componentDidUpdate(prevProps: SearchBarProps) {
-		if (prevProps.globalInputValue && this.inputRef.current) this.inputRef.current.focus();
+class SearchBar extends Component<SearchBarProps> {
+	constructor(props: SearchBarProps) {
+		super(props);
+		this.state = {};
 	}
 
 	render() {
-		const { fontSize, routeName, marginLeft, searchActive, globalInputValue, setGlobalInputValue } = this.props;
+		const { fontSize, routeName, marginLeft, searchActive, value, handleInput } = this.props;
 
 		const styles = StyleSheet.create({
 			componentTitle: {
@@ -26,14 +31,25 @@ export class SearchBar extends Component<SearchBarProps> {
 
 		return (
 			<TextInput
-				ref={this.inputRef}
-				value={globalInputValue}
-				onChange={(e) => setGlobalInputValue(e as unknown as string)}
+				key="globalSearch"
+				autoFocus
+				value={value}
+				onChange={(e) => handleInput(e.nativeEvent.text as unknown as string)}
 				editable={searchActive}
-				style={{ fontSize, marginLeft, ...styles.componentTitle }}
+				style={{ fontSize: searchActive ? fontSize : 22, marginLeft, ...styles.componentTitle }}
 				placeholderTextColor={searchActive ? theme.grey400 : theme.black}
 				placeholder={routeName}
 			/>
 		);
 	}
 }
+
+const mapStateToProps = (state: { global: { globalSearchInput: string } }) => ({
+	value: state.global.globalSearchInput,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+	handleInput: (data: string) => dispatch(globalSetGlobalSearchInput(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
