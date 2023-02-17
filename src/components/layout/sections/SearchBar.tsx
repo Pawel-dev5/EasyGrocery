@@ -26,8 +26,7 @@ const InputWrapper = ({ fontSize, routeName, marginLeft, searchActive }: SearchB
 	const handleInput = (text: string) => setSearchedUsers(text);
 
 	useEffect(() => {
-		if (searchUsersValueDebounced !== '' && searchedUsers !== globalSearchInput)
-			dispatch(globalSetGlobalSearchInput(searchUsersValueDebounced));
+		if (searchedUsers !== globalSearchInput) dispatch(globalSetGlobalSearchInput(searchUsersValueDebounced));
 	}, [searchUsersValueDebounced]);
 
 	return (

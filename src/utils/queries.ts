@@ -111,7 +111,7 @@ export const searchUserQuery = (currentUser: string, value: string) =>
 	);
 
 // SHOPS QUERIES
-export const shopsQuery = (shopName: string, category: string[], paginationStart: number) =>
+export const shopsQuery = (shopName: string, category: string[], paginationStart: number, searchValue?: string) =>
 	qs.stringify(
 		{
 			populate: {
@@ -122,6 +122,9 @@ export const shopsQuery = (shopName: string, category: string[], paginationStart
 			filters: {
 				category: {
 					$in: category,
+				},
+				title: {
+					$contains: searchValue,
 				},
 				[`${shopName}Prices`]: {
 					promotion: {
@@ -140,7 +143,7 @@ export const shopsQuery = (shopName: string, category: string[], paginationStart
 		},
 	);
 
-export const shopsPromotionQuery = (shopName: string, category: string[], paginationStart: number) => {
+export const shopsPromotionQuery = (shopName: string, category: string[], paginationStart: number, searchValue?: string) => {
 	const daysTimeAgo = 7; // Days you want to subtract
 	const currentDate = new Date();
 	const last = new Date(currentDate.getTime() - daysTimeAgo * 24 * 60 * 60 * 1000);
@@ -169,6 +172,9 @@ export const shopsPromotionQuery = (shopName: string, category: string[], pagina
 			filters: {
 				category: {
 					$in: category,
+				},
+				title: {
+					$contains: searchValue,
 				},
 				[`${shopName}Prices`]: {
 					promotion: {

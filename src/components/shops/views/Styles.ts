@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 export const StyledShopImage = styled.Image`
@@ -89,3 +90,25 @@ export const StyledListSeparator = styled.View`
 	height: 1px;
 	background-color: ${({ theme }) => theme.grey400};
 `;
+
+export const ProductListInlineStyle = StyleSheet.create({
+	contentContainer: {
+		display: 'flex',
+		minWidth: '100%',
+		justifyContent: 'space-evenly',
+		paddingTop: 16,
+	},
+	categoriesContainer: {
+		paddingBottom: 20,
+		paddingLeft: 16,
+		justifyContent: 'space-evenly',
+	},
+	bottomSheetBody: {
+		display: 'flex',
+		minWidth: '100%',
+		justifyContent: 'space-evenly',
+		paddingTop: 16,
+		paddingLeft: 8,
+		paddingRight: 8,
+	},
+});

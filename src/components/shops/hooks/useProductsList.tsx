@@ -33,12 +33,12 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 	const [totalProductsCount, setTotalProductsCount] = useState(0);
 	const [totalPromotionsCount, setTotalPromotionsCount] = useState(0);
 
-	const getProducts = async () => {
+	const getProducts = async (searchValue?: string) => {
 		setIsLoading(true);
 
 		axios({
 			method: 'get',
-			url: `${baseApi}?${shopsQuery(url, categoriesHandler(category), 1)}`,
+			url: `${baseApi}?${shopsQuery(url, categoriesHandler(category), 1, searchValue)}`,
 			headers: {
 				Authorization: null,
 			},
@@ -57,7 +57,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 
 		axios({
 			method: 'get',
-			url: `${baseApi}?${shopsPromotionQuery(url, categoriesHandler(category), 1)}`,
+			url: `${baseApi}?${shopsPromotionQuery(url, categoriesHandler(category), 1, searchValue)}`,
 			headers: {
 				Authorization: null,
 			},

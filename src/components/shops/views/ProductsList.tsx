@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, RefreshControl, FlatList, Platform, StyleSheet, Pressable } from 'react-native';
+import { View, RefreshControl, FlatList, Platform, Pressable } from 'react-native';
 import { t } from 'i18next';
 
 // ROUTER
@@ -26,10 +25,12 @@ import {
 	StyledCategoryWrapper,
 	StyledListSeparator,
 	StyledCategoryText,
+	ProductListInlineStyle,
 } from 'components/shops/views/Styles';
 
 // MODELS
 import { BottomSheetInterface } from 'components/shops/models/views';
+import { selectGlobal } from 'redux/slices/global';
 
 export const ProductsList = (props: any) => {
 	const {
@@ -39,8 +40,10 @@ export const ProductsList = (props: any) => {
 		navigation,
 	} = props;
 
+	const globalState = useAppSelector(selectGlobal);
 	const shopState = useAppSelector(selectShops);
 	const listsState = useAppSelector(selectLists);
+	const { globalSearchInput } = globalState;
 	const { shop } = shopState;
 	const { lists } = listsState;
 
@@ -73,21 +76,22 @@ export const ProductsList = (props: any) => {
 	const itemElementHeight = 150;
 	const index = shop?.attributes?.orders?.findIndex((element) => element?.value === category);
 
+	useEffect(() => {
+		getProducts();
+	}, [category]);
+
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
 		await getProducts();
 		setRefreshing(false);
 	}, []);
 
+	// OFFSET LISTENERS
 	const layoutHeight = useCallback(() => {
 		let height = 0;
 		if (productsList && productsList?.length > 0) height = productsList.length * itemElementHeight - 1000;
 		return height;
 	}, [productsList]);
-
-	useEffect(() => {
-		getProducts();
-	}, [category]);
 
 	useEffect(() => {
 		if (scrollOffset > layoutHeight() - 500 && productsList && productsList?.length > 40) {
@@ -100,6 +104,10 @@ export const ProductsList = (props: any) => {
 		if (offsetLoading && productsList && totalProductsCount > productsList?.length)
 			getProductsOffset(page, () => setOffsetLoading(false));
 	}, [offsetLoading]);
+
+	useEffect(() => {
+		getProducts(globalSearchInput);
+	}, [globalSearchInput]);
 
 	return (
 		<AppWrapper
@@ -116,7 +124,7 @@ export const ProductsList = (props: any) => {
 				<FlatList
 					style={{ height: '100%' }}
 					ItemSeparatorComponent={() => <StyledListSeparator />}
-					contentContainerStyle={styles.bottomSheetBody}
+					contentContainerStyle={ProductListInlineStyle?.bottomSheetBody}
 					data={lists}
 					renderItem={({ item }) => (
 						<BottomSheetRenderItem item={item} bottomSheetState={bottomSheetState} addProductToList={addProductToList} />
@@ -137,7 +145,7 @@ export const ProductsList = (props: any) => {
 							flatList.current?.scrollToIndex({ index: info.index, animated: true });
 						});
 				}}
-				contentContainerStyle={styles.categoriesContainer}
+				contentContainerStyle={ProductListInlineStyle?.categoriesContainer}
 				horizontal
 				ItemSeparatorComponent={() => <View style={{ height: 10, width: 8 }} />}
 				data={shop?.attributes?.orders}
@@ -176,7 +184,7 @@ export const ProductsList = (props: any) => {
 							columnWrapperStyle={{ justifyContent: 'space-between' }}
 							ItemSeparatorComponent={() => <View style={{ height: 20, width: 16 }} />}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-							contentContainerStyle={styles.contentContainer}
+							contentContainerStyle={ProductListInlineStyle?.contentContainer}
 							data={lastWeekPromotions}
 							numColumns={2}
 							renderItem={({ item }) => <Product {...item} setBottomSheetState={setBottomSheetState} />}
@@ -205,7 +213,7 @@ export const ProductsList = (props: any) => {
 					columnWrapperStyle={{ justifyContent: 'space-evenly' }}
 					ItemSeparatorComponent={() => <View style={{ height: 20, width: 16 }} />}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-					contentContainerStyle={styles.contentContainer}
+					contentContainerStyle={ProductListInlineStyle?.contentContainer}
 					data={productsList}
 					numColumns={2}
 					renderItem={({ item }) => <Product {...item} setBottomSheetState={setBottomSheetState} />}
@@ -216,25 +224,3 @@ export const ProductsList = (props: any) => {
 		</AppWrapper>
 	);
 };
-
-const styles = StyleSheet.create({
-	contentContainer: {
-		display: 'flex',
-		minWidth: '100%',
-		justifyContent: 'space-evenly',
-		paddingTop: 16,
-	},
-	categoriesContainer: {
-		paddingBottom: 20,
-		paddingLeft: 16,
-		justifyContent: 'space-evenly',
-	},
-	bottomSheetBody: {
-		display: 'flex',
-		minWidth: '100%',
-		justifyContent: 'space-evenly',
-		paddingTop: 16,
-		paddingLeft: 8,
-		paddingRight: 8,
-	},
-});
