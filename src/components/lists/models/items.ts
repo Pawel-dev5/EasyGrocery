@@ -19,8 +19,6 @@ export interface SingleListInterface {
 	description: string | null;
 	items: ItemInterface[];
 	color: string | null;
-	shop: {
-		data: ShopDataInterface;
-	};
+	shop: ShopDataInterface;
 	invitations: InvitationUser[];
 }

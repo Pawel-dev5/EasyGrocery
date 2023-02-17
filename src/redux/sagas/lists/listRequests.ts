@@ -1,6 +1,11 @@
 import axios from 'axios';
+
+// MODELS
 import { ItemInterface } from 'components/lists/models/sections';
+
+// HELPERS
 import { listQuery } from 'utils/queries';
+import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
 
 export const updateListItems = (id: string, data: ItemInterface[]) =>
 	axios
@@ -9,7 +14,4 @@ export const updateListItems = (id: string, data: ItemInterface[]) =>
 				items: data,
 			},
 		})
-		.then((resp) => ({
-			id: resp.data.data?.id,
-			...resp.data.data?.attributes,
-		}));
+		.then((resp) => convertListShopAttrubites(resp?.data?.data));

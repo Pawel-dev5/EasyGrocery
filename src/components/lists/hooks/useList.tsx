@@ -163,7 +163,7 @@ export const useList = () => {
 
 			axios
 				.get(`lists/${id}?${listQuery}`)
-				.then((resp) => dispatch(listsSetList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes })))
+				.then((resp) => dispatch(listsSetList(convertListShopAttrubites(resp?.data?.data))))
 				.catch((error) => {
 					if (error?.response?.data?.error) {
 						const { message, status, name } = error.response.data.error;
@@ -238,10 +238,7 @@ export const useList = () => {
 						socketState?.socket.emit(
 							'listUpdate',
 							{
-								data: {
-									id: resp.data.data?.id,
-									...resp.data.data?.attributes,
-								},
+								data: convertListShopAttrubites(resp?.data?.data),
 							},
 							(error: SocketErrorInterface) => {
 								if (error?.response?.data?.error) {
@@ -423,7 +420,7 @@ export const useList = () => {
 
 	const sortItemsByCategories = () => {
 		const itemsToSort = singleList?.items;
-		const categories = singleList?.shop?.data?.attributes?.orders;
+		const categories = singleList?.shop?.orders;
 		const newListItems: any = [];
 		if (categories && categories?.length > 0 && itemsToSort && itemsToSort?.length > 0) {
 			categories.forEach(({ value }) => {

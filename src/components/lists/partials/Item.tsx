@@ -38,7 +38,7 @@ export const Item = ({ id, title, done, category, prices }: ItemInterface) => {
 	// LOADERS STATES
 	const [editLoading, setEditLoading] = useState(false);
 
-	const categories = singleList?.shop?.data?.attributes?.orders;
+	const categories = singleList?.shop?.orders;
 
 	const pricesHandler = () => {
 		let price;
@@ -89,7 +89,7 @@ export const Item = ({ id, title, done, category, prices }: ItemInterface) => {
 							<StyledItemTitle length={titleLengthHandler(title?.length)}>{title}</StyledItemTitle>
 
 							<StyledCategory>
-								{!pricesHandler().price && <Text>{t<string>(`shopCategories.${editableItem?.category || category}`)}</Text>}
+								{!pricesHandler().price && category !== null && <Text>{t<string>(`shopCategories.${category}`)}</Text>}
 
 								{pricesHandler().price && (
 									<StyledItemPrice overpriced={!!pricesHandler().promotionPrice}>{pricesHandler().price}</StyledItemPrice>

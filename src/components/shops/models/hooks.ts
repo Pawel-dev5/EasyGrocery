@@ -2,25 +2,23 @@ import { ListInterface } from 'components/lists/models/sections';
 
 export interface ShopDataAttributes {
 	id: string;
-	attributes: {
-		uuid: string;
-		title: string;
-		description: string;
-		imageUrl?: string;
-		apiUrl: string;
-		image: {
-			data: {
-				id: string;
-				attributes: {
-					alternativeText: string;
-					url: string;
-				};
+	uuid: string;
+	title: string;
+	description: string;
+	imageUrl?: string;
+	apiUrl: string;
+	image: {
+		data: {
+			id: string;
+			attributes: {
+				alternativeText: string;
+				url: string;
 			};
 		};
-		prices: PriceInterface[];
-		lists: ListInterface[];
-		orders: OrderInterface[];
 	};
+	prices: PriceInterface[];
+	lists: ListInterface[];
+	orders: OrderInterface[];
 }
 
 export interface PriceInterface {
