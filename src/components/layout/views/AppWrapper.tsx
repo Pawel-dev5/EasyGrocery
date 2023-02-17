@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useMemo, useCallback, useState } from 'react';
 import { t } from 'i18next';
-import { Animated, Pressable, View } from 'react-native';
+import { Animated, TouchableOpacity, View } from 'react-native';
 import { Manager } from 'socket.io-client';
 import { REACT_APP_API } from '@env';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -177,7 +177,7 @@ export const AppWrapper = ({
 							marginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? 16 : undefined}
 						/>
 
-						<Pressable
+						<TouchableOpacity
 							onPress={() => {
 								setAnimationStart(!animationStart);
 								dispatch(globalSetGlobalSearchInput(''));
@@ -185,7 +185,7 @@ export const AppWrapper = ({
 							style={styles.componentButton}
 						>
 							{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
-						</Pressable>
+						</TouchableOpacity>
 					</Animated.View>
 				</View>
 			</StyledAppNavbar>
