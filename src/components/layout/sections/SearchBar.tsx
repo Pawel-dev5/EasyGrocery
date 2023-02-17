@@ -30,8 +30,8 @@ const InputWrapper = ({ fontSize, routeName, marginLeft, searchActive }: SearchB
 	}, [searchUsersValueDebounced]);
 
 	useEffect(() => {
-		if (searchActive) inputRef?.current?.focus();
-	}, [searchActive]);
+		if (searchActive && globalSearchInput === '') inputRef?.current?.focus();
+	}, [searchActive, globalSearchInput]);
 
 	return (
 		<TextInput

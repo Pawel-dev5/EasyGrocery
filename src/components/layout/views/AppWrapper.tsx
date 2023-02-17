@@ -159,7 +159,7 @@ export const AppWrapper = ({
 						</View>
 					)}
 
-					<Animated.View
+					{/* <Animated.View
 						style={{
 							backgroundColor,
 							borderRadius,
@@ -186,7 +186,7 @@ export const AppWrapper = ({
 						>
 							{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
 						</Pressable>
-					</Animated.View>
+					</Animated.View> */}
 				</View>
 			</StyledAppNavbar>
 

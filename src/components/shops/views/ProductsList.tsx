@@ -77,12 +77,12 @@ export const ProductsList = (props: any) => {
 	const index = shop?.attributes?.orders?.findIndex((element) => element?.value === category);
 
 	useEffect(() => {
-		getProducts();
+		getProducts(globalSearchInput);
 	}, [category]);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		await getProducts();
+		await getProducts(globalSearchInput);
 		setRefreshing(false);
 	}, []);
 

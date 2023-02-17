@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { t } from 'i18next';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
+import { globalSetGlobalSearchInput, globalSetMenuRoute, selectGlobal } from 'redux/slices/global';
 
 // REDUX
 import { selectNotifications } from 'redux/slices/notifications';
@@ -64,6 +64,7 @@ export const Menu = ({ navigation }: { navigation: any }) => {
 		},
 		[menuRoute],
 	);
+
 	return (
 		<StyledTabMenuWrapper>
 			{menuElements?.map(({ id, icon, counter, link }) => (
@@ -72,6 +73,7 @@ export const Menu = ({ navigation }: { navigation: any }) => {
 						onPress={() => {
 							link();
 							dispatch(globalSetMenuRoute(id));
+							dispatch(globalSetGlobalSearchInput(''));
 						}}
 					>
 						{icon && <StyledMenuIcon name={icon} color={setColor(id)} />}

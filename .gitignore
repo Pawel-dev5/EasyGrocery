@@ -15,5 +15,4 @@ web-build/
 # IOS BUILD CREDENTIALS
 ios/
 credentials.json
-.env
 .env.development

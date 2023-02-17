@@ -34,7 +34,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 	const [totalProductsCount, setTotalProductsCount] = useState(0);
 	const [totalPromotionsCount, setTotalPromotionsCount] = useState(0);
 
-	const getProducts = async (searchValue?: string) => {
+	const getProducts = async (searchValue: string) => {
 		setIsLoading(true);
 
 		axios({
