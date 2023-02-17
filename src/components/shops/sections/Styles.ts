@@ -79,7 +79,7 @@ export const StyledButtonContainer = styled.Pressable<{ variant: VariantType }>`
 	justify-content: center;
 	width: 35px;
 	height: 35px;
-	border-radius: 50%;
+	border-radius: 35px;
 
 	${({ variant }) => {
 		switch (variant) {

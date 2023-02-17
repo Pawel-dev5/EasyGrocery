@@ -34,6 +34,7 @@ import { updateObject } from 'utils/helpers/objectHelpers';
 import { findObjectInArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { useDebounce } from 'utils/helpers/useDebounce';
 import { listQuery, listNotificationQuery, searchUserQuery, userQuery } from 'utils/queries';
+import { convertListShopAttrubites } from 'utils/helpers/convertListShopAttrubites';
 
 const schema = yup
 	.object({
@@ -343,7 +344,6 @@ export const useList = () => {
 		if (newListUsers()) {
 			newListUsers()?.forEach((newUser: User) => {
 				const find = findObjectInArray(editedSingleList?.invitations!, 'email', newUser?.email);
-
 				if (find === null)
 					axios
 						.post(`notifications/?${listNotificationQuery}`, {
@@ -383,7 +383,6 @@ export const useList = () => {
 
 		if (data && editedSingleList) {
 			setIsUpdating(true);
-
 			axios
 				.put(`lists/${editedSingleList?.id}?${listQuery}`, {
 					data: {
@@ -394,15 +393,12 @@ export const useList = () => {
 					},
 				})
 				.then((resp) => {
-					// SOCKET UPDATE STATES BELOW
+					// SOCKET UPDATE STATES
 					if (socketState?.socket)
 						socketState?.socket.emit(
 							'listUpdate',
 							{
-								data: {
-									id: resp.data.data?.id,
-									...resp.data.data?.attributes,
-								},
+								data: convertListShopAttrubites(resp?.data?.data),
 							},
 							(error: SocketErrorInterface) => {
 								if (error?.response?.data?.error) {

@@ -18,6 +18,7 @@ import { listQuery, shopsPromotionQuery, shopsQuery } from 'utils/queries';
 // HELPERS
 import { convertPrices } from 'components/shops/helpers/convertPrices';
 import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
+import { convertListShopAttrubites } from 'utils/helpers/convertListShopAttrubites';
 
 // MODELS
 import { SocketErrorInterface } from 'config/models';
@@ -131,32 +132,12 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 					},
 				})
 				.then((resp) => {
-					// SOCKET UPDATE STATES BELOW
-					const response = resp?.data?.data;
-					const responseShop = response?.attributes?.shop?.data;
-					const responseImage = responseShop?.attributes?.image?.data;
-					const newValues = {
-						id: response?.id,
-						...{
-							...response?.attributes,
-							shop: {
-								id: responseShop?.id,
-								...{
-									...responseShop?.attributes,
-									image: {
-										id: responseImage?.id,
-										...responseImage?.attributes,
-									},
-								},
-							},
-						},
-					};
-
+					// SOCKET UPDATE STATES
 					if (socketState?.socket)
 						socketState?.socket.emit(
 							'listUpdate',
 							{
-								data: newValues,
+								data: convertListShopAttrubites(resp?.data?.data),
 							},
 							(error: SocketErrorInterface) => {
 								if (error?.response?.data?.error) {

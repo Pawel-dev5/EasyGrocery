@@ -50,8 +50,7 @@ export const StyledListCardTitle = styled.Text`
 
 export const StyledListCardItemElement = styled.View`
 	font-size: 15px;
-	align-items: flex-start;
-	justify-content: center;
+
 	margin-bottom: 5px;
 	margin-right: 10px;
 `;
@@ -73,11 +72,11 @@ export const StyledItemsWrapper = styled.View`
 	background: ${({ theme }) => theme.white};
 `;
 
-export const StyledInputTitleWrapper = styled.View`
+export const StyledHeaderOptions = styled.View`
 	width: 100%;
 	flex-direction: row;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: space-around;
 `;
 
 export const StyledListBackground = styled.View<{ color: string | null }>`
@@ -93,29 +92,22 @@ export const StyledListBackground = styled.View<{ color: string | null }>`
 `;
 
 export const StyledActionButton = styled.TouchableOpacity`
-	width: 42px;
-	height: 50px;
-	border-radius: 8px;
+	width: 40px;
+	height: 40px;
 	align-items: center;
 	justify-content: center;
-`;
-
-export const StyledListOptionWrapper = styled.View`
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	height: 100%;
-	margin-right: -15px;
 `;
 
 export const StyledUsersWrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
-	margin-right: 16px;
+	justify-content: center;
 `;
 
 export const StyledUsersCounter = styled.Text`
 	font-size: 17px;
+	line-height: 25px;
+	margin-bottom: -4px;
 `;
 
 export const StyledListDescription = styled.Text`

@@ -25,7 +25,7 @@ export const Shop = (props: any) => {
 	if (!shop) return null;
 
 	return (
-		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0" stopSwipe searchActive>
+		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0" stopSwipe>
 			<ScrollView>
 				<StyledHeader>
 					<StyledShopImageFull

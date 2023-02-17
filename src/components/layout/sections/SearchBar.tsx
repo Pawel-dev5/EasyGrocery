@@ -29,10 +29,13 @@ const InputWrapper = ({ fontSize, routeName, marginLeft, searchActive }: SearchB
 		if (searchedUsers !== globalSearchInput) dispatch(globalSetGlobalSearchInput(searchUsersValueDebounced));
 	}, [searchUsersValueDebounced]);
 
+	useEffect(() => {
+		if (searchActive) inputRef?.current?.focus();
+	}, [searchActive]);
+
 	return (
 		<TextInput
 			ref={inputRef}
-			onLayout={() => inputRef?.current?.focus()}
 			key="globalSearch"
 			value={searchedUsers}
 			onChange={(e) => handleInput(e.nativeEvent.text)}

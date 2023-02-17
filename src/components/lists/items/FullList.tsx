@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useMemo, useCallback, useState } from 'react';
-import { Text, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { t } from 'i18next';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
@@ -26,10 +26,9 @@ import { ListItems, EditListForm } from 'components/lists/elements';
 import {
 	StyledActionButton,
 	StyledFullListWrapper,
-	StyledInputTitleWrapper,
+	StyledHeaderOptions,
 	StyledListBackground,
 	StyledListCardItemElement,
-	StyledListOptionWrapper,
 	StyledUsersCounter,
 	StyledUsersWrapper,
 	StyledListDescription,
@@ -105,69 +104,65 @@ export const FullListWrapper = (props: any) => {
 		<AppWrapper {...props} isLoading={isLoading} routeName={singleList?.title || t('general.myLists')} customPadding="0">
 			<StyledListBackground color={newColor || singleList?.color!}>
 				<StyledFullListWrapper>
-					<StyledInputTitleWrapper>
-						<View style={{ flexDirection: 'row' }}>
-							<StyledUsersWrapper>
-								<StyledListCardItemElement>
-									<Icon name="users" size={20} />
-								</StyledListCardItemElement>
-
-								<StyledListCardItemElement>
-									<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
-								</StyledListCardItemElement>
-							</StyledUsersWrapper>
-
-							{listPricesSum() && (
-								<StyledUsersWrapper>
-									<StyledListCardItemElement>
-										<Icon name="money-bill-wave" size={20} />
-									</StyledListCardItemElement>
-
-									<StyledListCardItemElement>
-										<StyledUsersCounter>{listPricesSum()}</StyledUsersCounter>
-									</StyledListCardItemElement>
-								</StyledUsersWrapper>
-							)}
-						</View>
-
-						<StyledListOptionWrapper>
-							<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
-								<Icon name={editedSingleList !== null ? 'list' : 'edit'} size={20} />
+					<StyledHeaderOptions>
+						<StyledUsersWrapper>
+							<StyledActionButton>
+								<Icon name="users" size={20} />
 							</StyledActionButton>
 
-							{listItems && listItems?.length > 0 && (
-								<StyledActionButton
-									onPress={() =>
-										SubmitAlert({
-											okPressed: () => clearSingleListItems(),
-											okText: t('general.delete'),
-											cancelText: t('general.cancel'),
-											cancelPressed: () => {},
-											alertTitle: singleList?.title ?? '',
-											alertMessage: t<string>('general.deleteAllItems'),
-										})
-									}
-								>
-									<Icon name="broom" size={20} />
-								</StyledActionButton>
-							)}
+							<StyledListCardItemElement>
+								<StyledUsersCounter>{singleList?.users_permissions_users?.data?.length}</StyledUsersCounter>
+							</StyledListCardItemElement>
+						</StyledUsersWrapper>
 
+						{listPricesSum() && (
+							<StyledUsersWrapper>
+								<StyledActionButton>
+									<Icon name="money-bill-wave" size={20} />
+								</StyledActionButton>
+
+								<StyledListCardItemElement>
+									<StyledUsersCounter>{listPricesSum()}</StyledUsersCounter>
+								</StyledListCardItemElement>
+							</StyledUsersWrapper>
+						)}
+
+						<StyledActionButton onPress={() => setEditedSingleList(editedSingleList === null ? singleList : null)}>
+							<Icon name={editedSingleList !== null ? 'list' : 'edit'} size={20} />
+						</StyledActionButton>
+
+						{listItems && listItems?.length > 0 && (
 							<StyledActionButton
 								onPress={() =>
 									SubmitAlert({
-										okPressed: () => deleteList(singleList?.id!, () => navigation.navigate(lists.lists)),
+										okPressed: () => clearSingleListItems(),
 										okText: t('general.delete'),
 										cancelText: t('general.cancel'),
 										cancelPressed: () => {},
 										alertTitle: singleList?.title ?? '',
-										alertMessage: t<string>('general.deleteList'),
+										alertMessage: t<string>('general.deleteAllItems'),
 									})
 								}
 							>
-								<Icon name="trash" size={20} variant="unDone" />
+								<Icon name="broom" size={20} />
 							</StyledActionButton>
-						</StyledListOptionWrapper>
-					</StyledInputTitleWrapper>
+						)}
+
+						<StyledActionButton
+							onPress={() =>
+								SubmitAlert({
+									okPressed: () => deleteList(singleList?.id!, () => navigation.navigate(lists.lists)),
+									okText: t('general.delete'),
+									cancelText: t('general.cancel'),
+									cancelPressed: () => {},
+									alertTitle: singleList?.title ?? '',
+									alertMessage: t<string>('general.deleteList'),
+								})
+							}
+						>
+							<Icon name="trash" size={20} variant="unDone" />
+						</StyledActionButton>
+					</StyledHeaderOptions>
 
 					{singleList?.description && <StyledListDescription>{singleList?.description}</StyledListDescription>}
 
