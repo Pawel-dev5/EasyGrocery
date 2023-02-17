@@ -44,6 +44,7 @@ export const StyledAddItemButton = styled(StyledActionButton)`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	border-radius: ${({ theme }) => theme.radius[2]};
 `;
 
 export const StyledAddNewItem = styled.View`

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useMemo, useCallback, useState } from 'react';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
@@ -8,6 +8,7 @@ import { lists } from 'routes/AppRoutes';
 
 // REDUX
 import { selectShops } from 'redux/slices/shops';
+import { selectGlobal } from 'redux/slices/global';
 import { useAppSelector } from 'redux/hooks';
 
 // CONTEXT
@@ -32,8 +33,11 @@ import {
 	StyledUsersCounter,
 	StyledUsersWrapper,
 	StyledListDescription,
+	FullListInlineStyle,
 } from 'components/lists/items/Styles';
-import { selectGlobal } from 'redux/slices/global';
+
+// HELPERS
+import { listPricesSum } from 'components/lists/helpers/priceHelpers';
 
 export const FullListWrapper = (props: any) => {
 	const shopState = useAppSelector(selectShops);
@@ -59,11 +63,17 @@ export const FullListWrapper = (props: any) => {
 	} = useContext(ListsContextData);
 	const { getShops } = useShops();
 
-	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
-	const [newColor, setNewColor] = useState<string | null>(null);
-
 	const { route, navigation } = props;
 	const listUuid = route?.params?.id;
+
+	const [bottomSheetHeight, setBottomSheetHeight] = useState(1);
+	const [newColor, setNewColor] = useState<string | null>(null);
+	// BOTTOMSHEET CONFIG
+	const bottomSheetRef = useRef<BottomSheet>(null);
+	const snapPoints = useMemo(() => ['75%', '75%', '99.9%'], []);
+	const handleSheetChanges = useCallback((index: number) => setBottomSheetHeight(index), []);
+
+	const listItems = filteredItems || singleList?.items;
 
 	useEffect(() => {
 		if (listUuid && token) {
@@ -72,33 +82,6 @@ export const FullListWrapper = (props: any) => {
 			if (shops?.length === 0) getShops();
 		}
 	}, []);
-
-	// BOTTOMSHEET CONFIG
-	const bottomSheetRef = useRef<BottomSheet>(null);
-	const snapPoints = useMemo(() => ['75%', '75%', '99.9%'], []);
-	const handleSheetChanges = useCallback((index: number) => setBottomSheetHeight(index), []);
-
-	const listItems = filteredItems || singleList?.items;
-
-	const listPricesSum = () => {
-		let sum = 0;
-
-		listItems?.forEach((item) => {
-			if (item.prices && item?.prices[0]) {
-				const itemPrice = Number(item.prices[0].price?.replace('zł', '')?.replace(',', '.'));
-				const itemPricePromotion = Number(item.prices[0].promotion?.replace('zł', '')?.replace(',', '.'));
-				if (itemPricePromotion) {
-					sum += itemPricePromotion;
-				} else sum += itemPrice;
-			}
-		});
-
-		if (sum > 0) {
-			const allSum = (Math.round(sum * 100) / 100)?.toString()?.replace('.', ',');
-			return `${allSum} zł`;
-		}
-		return null;
-	};
 
 	return (
 		<AppWrapper {...props} isLoading={isLoading} routeName={singleList?.title || t('general.myLists')} customPadding="0">
@@ -115,14 +98,14 @@ export const FullListWrapper = (props: any) => {
 							</StyledListCardItemElement>
 						</StyledUsersWrapper>
 
-						{listPricesSum() && (
+						{listPricesSum(listItems) && (
 							<StyledUsersWrapper>
 								<StyledActionButton>
 									<Icon name="money-bill-wave" size={20} />
 								</StyledActionButton>
 
 								<StyledListCardItemElement>
-									<StyledUsersCounter>{listPricesSum()}</StyledUsersCounter>
+									<StyledUsersCounter>{listPricesSum(listItems)}</StyledUsersCounter>
 								</StyledListCardItemElement>
 							</StyledUsersWrapper>
 						)}
@@ -203,7 +186,10 @@ export const FullListWrapper = (props: any) => {
 					onChange={handleSheetChanges}
 				>
 					{/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-					<BottomSheetScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles?.contentContainer}>
+					<BottomSheetScrollView
+						keyboardShouldPersistTaps="always"
+						contentContainerStyle={FullListInlineStyle?.contentContainer}
+					>
 						{editedSingleList ? (
 							<EditListForm bottomSheetHeight={bottomSheetHeight} setNewColor={setNewColor} />
 						) : (
@@ -221,15 +207,3 @@ export const FullList = (props: any) => (
 		<FullListWrapper {...props} />
 	</ContextProvider>
 );
-
-const styles = StyleSheet.create({
-	contentContainer: {
-		width: '100%',
-		maxHeight: '97.5%',
-		flexDirection: 'column',
-		paddingRight: 16,
-		paddingLeft: 16,
-		paddingTop: 0,
-		paddingBottom: 0,
-	},
-});

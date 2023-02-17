@@ -73,7 +73,6 @@ export const Menu = ({ navigation }: { navigation: any }) => {
 							link();
 							dispatch(globalSetMenuRoute(id));
 						}}
-						disabled={menuRoute === id}
 					>
 						{icon && <StyledMenuIcon name={icon} color={setColor(id)} />}
 						{counter ? <NotificationCounter counter={counter} variant="small" /> : null}

@@ -18,7 +18,7 @@ import { listQuery, shopsPromotionQuery, shopsQuery } from 'utils/queries';
 // HELPERS
 import { convertPrices } from 'components/shops/helpers/convertPrices';
 import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
-import { convertListShopAttrubites } from 'utils/helpers/convertListShopAttrubites';
+import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
 
 // MODELS
 import { SocketErrorInterface } from 'config/models';

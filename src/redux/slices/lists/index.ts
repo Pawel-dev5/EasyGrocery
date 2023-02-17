@@ -39,7 +39,7 @@ export const listsSlice = createSlice({
 			);
 			state.lists = newArr;
 		},
-		listsSetList: (state, action: PayloadAction<SingleListInterface>) => {
+		listsSetList: (state, action: PayloadAction<SingleListInterface | null>) => {
 			state.list = action.payload;
 		},
 		listsUpdateListStatus: (state, action: PayloadAction<string>) => {

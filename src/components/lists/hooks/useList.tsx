@@ -34,7 +34,7 @@ import { updateObject } from 'utils/helpers/objectHelpers';
 import { findObjectInArray, updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { useDebounce } from 'utils/helpers/useDebounce';
 import { listQuery, listNotificationQuery, searchUserQuery, userQuery } from 'utils/queries';
-import { convertListShopAttrubites } from 'utils/helpers/convertListShopAttrubites';
+import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
 
 const schema = yup
 	.object({
@@ -158,7 +158,9 @@ export const useList = () => {
 	};
 
 	const getList = (id: string) => {
-		if (id)
+		if (id) {
+			setSortedListItemsByCategories(null);
+
 			axios
 				.get(`lists/${id}?${listQuery}`)
 				.then((resp) => dispatch(listsSetList({ id: resp?.data?.data?.id, ...resp?.data?.data?.attributes })))
@@ -169,6 +171,7 @@ export const useList = () => {
 					}
 				})
 				.finally(() => setIsLoading(false));
+		}
 	};
 
 	const deleteList = (id: string, callback?: () => void) => {
@@ -433,10 +436,6 @@ export const useList = () => {
 		}
 		if (newListItems?.length > 0) setSortedListItemsByCategories(newListItems);
 	};
-
-	useEffect(() => {
-		if (sortedListItemsByCategories) sortItemsByCategories();
-	}, [singleList]);
 
 	return {
 		singleList,
