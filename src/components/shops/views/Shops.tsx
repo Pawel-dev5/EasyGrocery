@@ -65,10 +65,7 @@ export const Shops = (props: any) => {
 									minHeight: 100,
 								}}
 							>
-								<StyledShopImage
-									source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
-									style={{ resizeMode: 'cover' }}
-								/>
+								<StyledShopImage source={{ uri: shop?.image?.url }} style={{ resizeMode: 'cover' }} />
 							</View>
 						</TouchableOpacity>
 					))}

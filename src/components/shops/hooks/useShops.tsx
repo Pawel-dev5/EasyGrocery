@@ -13,6 +13,7 @@ import { ShopDataInterface } from 'components/shops/models/hooks';
 // UTILS
 import { shopQuery } from 'utils/queries';
 import { AlertTypes } from 'redux/slices/global/models';
+import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
 
 export const useShops = () => {
 	const dispatch = useAppDispatch();
@@ -24,7 +25,13 @@ export const useShops = () => {
 		setIsLoading(true);
 		axios
 			.get(`shops?${shopQuery}`)
-			.then((resp) => dispatch(shopsSetshops(resp?.data?.data)))
+			.then((resp) => {
+				const newArr: any = [];
+				resp?.data?.data?.forEach((item: any) => {
+					newArr.push(convertListShopAttrubites(item));
+				});
+				dispatch(shopsSetshops(newArr));
+			})
 			.catch((error) => {
 				if (error?.response?.data?.error?.message) {
 					const { message, status, name } = error.response.data.error.message;

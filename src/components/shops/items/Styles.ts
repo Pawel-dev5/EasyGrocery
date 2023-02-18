@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 export const StyledProdImageWrapper = styled.View`
@@ -67,3 +68,32 @@ export const StyledCategoryText = styled.Text<{ active: boolean }>`
 			margin-left: 8px;
 		`}
 `;
+
+export const CategoryInlineStyles = StyleSheet.create({
+	contentContainer: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between',
+	},
+	contentWrapper: {
+		width: '100%',
+		height: '100%',
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+	},
+	contentElement: {
+		borderRadius: 20,
+		borderWidth: 1,
+		borderColor: '#000000',
+		marginBottom: 4,
+		marginRight: 4,
+		paddingLeft: 12,
+		paddingRight: 12,
+		paddingBottom: 8,
+		paddingTop: 8,
+		alignSelf: 'flex-start',
+		fontSize: 8,
+	},
+});

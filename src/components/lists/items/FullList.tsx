@@ -169,7 +169,7 @@ export const FullListWrapper = (props: any) => {
 						</TouchableOpacity>
 					)}
 
-					{singleList?.shop?.data !== null && (
+					{singleList?.shop !== null && (
 						<TouchableOpacity
 							onPress={() => (sortedListItemsByCategories ? setSortedListItemsByCategories(null) : sortItemsByCategories())}
 						>

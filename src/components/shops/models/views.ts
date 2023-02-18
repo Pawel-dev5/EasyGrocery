@@ -1,7 +1,7 @@
 // MODELS
-import { ShopDataAttributes } from 'components/shops/models/hooks';
+import { ProductInterface } from 'components/shops/models/hooks';
 
 export interface BottomSheetInterface {
 	visible: boolean;
-	product: ShopDataAttributes | null;
+	product: ProductInterface | null;
 }

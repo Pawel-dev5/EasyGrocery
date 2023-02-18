@@ -8,13 +8,9 @@ export interface ShopDataAttributes {
 	imageUrl?: string;
 	apiUrl: string;
 	image: {
-		data: {
-			id: string;
-			attributes: {
-				alternativeText: string;
-				url: string;
-			};
-		};
+		id: string;
+		alternativeText: string;
+		url: string;
 	};
 	prices: PriceInterface[];
 	lists: ListInterface[];
@@ -39,8 +35,19 @@ export interface OrderInterface {
 	priority: number;
 }
 
+export interface ProductInterface {
+	id: string;
+	category: string;
+	createdAt: string;
+	description: string;
+	imageUrl: string;
+	title: string;
+	updatedAt: string;
+	prices: PriceInterface[];
+}
+
 export interface AddProductInterface {
 	list: ListInterface;
-	product: ShopDataInterface | null;
+	product: ProductInterface | null;
 	callbackOnSuccess?: () => void;
 }

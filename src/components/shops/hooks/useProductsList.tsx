@@ -10,13 +10,12 @@ import { selectSocket } from 'redux/slices/socket';
 import { AlertTypes } from 'redux/slices/global/models';
 
 // MODELS
-import { AddProductInterface, ShopDataInterface } from 'components/shops/models/hooks';
+import { AddProductInterface, ProductInterface } from 'components/shops/models/hooks';
 
 // UTILS
 import { listQuery, shopsPromotionQuery, shopsQuery } from 'utils/queries';
 
 // HELPERS
-import { convertPrices } from 'components/shops/helpers/convertPrices';
 import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
 import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
 
@@ -28,8 +27,8 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 	const socketState = useAppSelector(selectSocket);
 	const baseApi = `${REACT_APP_SHOPS_API}api/${url}`;
 
-	const [productsList, setProductsList] = useState<ShopDataInterface[] | null>(null);
-	const [lastWeekPromotions, setLastWeekPromotions] = useState<ShopDataInterface[] | null>(null);
+	const [productsList, setProductsList] = useState<ProductInterface[] | null>(null);
+	const [lastWeekPromotions, setLastWeekPromotions] = useState<ProductInterface[] | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [totalProductsCount, setTotalProductsCount] = useState(0);
 	const [totalPromotionsCount, setTotalPromotionsCount] = useState(0);
@@ -46,7 +45,11 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		})
 			.then((resp) => {
 				setTotalProductsCount(resp?.data?.meta?.pagination?.total);
-				setProductsList(convertPrices({ url, data: resp?.data?.data }));
+				const newArr: any = [];
+				resp?.data?.data?.forEach((item: any) => {
+					newArr.push({ id: item?.id, ...item?.attributes });
+				});
+				setProductsList(newArr);
 			})
 			.catch((error) => {
 				if (error?.response?.data?.error?.message) {
@@ -65,7 +68,11 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		})
 			.then((resp) => {
 				setTotalPromotionsCount(resp?.data?.meta?.pagination?.total);
-				setLastWeekPromotions(convertPrices({ url, data: resp?.data?.data }));
+				const newArr: any = [];
+				resp?.data?.data?.forEach((item: any) => {
+					newArr.push({ id: item?.id, ...item?.attributes });
+				});
+				setLastWeekPromotions(newArr);
 			})
 			.catch((error) => {
 				if (error?.response?.data?.error?.message) {
@@ -86,7 +93,13 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		})
 			.then((resp) => {
 				setTotalProductsCount(resp?.data?.meta?.pagination?.total);
-				if (productsList) setProductsList([...productsList, ...convertPrices({ url, data: resp?.data?.data })]);
+				if (productsList) {
+					const newArr: any = [];
+					resp?.data?.data?.forEach((item: any) => {
+						newArr.push({ id: item?.id, ...item?.attributes });
+					});
+					setProductsList([...productsList, ...newArr]);
+				}
 			})
 			.catch((error) => {
 				if (error?.response?.data?.error?.message) {
@@ -105,8 +118,13 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		})
 			.then((resp) => {
 				setTotalPromotionsCount(resp?.data?.meta?.pagination?.total);
-				if (lastWeekPromotions)
-					setLastWeekPromotions([...lastWeekPromotions, ...convertPrices({ url, data: resp?.data?.data })]);
+				if (lastWeekPromotions) {
+					const newArr: any = [];
+					resp?.data?.data?.forEach((item: any) => {
+						newArr.push({ id: item?.id, ...item?.attributes });
+					});
+					setLastWeekPromotions([...lastWeekPromotions, ...newArr]);
+				}
 			})
 			.catch((error) => {
 				if (error?.response?.data?.error?.message) {
@@ -119,16 +137,18 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 
 	const addProductToList = ({ list, product, callbackOnSuccess }: AddProductInterface) => {
 		if (product && product !== null) {
+			const { id: productId, ...rest } = product;
+
 			const deletePricesId = () =>
-				product?.attributes?.prices?.map((item) => {
-					delete item?.id;
-					return item;
+				rest?.prices?.map((item) => {
+					const { id: itemId, ...restItem } = item;
+					return restItem;
 				});
 
 			axios
 				.put(`lists/${list?.id}?${listQuery}`, {
 					data: {
-						items: [...list.items, { ...product?.attributes, prices: deletePricesId() }],
+						items: [...list.items, { ...rest, prices: deletePricesId() }],
 					},
 				})
 				.then((resp) => {

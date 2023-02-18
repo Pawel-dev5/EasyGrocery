@@ -25,18 +25,15 @@ export const Shop = (props: any) => {
 	if (!shop) return null;
 
 	return (
-		<AppWrapper {...props} routeName={shop?.attributes?.title} customPadding="0 0" stopSwipe>
+		<AppWrapper {...props} routeName={shop?.title} customPadding="0 0" stopSwipe>
 			<ScrollView>
 				<StyledHeader>
-					<StyledShopImageFull
-						source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
-						style={{ resizeMode: 'cover' }}
-					/>
+					<StyledShopImageFull source={{ uri: shop?.image?.url }} style={{ resizeMode: 'cover' }} />
 				</StyledHeader>
 
-				{shop?.attributes?.orders?.length > 0 && (
+				{shop?.orders?.length > 0 && (
 					<StyledShopCategoriesWrapper>
-						{shop?.attributes?.orders?.map(({ id, value }) => {
+						{shop?.orders?.map(({ id, value }) => {
 							const categoryProps = {
 								value,
 								active: current === id,
@@ -49,7 +46,7 @@ export const Shop = (props: any) => {
 										if (current !== id) {
 											navigation?.navigate(shopsRoutes.productsList, {
 												id: shop?.id,
-												slug: shop?.attributes?.apiUrl,
+												slug: shop?.apiUrl,
 												category: value,
 											});
 											setCurrent(null);

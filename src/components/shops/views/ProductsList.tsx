@@ -6,8 +6,9 @@ import { t } from 'i18next';
 import { shops as shopsRoutes } from 'routes/AppRoutes';
 
 // REDUX
-import { selectShops } from 'redux/slices/shops';
 import { useAppSelector } from 'redux/hooks';
+import { selectGlobal } from 'redux/slices/global';
+import { selectShops } from 'redux/slices/shops';
 import { selectLists } from 'redux/slices/lists';
 
 // HOOKS
@@ -30,7 +31,7 @@ import {
 
 // MODELS
 import { BottomSheetInterface } from 'components/shops/models/views';
-import { selectGlobal } from 'redux/slices/global';
+import { ProductInterface } from 'components/shops/models/hooks';
 
 export const ProductsList = (props: any) => {
 	const {
@@ -74,7 +75,7 @@ export const ProductsList = (props: any) => {
 	const flatList = useRef<FlatList>(null);
 
 	const itemElementHeight = 150;
-	const index = shop?.attributes?.orders?.findIndex((element) => element?.value === category);
+	const index = shop?.orders?.findIndex((element) => element?.value === category);
 
 	useEffect(() => {
 		getProducts(globalSearchInput);
@@ -136,7 +137,7 @@ export const ProductsList = (props: any) => {
 			<FlatList
 				ref={flatList}
 				initialScrollIndex={index}
-				initialNumToRender={shop?.attributes?.orders?.length}
+				initialNumToRender={shop?.orders?.length}
 				onScrollToIndexFailed={(info) => {
 					// eslint-disable-next-line no-promise-executor-return
 					const wait = new Promise((resolve) => setTimeout(resolve, 500));
@@ -148,14 +149,14 @@ export const ProductsList = (props: any) => {
 				contentContainerStyle={ProductListInlineStyle?.categoriesContainer}
 				horizontal
 				ItemSeparatorComponent={() => <View style={{ height: 10, width: 8 }} />}
-				data={shop?.attributes?.orders}
+				data={shop?.orders}
 				renderItem={({ item }) => (
 					<Pressable
 						key={item?.id}
 						onPress={() =>
 							navigation?.navigate(shopsRoutes.productsList, {
 								id: shop?.id,
-								slug: shop?.attributes?.apiUrl,
+								slug: shop?.apiUrl,
 								category: item?.value,
 							})
 						}
@@ -187,7 +188,16 @@ export const ProductsList = (props: any) => {
 							contentContainerStyle={ProductListInlineStyle?.contentContainer}
 							data={lastWeekPromotions}
 							numColumns={2}
-							renderItem={({ item }) => <Product {...item} setBottomSheetState={setBottomSheetState} />}
+							renderItem={({ item }) => {
+								const pricesKey = `${shop?.apiUrl}Prices`;
+								const newPrices: any = item[pricesKey as keyof ProductInterface];
+								const newProps = {
+									...item,
+									prices: newPrices,
+								};
+								delete newProps[pricesKey as keyof ProductInterface];
+								return <Product {...newProps} setBottomSheetState={setBottomSheetState} />;
+							}}
 							keyExtractor={(item) => item?.id}
 							onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
 						/>
@@ -216,7 +226,16 @@ export const ProductsList = (props: any) => {
 					contentContainerStyle={ProductListInlineStyle?.contentContainer}
 					data={productsList}
 					numColumns={2}
-					renderItem={({ item }) => <Product {...item} setBottomSheetState={setBottomSheetState} />}
+					renderItem={({ item }) => {
+						const pricesKey = `${shop?.apiUrl}Prices`;
+						const newPrices: any = item[pricesKey as keyof ProductInterface];
+						const newProps = {
+							...item,
+							prices: newPrices,
+						};
+						delete newProps[pricesKey as keyof ProductInterface];
+						return <Product {...newProps} setBottomSheetState={setBottomSheetState} />;
+					}}
 					keyExtractor={(item) => item?.id}
 					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
 				/>

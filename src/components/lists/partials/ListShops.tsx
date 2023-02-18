@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { t } from 'i18next';
 
 // REDUX
@@ -9,8 +9,8 @@ import { useAppSelector } from 'redux/hooks';
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
 
-// MODELS
-import { StyledListShopCategories, StyledShopImage } from 'components/lists/partials/Styles';
+// STYLES
+import { StyledListShopCategories, StyledShopImage, ListShopsInlineStyles } from 'components/lists/partials/Styles';
 
 export const ListShops = () => {
 	const shopState = useAppSelector(selectShops);
@@ -20,14 +20,14 @@ export const ListShops = () => {
 	return (
 		<>
 			{/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-			<ScrollView contentContainerStyle={styles?.scrollView} horizontal>
+			<ScrollView contentContainerStyle={ListShopsInlineStyles?.scrollView} horizontal>
 				{shops?.map((shop) => {
 					const isActiveShop = () => {
 						if (shop?.id === newShop?.id)
 							return {
 								transform: [{ scale: 1.12 }],
 							};
-						if (shop?.id === editedSingleList?.shop?.data?.id && newShop === null)
+						if (shop?.id === editedSingleList?.shop?.id && newShop === null)
 							return {
 								transform: [{ scale: 1.12 }],
 							};
@@ -35,10 +35,7 @@ export const ListShops = () => {
 					};
 					return (
 						<TouchableOpacity key={shop?.id} onPress={() => setNewShop(shop)}>
-							<StyledShopImage
-								source={{ uri: shop?.attributes?.image?.data?.attributes?.url }}
-								style={[{ resizeMode: 'cover' }, isActiveShop()]}
-							/>
+							<StyledShopImage source={{ uri: shop?.image?.url }} style={[{ resizeMode: 'cover' }, isActiveShop()]} />
 						</TouchableOpacity>
 					);
 				})}
@@ -46,7 +43,7 @@ export const ListShops = () => {
 			<View>
 				{newShop !== null && (
 					<View>
-						{newShop?.attributes?.orders?.map(({ id, value }) => (
+						{newShop?.orders?.map(({ id, value }) => (
 							<StyledListShopCategories key={id}>{t<string>(`shopCategories.${value}`)}</StyledListShopCategories>
 						))}
 					</View>
@@ -55,13 +52,3 @@ export const ListShops = () => {
 		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	scrollView: {
-		flexDirection: 'row',
-		flexWrap: 'nowrap',
-		minWidth: '100%',
-		paddingVertical: 8,
-		paddingHorizontal: 5,
-	},
-});

@@ -1,4 +1,8 @@
+import { StyleSheet } from 'react-native';
+
 import styled, { css } from 'styled-components/native';
+
+// MODELS
 import { ItemTitleVariants } from 'components/lists/models/partials';
 
 export const StyledRadioButtonWrapper = styled.View`
@@ -180,3 +184,13 @@ export const StyledItemPricePromotionDescription = styled.Text`
 	font-size: 11px;
 	margin-top: 4px;
 `;
+
+export const ListShopsInlineStyles = StyleSheet.create({
+	scrollView: {
+		flexDirection: 'row',
+		flexWrap: 'nowrap',
+		minWidth: '100%',
+		paddingVertical: 8,
+		paddingHorizontal: 5,
+	},
+});

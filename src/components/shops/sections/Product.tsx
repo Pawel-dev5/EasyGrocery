@@ -4,9 +4,6 @@ import React, { memo } from 'react';
 import { ProductImage } from 'components/shops/items';
 import { Icon } from 'components/layout/common';
 
-// MODELS
-import { ShopDataAttributes } from 'components/shops/models/hooks';
-
 // STYLES
 import {
 	StyledProductWrapper,
@@ -20,21 +17,27 @@ import {
 } from 'components/shops/sections/Styles';
 import { shadowInline } from 'utils/theme/themeDefault';
 
-interface ProductPropsInterface extends ShopDataAttributes {
-	setBottomSheetState: ({ visible, product }: { visible: boolean; product: ShopDataAttributes }) => void;
-}
+// MODELS
+import { ProductPropsInterface } from 'components/shops/models/sections';
 
-const Product = ({ id, attributes, setBottomSheetState }: ProductPropsInterface) => {
-	const { imageUrl, title, description, prices } = attributes;
+const Product = ({
+	id,
+	imageUrl,
+	title,
+	description,
+	prices,
+	category,
+	createdAt,
+	updatedAt,
+	setBottomSheetState,
+}: ProductPropsInterface) => {
 	const sortedPrices = prices?.reverse();
 
 	return (
 		<StyledProductWrapper>
 			<StyledHeader>
 				<ProductImage imageUrl={imageUrl} />
-
 				{title && <StyledProdTitle>{title} </StyledProdTitle>}
-
 				{description && <StyledProdDescription>{description}</StyledProdDescription>}
 			</StyledHeader>
 
@@ -42,19 +45,22 @@ const Product = ({ id, attributes, setBottomSheetState }: ProductPropsInterface)
 				{sortedPrices && sortedPrices?.length > 0 && (
 					<StyledProdPrice promotion={sortedPrices[0]?.promotion !== 'null'}>{sortedPrices[0]?.price}</StyledProdPrice>
 				)}
-				{sortedPrices[0]?.promotion !== 'null' && (
+				{sortedPrices && sortedPrices[0]?.promotion !== 'null' && (
 					<StyledProdPromotionPrice> {sortedPrices[0]?.promotion}</StyledProdPromotionPrice>
 				)}
 			</StyledPricesWrapper>
 
-			{sortedPrices[0]?.promotionDescription !== 'null' && (
+			{sortedPrices && sortedPrices[0]?.promotionDescription !== 'null' && (
 				<StyledProdDescription>{sortedPrices[0]?.promotionDescription}</StyledProdDescription>
 			)}
 
 			<StyledAddButton
 				style={shadowInline}
 				onPress={() => {
-					setBottomSheetState({ visible: true, product: { id, attributes } });
+					setBottomSheetState({
+						visible: true,
+						product: { id, imageUrl, title, description, prices, category, createdAt, updatedAt },
+					});
 				}}
 			>
 				<Icon name="plus" size={20} variant="black" />
