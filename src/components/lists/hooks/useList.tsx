@@ -299,7 +299,7 @@ export const useList = () => {
 	const updateSingleListItemName = (id: string, item: EditItemInterface, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
-				updateObject(todo, { value: item?.title, category: item?.category }),
+				updateObject(todo, { title: item?.title, category: item?.category }),
 			);
 			sendSingleListPutRequest(newData, callback);
 		}
