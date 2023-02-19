@@ -28,3 +28,7 @@ export const shops = {
 export const notifications = {
 	notifications: '/notifications',
 };
+
+export const product = {
+	product: '/product/:slug',
+};

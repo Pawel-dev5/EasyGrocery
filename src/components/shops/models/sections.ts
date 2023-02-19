@@ -11,4 +11,5 @@ export interface BottomSheetRenderItemInterface {
 
 export interface ProductPropsInterface extends ProductInterface {
 	setBottomSheetState: ({ visible, product }: { visible: boolean; product: ProductInterface }) => void;
+	navigation: any;
 }

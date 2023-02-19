@@ -170,6 +170,7 @@ export const ProductsList = (props: any) => {
 				)}
 				keyExtractor={(item) => item?.id}
 			/>
+
 			{lastWeekPromotions && lastWeekPromotions?.length > 0 && (
 				<>
 					<StyledListHeaderWrapper onPress={() => setExpandedList(!expandedList!)}>
@@ -196,7 +197,7 @@ export const ProductsList = (props: any) => {
 									prices: newPrices,
 								};
 								delete newProps[pricesKey as keyof ProductInterface];
-								return <Product {...newProps} setBottomSheetState={setBottomSheetState} />;
+								return <Product {...newProps} setBottomSheetState={setBottomSheetState} navigation={navigation} />;
 							}}
 							keyExtractor={(item) => item?.id}
 							onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
@@ -234,7 +235,7 @@ export const ProductsList = (props: any) => {
 							prices: newPrices,
 						};
 						delete newProps[pricesKey as keyof ProductInterface];
-						return <Product {...newProps} setBottomSheetState={setBottomSheetState} />;
+						return <Product {...newProps} setBottomSheetState={setBottomSheetState} navigation={navigation} />;
 					}}
 					keyExtractor={(item) => item?.id}
 					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}

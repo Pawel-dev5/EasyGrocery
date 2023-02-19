@@ -7,7 +7,7 @@ import 'expo-dev-client';
 // ROUTING
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { auth, lists, notifications, profile, shops } from 'routes/AppRoutes';
+import { auth, lists, notifications, product, profile, shops } from 'routes/AppRoutes';
 
 // CONFIG
 import 'src/config/i18nConfig';
@@ -35,6 +35,7 @@ import { List } from 'components/lists/sections';
 import { Shops, Shop, ProductsList } from 'components/shops';
 import { Notifications } from 'components/notifications';
 import { useAuth } from 'components/auth/hooks/useAuth';
+import { Product } from 'components/product';
 
 const { Screen, Navigator } = createNativeStackNavigator();
 
@@ -65,6 +66,7 @@ const AppComponent = () => {
 						<Screen name={shops.shop}>{(props) => <Shop {...props} />}</Screen>
 						<Screen name={shops.productsList}>{(props) => <ProductsList {...props} />}</Screen>
 						<Screen name={notifications.notifications}>{(props) => <Notifications {...props} />}</Screen>
+						<Screen name={product.product}>{(props) => <Product {...props} />}</Screen>
 					</>
 				)}
 

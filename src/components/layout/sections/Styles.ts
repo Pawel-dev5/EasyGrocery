@@ -102,10 +102,10 @@ export const StyledMenuOption = styled.View`
 `;
 
 export const StyledMenuIcon = styled(FontAwesome)<{ color?: ColorsKeys }>`
-	width: 20px;
+	width: 30px;
 	text-align: center;
 	vertical-align: center;
-	font-size: 18px;
+	font-size: 20px;
 	color: ${({ theme, color }) => (color ? theme[color] : theme.base1)};
 	margin-bottom: -3px;
 `;

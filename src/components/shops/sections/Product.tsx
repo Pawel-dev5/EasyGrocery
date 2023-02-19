@@ -1,4 +1,12 @@
 import React, { memo } from 'react';
+import { TouchableOpacity } from 'react-native';
+
+// ROUTING
+import { product } from 'routes/AppRoutes';
+
+// REDUX
+import { useAppDispatch } from 'redux/hooks';
+import { productSetProduct } from 'redux/slices/product';
 
 // COMPONENTS
 import { ProductImage } from 'components/shops/items';
@@ -29,30 +37,41 @@ const Product = ({
 	category,
 	createdAt,
 	updatedAt,
+	navigation,
 	setBottomSheetState,
 }: ProductPropsInterface) => {
+	const dispatch = useAppDispatch();
 	const sortedPrices = prices?.reverse();
 
 	return (
 		<StyledProductWrapper>
-			<StyledHeader>
-				<ProductImage imageUrl={imageUrl} />
-				{title && <StyledProdTitle>{title} </StyledProdTitle>}
-				{description && <StyledProdDescription>{description}</StyledProdDescription>}
-			</StyledHeader>
+			<TouchableOpacity
+				onPress={() => {
+					dispatch(
+						productSetProduct({ id, imageUrl, title, description, prices: sortedPrices, category, createdAt, updatedAt }),
+					);
+					navigation?.navigate(product.product, { slug: title });
+				}}
+			>
+				<StyledHeader>
+					<ProductImage imageUrl={imageUrl} />
+					{title && <StyledProdTitle>{title} </StyledProdTitle>}
+					{description && <StyledProdDescription>{description}</StyledProdDescription>}
+				</StyledHeader>
 
-			<StyledPricesWrapper>
-				{sortedPrices && sortedPrices?.length > 0 && (
-					<StyledProdPrice promotion={sortedPrices[0]?.promotion !== 'null'}>{sortedPrices[0]?.price}</StyledProdPrice>
-				)}
-				{sortedPrices && sortedPrices[0]?.promotion !== 'null' && (
-					<StyledProdPromotionPrice> {sortedPrices[0]?.promotion}</StyledProdPromotionPrice>
-				)}
-			</StyledPricesWrapper>
+				<StyledPricesWrapper>
+					{sortedPrices && sortedPrices?.length > 0 && (
+						<StyledProdPrice promotion={sortedPrices[0]?.promotion !== 'null'}>{sortedPrices[0]?.price}</StyledProdPrice>
+					)}
+					{sortedPrices && sortedPrices[0]?.promotion !== 'null' && (
+						<StyledProdPromotionPrice> {sortedPrices[0]?.promotion}</StyledProdPromotionPrice>
+					)}
+				</StyledPricesWrapper>
 
-			{sortedPrices && sortedPrices[0]?.promotionDescription !== 'null' && (
-				<StyledProdDescription>{sortedPrices[0]?.promotionDescription}</StyledProdDescription>
-			)}
+				{sortedPrices && sortedPrices[0]?.promotionDescription !== 'null' && (
+					<StyledProdDescription>{sortedPrices[0]?.promotionDescription}</StyledProdDescription>
+				)}
+			</TouchableOpacity>
 
 			<StyledAddButton
 				style={shadowInline}
