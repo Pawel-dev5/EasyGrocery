@@ -8,7 +8,7 @@ import { StyledInput } from 'components/layout/common/Styles';
 
 export const Input = ({
 	value,
-	onChange,
+	onChangeText,
 	onBlur,
 	placeholder,
 	keyboardType = 'default',
@@ -23,29 +23,33 @@ export const Input = ({
 	onFocus,
 	inputRef,
 	blurOnSubmit,
+	customStyle,
+	placeholderTextColor,
+	editable,
+	globalSearch = false,
 }: InputInterface) => (
 	<StyledInput
 		ref={inputRef}
-		name={name}
+		key={name}
 		onBlur={onBlur}
-		onChangeText={onChange}
+		onChangeText={onChangeText}
 		value={value}
 		placeholder={placeholder}
 		keyboardType={keyboardType}
 		textContentType={textContentType}
 		autoComplete={autoComplete}
 		aria-invalid={ariaInvalid}
-		type={type}
 		secureTextEntry={type === 'password'}
 		onKeyPress={onKeyPress}
 		autoFocus={autoFocus}
 		onSubmitEditing={onSubmitEditing}
 		clearButtonMode="while-editing"
 		returnKeyType="search"
-		placeholderTextColor="grey"
 		blurOnSubmit={blurOnSubmit}
-		onFocus={() => {
-			if (onFocus) onFocus();
-		}}
+		onFocus={onFocus}
+		placeholderTextColor={placeholderTextColor}
+		editable={editable}
+		style={customStyle}
+		globalSearch={globalSearch}
 	/>
 );

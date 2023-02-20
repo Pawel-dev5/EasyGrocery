@@ -31,7 +31,7 @@ export const Search = ({
 				name={name}
 				placeholder={placeholder}
 				textContentType={textContentType}
-				onChange={(e) => setSearchIcons(e as unknown as string)}
+				onChangeText={(e) => setSearchIcons(e)}
 			/>
 
 			{showMore && (

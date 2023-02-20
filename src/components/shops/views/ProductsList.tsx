@@ -79,7 +79,7 @@ export const ProductsList = (props: any) => {
 
 	useEffect(() => {
 		getProducts(globalSearchInput);
-	}, [category]);
+	}, [globalSearchInput, category]);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
@@ -105,10 +105,6 @@ export const ProductsList = (props: any) => {
 		if (offsetLoading && productsList && totalProductsCount > productsList?.length)
 			getProductsOffset(page, () => setOffsetLoading(false));
 	}, [offsetLoading]);
-
-	useEffect(() => {
-		getProducts(globalSearchInput);
-	}, [globalSearchInput]);
 
 	return (
 		<AppWrapper

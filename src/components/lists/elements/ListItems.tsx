@@ -32,12 +32,12 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 		<StyledAddNewItem>
 			<Input
 				inputRef={ref}
-				value={singleListItemsEditable?.value?.newItem.title!}
+				value={singleListItemsEditable?.value?.newItem.title || ''}
 				name="title"
-				placeholder={t('general.add')}
+				placeholder={t('general.add') || ''}
 				textContentType="nickname"
 				onSubmitEditing={() => handleSubmit()}
-				onChange={(text) => inputHandler(text)}
+				onChangeText={(text) => inputHandler(text)}
 				blurOnSubmit={false}
 			/>
 

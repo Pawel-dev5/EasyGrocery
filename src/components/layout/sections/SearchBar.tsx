@@ -1,16 +1,17 @@
-import React, { Component, RefObject, useEffect, useRef, useState } from 'react';
-import { TextInput } from 'react-native';
+import React, { Component, useState } from 'react';
 
 // REDUX
 import { globalSetGlobalSearchInput, selectGlobal } from 'redux/slices/global';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
+
+// COMPONENTS
+import { Input } from 'components/layout/common';
 
 // MODELS
 import { SearchBarProps } from 'components/layout/models/sections';
 
 // UTILS
 import theme from 'utils/theme/themeDefault';
-import { useDebounce } from 'utils/helpers/useDebounce';
 
 // STYLES
 import { searchBarInlineStyles } from 'components/layout/sections/Styles';
@@ -19,30 +20,22 @@ const InputWrapper = ({ fontSize, routeName, marginLeft, searchActive }: SearchB
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const { globalSearchInput } = globalState;
-	const inputRef: RefObject<TextInput> = useRef(null);
 	const [searchedUsers, setSearchedUsers] = useState(globalSearchInput);
-	const searchUsersValueDebounced = useDebounce(searchedUsers || '', 500);
-
-	const handleInput = (text: string) => setSearchedUsers(text);
-
-	useEffect(() => {
-		if (searchedUsers !== globalSearchInput) dispatch(globalSetGlobalSearchInput(searchUsersValueDebounced));
-	}, [searchUsersValueDebounced]);
-
-	useEffect(() => {
-		if (searchActive && globalSearchInput === '') inputRef?.current?.focus();
-	}, [searchActive, globalSearchInput]);
 
 	return (
-		<TextInput
-			ref={inputRef}
-			key="globalSearch"
+		<Input
+			name="globalSearch"
 			value={searchedUsers}
-			onChange={(e) => handleInput(e.nativeEvent.text)}
-			editable={searchActive}
-			style={{ fontSize, marginLeft, ...searchBarInlineStyles.componentTitle }}
+			textContentType="nickname"
+			onSubmitEditing={() => dispatch(globalSetGlobalSearchInput(searchedUsers))}
+			onChangeText={(e) => setSearchedUsers(e)}
+			blurOnSubmit={false}
 			placeholderTextColor={searchActive ? theme.grey400 : theme.black}
 			placeholder={routeName}
+			customStyle={{ fontSize, marginLeft, ...searchBarInlineStyles.componentTitle }}
+			editable={searchActive}
+			autoFocus={searchedUsers === ''}
+			globalSearch
 		/>
 	);
 };
