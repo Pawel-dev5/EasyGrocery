@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from 'react';
-import { View, ScrollView, TextInput } from 'react-native';
+import { View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
+import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
 // CONTEXT
 import { ListsContextData } from 'components/lists/hooks/useList';
@@ -11,15 +12,20 @@ import { Item } from 'components/lists/partials';
 
 // STYLES
 import { StyledAddItemButton, StyledAddNewItem, StyledSortedCategoryTitle } from 'components/lists/elements/Styles';
-import { StyledEditInoutWrapper, StyledItemsWrapper } from 'components/lists/partials/Styles';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
 import { ListItemInterface } from 'components/lists/models/partials';
 
 export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) => {
-	const { singleListItemsEditable, inputHandler, addSingleListItem, addNewListItemLoader, sortedListItemsByCategories } =
-		useContext(ListsContextData);
+	const {
+		singleListItemsEditable,
+		inputHandler,
+		addSingleListItem,
+		itemsDnDUpdate,
+		addNewListItemLoader,
+		sortedListItemsByCategories,
+	} = useContext(ListsContextData);
 
 	const ref = useRef<TextInput>(null);
 
@@ -34,7 +40,7 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 				inputRef={ref}
 				value={singleListItemsEditable?.value?.newItem.title || ''}
 				name="title"
-				placeholder={t('general.add') || ''}
+				placeholder={t<string>('general.add')}
 				textContentType="nickname"
 				onSubmitEditing={() => handleSubmit()}
 				onChangeText={(text) => inputHandler(text)}
@@ -65,15 +71,34 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 					</ScrollView>
 				</View>
 			) : (
-				<StyledEditInoutWrapper>
-					{addInput()}
-
-					<StyledItemsWrapper keyboardShouldPersistTaps="always" bottomSheetHeight={bottomSheetHeight}>
-						{listItems?.map((item: ItemInterface) => (
-							<Item key={item?.id} {...item} />
-						))}
-					</StyledItemsWrapper>
-				</StyledEditInoutWrapper>
+				<>
+					{listItems && listItems?.length > 0 && (
+						<DraggableFlatList
+							data={listItems}
+							onDragEnd={({ data }: { data: ItemInterface[] }) => itemsDnDUpdate(data)}
+							style={{
+								maxHeight: '100%',
+								height: bottomSheetHeight === 1 ? '77%' : '100%',
+								paddingRight: 15,
+								paddingLeft: 15,
+							}}
+							keyExtractor={(item: ItemInterface) => item?.id}
+							renderItem={({ item, drag, isActive, getIndex }: RenderItemParams<ItemInterface>) => {
+								const newProps = {
+									...item,
+									index: getIndex()!,
+								};
+								return (
+									<OpacityDecorator>
+										<TouchableOpacity onLongPress={drag} disabled={isActive}>
+											<Item {...newProps} />
+										</TouchableOpacity>
+									</OpacityDecorator>
+								);
+							}}
+						/>
+					)}
+				</>
 			)}
 		</>
 	);

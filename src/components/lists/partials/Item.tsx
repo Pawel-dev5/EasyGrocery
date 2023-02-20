@@ -81,7 +81,7 @@ export const Item = ({ id, title, done, category, prices }: ItemInterface) => {
 								name="title"
 								placeholder="title"
 								textContentType="nickname"
-								onChange={(text) => setEditableItem({ ...editableItem, title: text as unknown as string })}
+								onChangeText={(text) => setEditableItem({ ...editableItem, title: text })}
 							/>
 						</StyledEditInputWrapper>
 					) : (

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useMemo, useCallback, useState } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { t } from 'i18next';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 // ROUTER
 import { lists } from 'routes/AppRoutes';
@@ -33,7 +33,6 @@ import {
 	StyledUsersCounter,
 	StyledUsersWrapper,
 	StyledListDescription,
-	FullListInlineStyle,
 } from 'components/lists/items/Styles';
 
 // HELPERS
@@ -70,7 +69,7 @@ export const FullListWrapper = (props: any) => {
 	const [newColor, setNewColor] = useState<string | null>(null);
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const snapPoints = useMemo(() => ['75%', '75%', '99.9%'], []);
+	const snapPoints = useMemo(() => ['4%', '78%', '99.9%'], []);
 	const handleSheetChanges = useCallback((index: number) => setBottomSheetHeight(index), []);
 
 	const listItems = filteredItems || singleList?.items;
@@ -185,17 +184,11 @@ export const FullListWrapper = (props: any) => {
 					enableContentPanningGesture={false}
 					onChange={handleSheetChanges}
 				>
-					{/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-					<BottomSheetScrollView
-						keyboardShouldPersistTaps="always"
-						contentContainerStyle={FullListInlineStyle?.contentContainer}
-					>
-						{editedSingleList ? (
-							<EditListForm bottomSheetHeight={bottomSheetHeight} setNewColor={setNewColor} />
-						) : (
-							<ListItems listItems={listItems!} bottomSheetHeight={bottomSheetHeight} />
-						)}
-					</BottomSheetScrollView>
+					{editedSingleList ? (
+						<EditListForm bottomSheetHeight={bottomSheetHeight} setNewColor={setNewColor} />
+					) : (
+						<ListItems listItems={listItems!} bottomSheetHeight={bottomSheetHeight} />
+					)}
 				</BottomSheet>
 			</StyledListBackground>
 		</AppWrapper>

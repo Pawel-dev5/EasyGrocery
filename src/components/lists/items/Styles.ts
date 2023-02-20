@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 export const StyledListCard = styled.View<{ color: string | null; lastElement: boolean; firstElement: boolean }>`
@@ -120,17 +119,5 @@ export const StyledUserCounter = styled.Text`
 	margin-left: 5px;
 	margin-top: -2px;
 `;
-
-export const FullListInlineStyle = StyleSheet.create({
-	contentContainer: {
-		width: '100%',
-		maxHeight: '97.5%',
-		flexDirection: 'column',
-		paddingRight: 16,
-		paddingLeft: 16,
-		paddingTop: 0,
-		paddingBottom: 0,
-	},
-});
 
 // ========= END FULL LIST ===========

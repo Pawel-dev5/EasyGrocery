@@ -52,7 +52,7 @@ export const Register = (props: any) => {
 					<StyledInputWrapper>
 						<ControllerWrapper
 							name="username"
-							placeholder={t('general.nick')}
+							placeholder={t<string>('general.nick')}
 							keyboardType="default"
 							textContentType="nickname"
 							control={control}
@@ -75,7 +75,7 @@ export const Register = (props: any) => {
 					<StyledInputWrapper>
 						<ControllerWrapper
 							name="password"
-							placeholder={t('auth.password')}
+							placeholder={t<string>('auth.password')}
 							textContentType="password"
 							autoComplete="password"
 							type="password"
@@ -87,7 +87,7 @@ export const Register = (props: any) => {
 					<StyledInputWrapper>
 						<ControllerWrapper
 							name="confirmPassword"
-							placeholder={t('auth.cofirmPassword')}
+							placeholder={t<string>('auth.cofirmPassword')}
 							textContentType="password"
 							type="password"
 							control={control}

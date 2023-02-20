@@ -35,7 +35,9 @@ export const Product = (props: any) => {
 
 		return { pricesArray, titlesArray };
 	};
+
 	console.log(data?.imageUrl);
+
 	return (
 		<AppWrapper {...props}>
 			<View>

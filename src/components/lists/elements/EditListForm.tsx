@@ -117,7 +117,7 @@ export const EditListForm = ({ bottomSheetHeight, setNewColor }: EditListFormInt
 					<StyledEditFormWrapperTitle>{t<string>('general.title')}</StyledEditFormWrapperTitle>
 					<ControllerWrapper
 						name="title"
-						placeholder={t('general.title') || ''}
+						placeholder={t<string>('general.title') || ''}
 						textContentType="nickname"
 						control={control}
 						errors={errors}
@@ -128,7 +128,7 @@ export const EditListForm = ({ bottomSheetHeight, setNewColor }: EditListFormInt
 					<StyledEditFormWrapperTitle>{t<string>('general.description')}</StyledEditFormWrapperTitle>
 					<ControllerWrapper
 						name="description"
-						placeholder={t('general.description') || ''}
+						placeholder={t<string>('general.description') || ''}
 						textContentType="none"
 						control={control}
 						errors={errors}
@@ -155,7 +155,7 @@ export const EditListForm = ({ bottomSheetHeight, setNewColor }: EditListFormInt
 							<Search
 								setSearchIcons={setSearchIcons}
 								name={t('general.searchUser')}
-								placeholder={t('general.searchUser')}
+								placeholder={t<string>('general.searchUser')}
 								textContentType="none"
 								results={searchedUsers}
 								actualUsers={listUsers}

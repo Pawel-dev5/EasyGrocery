@@ -6,7 +6,7 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 // REDUX
 import { globalSetAlert } from 'redux/slices/global';
-import { listsUpdateListStatus, listsDeleteListItem } from 'redux/slices/lists';
+import { listsUpdateListStatus, listsDeleteListItem, listsUpdateDnDListItem } from 'redux/slices/lists';
 
 // REQUESTS
 import { updateListItems } from 'redux/sagas/lists/listRequests';
@@ -63,4 +63,5 @@ function* handleListFlow() {
 export default function* watcherLists() {
 	yield takeLatest(listsUpdateListStatus, handleListFlow);
 	yield takeLatest(listsDeleteListItem, handleListFlow);
+	yield takeLatest(listsUpdateDnDListItem, handleListFlow);
 }

@@ -18,6 +18,7 @@ import {
 	listsUpdateListStatus,
 	selectLists,
 	listsDeleteListItem,
+	listsUpdateDnDListItem,
 } from 'redux/slices/lists';
 
 // MODELS
@@ -288,6 +289,10 @@ export const useList = () => {
 			sendSingleListPutRequest([], () => setSortedListItemsByCategories([]));
 	};
 
+	const itemsDnDUpdate = (newItems: ItemInterface[]) => {
+		if (singleList?.items) dispatch(listsUpdateDnDListItem(newItems));
+	};
+
 	const deleteSingleListItem = (id: string) => {
 		if (singleList?.items) dispatch(listsDeleteListItem(id));
 	};
@@ -460,6 +465,7 @@ export const useList = () => {
 		setListUsers,
 		addSingleListItem,
 		deleteSingleListItem,
+		itemsDnDUpdate,
 		clearSingleListItems,
 		updateSingleListItemStatus,
 		updateSingleListItemName,

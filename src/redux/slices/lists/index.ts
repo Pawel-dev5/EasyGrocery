@@ -42,6 +42,8 @@ export const listsSlice = createSlice({
 		listsSetList: (state, action: PayloadAction<SingleListInterface | null>) => {
 			state.list = action.payload;
 		},
+
+		// SAGA HANDLERS
 		listsUpdateListStatus: (state, action: PayloadAction<string>) => {
 			if (state?.list) {
 				const newData = updateObjectInArray(state?.list.items, 'id', action.payload, (todo: ItemInterface) =>
@@ -54,6 +56,11 @@ export const listsSlice = createSlice({
 			if (state?.list) {
 				const newData = state?.list?.items?.filter((item) => item?.id !== action.payload);
 				state.list = { ...state.list, items: newData };
+			}
+		},
+		listsUpdateDnDListItem: (state, action: PayloadAction<ItemInterface[]>) => {
+			if (state?.list) {
+				state.list = { ...state.list, items: action.payload };
 			}
 		},
 	},
@@ -70,6 +77,7 @@ export const {
 	listsSetList,
 	listsUpdateListStatus,
 	listsDeleteListItem,
+	listsUpdateDnDListItem,
 } = listsSlice.actions;
 
 export const selectLists = (state: RootState) => state.lists;

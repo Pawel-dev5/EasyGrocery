@@ -112,7 +112,7 @@ const ListsWrapper = (props: any) => {
 					<StyledAddListWrapper>
 						<ControllerWrapper
 							name="title"
-							placeholder={t('general.title')}
+							placeholder={t<string>('general.title')}
 							textContentType="nickname"
 							control={control}
 							errors={errors}

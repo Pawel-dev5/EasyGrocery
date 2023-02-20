@@ -108,10 +108,6 @@ export const StyledItemsCategory = styled.TouchableOpacity<{ active: boolean }>`
 		`};
 `;
 
-export const StyledEditInoutWrapper = styled.View`
-	max-width: 100%;
-`;
-
 export const StyledItemsContainer = styled.View`
 	max-width: 100%;
 	padding: 10px 0;
@@ -137,21 +133,6 @@ export const StyledCheckButton = styled.TouchableOpacity`
 
 export const StyledEditInputWrapper = styled.View`
 	width: 90%;
-`;
-
-export const StyledItemsWrapper = styled.ScrollView<{ bottomSheetHeight: number }>`
-	${({ bottomSheetHeight }) => {
-		switch (bottomSheetHeight) {
-			case 1:
-				return css`
-					height: 78.1%;
-				`;
-			default:
-				return css`
-					height: 92.6%;
-				`;
-		}
-	}}
 `;
 
 export const StyledItemButton = styled.TouchableOpacity`

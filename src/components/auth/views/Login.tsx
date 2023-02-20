@@ -65,7 +65,7 @@ export const Login = (props: any) => {
 					<StyledInputWrapper>
 						<ControllerWrapper
 							name="password"
-							placeholder={t('auth.password')}
+							placeholder={t<string>('auth.password')}
 							textContentType="password"
 							autoComplete="password"
 							control={control}
