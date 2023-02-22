@@ -22,13 +22,13 @@ import {
 	StyledPricesWrapper,
 	StyledAddButton,
 	StyledHeader,
-} from 'components/shops/sections/Styles';
+} from 'components/product/sections/Styles';
 import { shadowInline } from 'utils/theme/themeDefault';
 
 // MODELS
 import { ProductPropsInterface } from 'components/shops/models/sections';
 
-const Product = ({
+const ProductCard = ({
 	id,
 	imageUrl,
 	title,
@@ -38,19 +38,21 @@ const Product = ({
 	createdAt,
 	updatedAt,
 	navigation,
+	shopSlug,
+	customWidth,
 	setBottomSheetState,
 }: ProductPropsInterface) => {
 	const dispatch = useAppDispatch();
 	const sortedPrices = prices?.reverse();
 
 	return (
-		<StyledProductWrapper>
+		<StyledProductWrapper customWidth={customWidth}>
 			<TouchableOpacity
 				onPress={() => {
 					dispatch(
 						productSetProduct({ id, imageUrl, title, description, prices: sortedPrices, category, createdAt, updatedAt }),
 					);
-					navigation?.navigate(product.product, { slug: title });
+					navigation?.navigate(product.product, { shop: shopSlug, category, slug: title });
 				}}
 			>
 				<StyledHeader>
@@ -76,10 +78,11 @@ const Product = ({
 			<StyledAddButton
 				style={shadowInline}
 				onPress={() => {
-					setBottomSheetState({
-						visible: true,
-						product: { id, imageUrl, title, description, prices, category, createdAt, updatedAt },
-					});
+					if (setBottomSheetState)
+						setBottomSheetState({
+							visible: true,
+							product: { id, imageUrl, title, description, prices, category, createdAt, updatedAt },
+						});
 				}}
 			>
 				<Icon name="plus" size={20} variant="black" />
@@ -88,4 +91,4 @@ const Product = ({
 	);
 };
 
-export default memo(Product);
+export default memo(ProductCard);

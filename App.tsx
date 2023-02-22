@@ -32,10 +32,10 @@ import { Profile } from 'components/user';
 import { ListVariant } from 'components/lists/models/sections';
 import { Lists } from 'components/lists';
 import { List } from 'components/lists/sections';
-import { Shops, Shop, ProductsList } from 'components/shops';
+import { Shops, Shop } from 'components/shops';
 import { Notifications } from 'components/notifications';
 import { useAuth } from 'components/auth/hooks/useAuth';
-import { Product } from 'components/product';
+import { Product, ProductsList } from 'components/product';
 
 const { Screen, Navigator } = createNativeStackNavigator();
 

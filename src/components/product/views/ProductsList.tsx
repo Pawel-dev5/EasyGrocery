@@ -16,7 +16,8 @@ import { useProductsList } from 'components/shops/hooks/useProductsList';
 
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
-import { BottomSheetRenderItem, Product } from 'components/shops/sections';
+import { BottomSheetRenderItem } from 'components/shops/sections';
+import { ProductCard } from 'components/product/sections';
 import { Icon } from 'components/layout/common';
 
 // STYLES
@@ -57,6 +58,7 @@ export const ProductsList = (props: any) => {
 		getProducts,
 		getProductsOffset,
 		addProductToList,
+		getProductSimilarItems,
 	} = useProductsList({
 		url: slug,
 		category,
@@ -193,7 +195,16 @@ export const ProductsList = (props: any) => {
 									prices: newPrices,
 								};
 								delete newProps[pricesKey as keyof ProductInterface];
-								return <Product {...newProps} setBottomSheetState={setBottomSheetState} navigation={navigation} />;
+								return (
+									<ProductCard
+										customWidth="45%"
+										{...newProps}
+										setBottomSheetState={setBottomSheetState}
+										navigation={navigation}
+										getProductSimilarItems={getProductSimilarItems}
+										shopSlug={slug}
+									/>
+								);
 							}}
 							keyExtractor={(item) => item?.id}
 							onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}
@@ -231,7 +242,16 @@ export const ProductsList = (props: any) => {
 							prices: newPrices,
 						};
 						delete newProps[pricesKey as keyof ProductInterface];
-						return <Product {...newProps} setBottomSheetState={setBottomSheetState} navigation={navigation} />;
+						return (
+							<ProductCard
+								customWidth="45%"
+								{...newProps}
+								setBottomSheetState={setBottomSheetState}
+								navigation={navigation}
+								getProductSimilarItems={getProductSimilarItems}
+								shopSlug={slug}
+							/>
+						);
 					}}
 					keyExtractor={(item) => item?.id}
 					onScroll={(e) => setScrollOffset(e.nativeEvent.contentOffset.y)}

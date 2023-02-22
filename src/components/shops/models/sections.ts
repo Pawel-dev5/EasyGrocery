@@ -10,6 +10,9 @@ export interface BottomSheetRenderItemInterface {
 }
 
 export interface ProductPropsInterface extends ProductInterface {
-	setBottomSheetState: ({ visible, product }: { visible: boolean; product: ProductInterface }) => void;
+	setBottomSheetState?: ({ visible, product }: { visible: boolean; product: ProductInterface }) => void;
 	navigation: any;
+	getProductSimilarItems: (e: string[]) => void;
+	shopSlug: string;
+	customWidth?: string;
 }

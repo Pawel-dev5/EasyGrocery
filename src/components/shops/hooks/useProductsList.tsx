@@ -13,7 +13,7 @@ import { AlertTypes } from 'redux/slices/global/models';
 import { AddProductInterface, ProductInterface } from 'components/shops/models/hooks';
 
 // UTILS
-import { listQuery, shopsPromotionQuery, shopsQuery } from 'utils/queries';
+import { listQuery, productQuery, shopsPromotionQuery, shopsQuery } from 'utils/queries';
 
 // HELPERS
 import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
@@ -29,6 +29,7 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 
 	const [productsList, setProductsList] = useState<ProductInterface[] | null>(null);
 	const [lastWeekPromotions, setLastWeekPromotions] = useState<ProductInterface[] | null>(null);
+	const [similarProductsList, setSimilarProductsList] = useState<ProductInterface[] | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [totalProductsCount, setTotalProductsCount] = useState(0);
 	const [totalPromotionsCount, setTotalPromotionsCount] = useState(0);
@@ -179,14 +180,42 @@ export const useProductsList = ({ url, category }: { url: string; category: stri
 		}
 	};
 
+	const getProductSimilarItems = (slicedTitle: string[]) => {
+		axios({
+			method: 'get',
+			url: `${baseApi}?${productQuery(url, category, 1, slicedTitle)}`,
+			headers: {
+				Authorization: null,
+			},
+		})
+			.then((resp) => {
+				const newArr: any = [];
+				resp?.data?.data?.forEach((item: any) => {
+					const pricesKey = `${url}Prices`;
+					const newPrices: any = item?.attributes[pricesKey as keyof ProductInterface];
+					newArr.push({ id: item?.id, ...{ ...item?.attributes, prices: newPrices } });
+				});
+				setSimilarProductsList(newArr);
+			})
+			.catch((error) => {
+				if (error?.response?.data?.error?.message) {
+					const { message, status, name } = error.response.data.error.message;
+					dispatch(globalSetAlert({ id: uuidv4(), type: AlertTypes.ERROR, message, status, name }));
+				}
+			})
+			.finally(() => setIsLoading(false));
+	};
+
 	return {
 		isLoading,
 		productsList,
 		lastWeekPromotions,
 		totalProductsCount,
 		totalPromotionsCount,
+		similarProductsList,
 		getProducts,
 		getProductsOffset,
 		addProductToList,
+		getProductSimilarItems,
 	};
 };

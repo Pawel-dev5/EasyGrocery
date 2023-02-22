@@ -30,5 +30,5 @@ export const notifications = {
 };
 
 export const product = {
-	product: '/product/:slug',
+	product: '/:shop/:category/:slug',
 };

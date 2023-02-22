@@ -30,7 +30,5 @@ export const shopsSlice = createSlice({
 });
 
 export const { shopsSetshops, shopsSetshop } = shopsSlice.actions;
-
 export const selectShops = (state: RootState) => state.shops;
-
 export default shopsSlice.reducer;

@@ -111,6 +111,36 @@ export const searchUserQuery = (currentUser: string, value: string) =>
 	);
 
 // SHOPS QUERIES
+export const productQuery = (
+	shopName: string,
+	category: string[] | string,
+	paginationStart: number,
+	slicedTitle?: string[],
+) =>
+	qs.stringify(
+		{
+			populate: {
+				[`${shopName}Prices`]: {
+					populate: '*',
+				},
+			},
+			filters: {
+				category: {
+					$in: category,
+				},
+				title: {
+					$contains: slicedTitle,
+				},
+			},
+			pagination: {
+				page: paginationStart,
+				pageSize: 20,
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		},
+	);
 export const shopsQuery = (shopName: string, category: string[], paginationStart: number, searchValue?: string) =>
 	qs.stringify(
 		{

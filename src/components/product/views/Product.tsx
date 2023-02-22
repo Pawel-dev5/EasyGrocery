@@ -1,57 +1,87 @@
-import React from 'react';
-import { Text, View, Dimensions, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, Dimensions, Image, FlatList, Pressable } from 'react-native';
+import { t } from 'i18next';
 import { LineChart } from 'react-native-chart-kit';
+
+// ROUTER
+import { product } from 'routes/AppRoutes';
 
 // REDUX
 import { useAppSelector } from 'redux/hooks';
 import { selectProduct } from 'redux/slices/product';
 
+// HOOKS
+import { useProductsList } from 'components/shops/hooks/useProductsList';
+
 // COMPONENTS
 import { AppWrapper } from 'components/layout';
+import { ProductCard } from 'components/product/sections';
+
+// STYLES
+import { ProductSimilarItemsInlineStyle } from 'components/product/views/Styles';
 
 export const Product = (props: any) => {
 	const productState = useAppSelector(selectProduct);
 	const { data } = productState;
+	const {
+		route: {
+			params: { shop, category },
+		},
+		navigation,
+	} = props;
 
-	const chartData = () => {
+	const { getProductSimilarItems, similarProductsList } = useProductsList({
+		url: shop,
+		category,
+	});
+
+	const last30DaysData = () => {
 		const pricesArray: number[] = [];
 		const titlesArray: string[] = [];
 
-		data?.prices?.forEach((price) => {
-			const tmp = price.price?.replace(' zł', '')?.replace(',', '.')?.trim();
-			console.log(price?.date?.slice(5));
-			pricesArray.push(Number(tmp));
-			titlesArray.push(price?.date?.slice(5));
-
-			pricesArray.push(Number(tmp) + 1.5);
-			titlesArray.push(price?.date?.slice(5));
-			pricesArray.push(Number(tmp) + 2);
-			titlesArray.push(price?.date?.slice(5));
-			pricesArray.push(Number(tmp) + 1);
-			titlesArray.push(price?.date?.slice(5));
-			pricesArray.push(Number(tmp) + 1.5);
-			titlesArray.push(price?.date?.slice(5));
+		data?.prices?.forEach((price, index) => {
+			const priceAsNumber = price.price?.replace(' zł', '')?.replace(',', '.')?.trim();
+			pricesArray.push(Number(priceAsNumber));
+			if (index % 2 === 0) titlesArray.push(price?.date);
 		});
 
+		pricesArray.reverse();
+		titlesArray.reverse();
 		return { pricesArray, titlesArray };
 	};
 
-	console.log(data?.imageUrl);
+	useEffect(() => {
+		// eslint-disable-next-line no-useless-escape
+		const regExTitle = data?.title.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')?.split(' ');
+		const newArr: string[] = [];
+		if (regExTitle && regExTitle?.length > 0) {
+			regExTitle?.forEach((element) => {
+				if (element.length > 1) newArr.push(element);
+			});
+		}
+
+		if (newArr.length > 0) getProductSimilarItems(newArr);
+	}, []);
 
 	return (
-		<AppWrapper {...props}>
+		<AppWrapper {...props} stopSwipe routeName={t(`shopCategories.${category}`)}>
 			<View>
 				<View>
 					{data?.imageUrl && <Image source={{ uri: data?.imageUrl }} style={{ width: 100, height: 100 }} />}
 					<Text>{data?.title}</Text>
 				</View>
 
+				<View>
+					<Text>Cena:</Text>
+					<Text>30dni</Text>
+				</View>
+
 				<LineChart
 					data={{
-						labels: chartData()?.titlesArray,
+						labels: last30DaysData()?.titlesArray,
 						datasets: [
 							{
-								data: chartData()?.pricesArray,
+								data: last30DaysData()?.pricesArray,
 								strokeWidth: 2,
 							},
 						],
@@ -72,6 +102,33 @@ export const Product = (props: any) => {
 						marginVertical: 8,
 						borderRadius: 16,
 					}}
+					fromZero
+					bezier
+					onDataPointClick={(pointData) => console.log(pointData)}
+					yAxisSuffix=" zł"
+				/>
+
+				<Text>Podobne produkty:</Text>
+				<FlatList
+					contentContainerStyle={ProductSimilarItemsInlineStyle?.categoriesContainer}
+					horizontal
+					data={similarProductsList}
+					ItemSeparatorComponent={() => <View style={{ height: 10, width: 16 }} />}
+					renderItem={({ item }) => (
+						<Pressable
+							style={{ width: 180, height: 200 }}
+							key={item?.id}
+							onPress={() => navigation?.navigate(product.product, { shop, category, slug: item?.title })}
+						>
+							<ProductCard
+								{...item}
+								navigation={navigation}
+								getProductSimilarItems={getProductSimilarItems}
+								shopSlug={shop}
+							/>
+						</Pressable>
+					)}
+					keyExtractor={(item) => item?.id}
 				/>
 			</View>
 		</AppWrapper>
