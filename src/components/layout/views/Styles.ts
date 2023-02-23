@@ -102,5 +102,5 @@ export const styles = StyleSheet.create({
 		overflow: 'hidden',
 	},
 	componentContainer: { width: '100%', display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center' },
-	componentButton: { width: 35, height: 35, justifyContent: 'center', alignItems: 'flex-end' },
+	componentButton: { width: 35, height: 35, justifyContent: 'center', alignItems: 'center', marginRight: -10 },
 });

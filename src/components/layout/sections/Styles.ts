@@ -123,6 +123,6 @@ export const searchBarInlineStyles = StyleSheet.create({
 		textAlign: 'left',
 		fontWeight: '500',
 		overflow: 'hidden',
-		width: '80%',
+		width: '90%',
 	},
 });

@@ -31,7 +31,9 @@ export const StyledIcon = styled(FontAwesome5)<{ variant?: VariantType }>`
 				`;
 
 			default:
-				return null;
+				return css`
+					color: ${({ theme }) => theme.black};
+				`;
 		}
 	}}
 `;
@@ -53,7 +55,6 @@ export const StyledInput = styled.TextInput<{ globalSearch: boolean }>`
 
 export const StyledProgressBarContainer = styled.View<{ variant: ProgressBarVariant }>`
 	height: 7px;
-
 	position: relative;
 
 	${({ variant }) => {

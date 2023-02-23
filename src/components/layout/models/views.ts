@@ -33,4 +33,6 @@ export interface AppLayoutInterface {
 	onClose?: () => void;
 	stopSwipe?: boolean;
 	searchActive?: boolean;
+	globalAddInput?: boolean;
+	globalInputLoader?: boolean;
 }

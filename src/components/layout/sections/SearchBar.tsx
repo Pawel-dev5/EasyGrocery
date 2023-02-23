@@ -20,21 +20,21 @@ const InputWrapper = ({ fontSize, routeName, marginLeft, searchActive }: SearchB
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const { globalSearchInput } = globalState;
-	const [searchedUsers, setSearchedUsers] = useState(globalSearchInput);
+	const [searchedData, setSearchedData] = useState(globalSearchInput);
 
 	return (
 		<Input
 			name="globalSearch"
-			value={searchedUsers}
+			value={searchedData}
 			textContentType="nickname"
-			onSubmitEditing={() => dispatch(globalSetGlobalSearchInput(searchedUsers))}
-			onChangeText={(e) => setSearchedUsers(e)}
+			onSubmitEditing={() => dispatch(globalSetGlobalSearchInput(searchedData))}
+			onChangeText={(e) => setSearchedData(e)}
 			blurOnSubmit={false}
 			placeholderTextColor={searchActive ? theme.grey400 : theme.black}
 			placeholder={routeName}
 			customStyle={{ fontSize, marginLeft, ...searchBarInlineStyles.componentTitle }}
 			editable={searchActive}
-			autoFocus={searchedUsers === ''}
+			autoFocus={searchedData === ''}
 			globalSearch
 		/>
 	);

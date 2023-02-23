@@ -1,8 +1,5 @@
 import styled, { css } from 'styled-components/native';
 
-// STYLES
-import { StyledActionButton } from 'components/lists/items/Styles';
-
 export const StyledEditButton = styled.TouchableOpacity<{ variant?: string }>`
 	width: 48%;
 	margin: 10px 0;
@@ -35,24 +32,6 @@ export const StyledItemsCategoryWrapper = styled.View`
 	align-items: center;
 	max-width: 70%;
 	margin-top: 10px;
-`;
-
-export const StyledAddItemButton = styled(StyledActionButton)`
-	height: 42px;
-	border: 1px solid ${({ theme }) => theme.grey200};
-	margin-left: 10px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: ${({ theme }) => theme.radius[2]};
-`;
-
-export const StyledAddNewItem = styled.View`
-	width: 88%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 10px;
 `;
 
 export const StyledSortedCategoryTitle = styled.Text`

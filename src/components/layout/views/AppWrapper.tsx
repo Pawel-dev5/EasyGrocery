@@ -54,13 +54,15 @@ export const AppWrapper = ({
 	bottomSheetHeader,
 	stopSwipe,
 	searchActive,
+	globalAddInput,
+	globalInputLoader,
 }: AppLayoutInterface) => {
 	const dispatch = useAppDispatch();
 	const globalState = useAppSelector(selectGlobal);
 	const socketState = useAppSelector(selectSocket);
 	const notificationsState = useAppSelector(selectNotifications);
 	const notifications = notificationsState?.items;
-	const { user, token, alerts } = globalState;
+	const { user, token, alerts, globalSearchInput } = globalState;
 
 	// BOTTOMSHEET CONFIG
 	const bottomSheetRef = useRef<BottomSheet>(null);
@@ -171,7 +173,7 @@ export const AppWrapper = ({
 						}}
 					>
 						<AnimatedSearchBar
-							searchActive={animationStart}
+							searchActive={searchActive || globalAddInput ? animationStart : false}
 							fontSize={fontSize}
 							routeName={routeName}
 							marginLeft={routeName === t<string>('general.myLists') || !navigation?.canGoBack() ? 16 : undefined}
@@ -180,11 +182,18 @@ export const AppWrapper = ({
 						<TouchableOpacity
 							onPress={() => {
 								setAnimationStart(!animationStart);
-								dispatch(globalSetGlobalSearchInput(''));
+								if ((searchActive || globalAddInput) && globalSearchInput !== '') dispatch(globalSetGlobalSearchInput(''));
 							}}
 							style={styles.componentButton}
 						>
-							{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
+							{globalInputLoader ? (
+								<Loader size={25} />
+							) : (
+								<>
+									{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
+									{globalAddInput && <Icon name={animationStart ? 'times' : 'plus'} size={20} />}
+								</>
+							)}
 						</TouchableOpacity>
 					</Animated.View>
 				</View>

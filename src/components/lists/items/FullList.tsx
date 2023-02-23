@@ -8,8 +8,8 @@ import { lists } from 'routes/AppRoutes';
 
 // REDUX
 import { selectShops } from 'redux/slices/shops';
-import { selectGlobal } from 'redux/slices/global';
-import { useAppSelector } from 'redux/hooks';
+import { globalSetGlobalSearchInput, selectGlobal } from 'redux/slices/global';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 
 // CONTEXT
 import { ContextProvider, ListsContextData } from 'components/lists/hooks/useList';
@@ -39,10 +39,11 @@ import {
 import { listPricesSum } from 'components/lists/helpers/priceHelpers';
 
 export const FullListWrapper = (props: any) => {
+	const dispatch = useAppDispatch();
 	const shopState = useAppSelector(selectShops);
 	const globalState = useAppSelector(selectGlobal);
 	const { shops } = shopState;
-	const { token } = globalState;
+	const { token, globalSearchInput } = globalState;
 
 	const {
 		singleList,
@@ -59,6 +60,8 @@ export const FullListWrapper = (props: any) => {
 		editedSingleList,
 		sortedListItemsByCategories,
 		isLoading,
+		addSingleListItem,
+		addNewListItemLoader,
 	} = useContext(ListsContextData);
 	const { getShops } = useShops();
 
@@ -82,8 +85,21 @@ export const FullListWrapper = (props: any) => {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (globalSearchInput !== '') {
+			addSingleListItem(globalSearchInput, () => dispatch(globalSetGlobalSearchInput('')));
+		}
+	}, [globalSearchInput]);
+
 	return (
-		<AppWrapper {...props} isLoading={isLoading} routeName={singleList?.title || t('general.myLists')} customPadding="0">
+		<AppWrapper
+			{...props}
+			isLoading={isLoading}
+			routeName={singleList?.title || t('general.myLists')}
+			customPadding="0"
+			globalAddInput
+			globalInputLoader={addNewListItemLoader}
+		>
 			<StyledListBackground color={newColor || singleList?.color!}>
 				<StyledFullListWrapper>
 					<StyledHeaderOptions>

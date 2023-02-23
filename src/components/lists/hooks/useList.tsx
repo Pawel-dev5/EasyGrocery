@@ -1,4 +1,4 @@
-import React, { ChangeEvent, createContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FieldValues, useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +23,6 @@ import {
 
 // MODELS
 import { ItemInterface, ListInterface } from 'components/lists/models/sections';
-import { SingleListEditableInitialInterface } from 'components/lists/models/hooks';
 import { SingleListInterface } from 'components/lists/models/items';
 import { EditItemInterface } from 'components/lists/models/elements';
 import { ContextProviderProps, SocketErrorInterface, User } from 'config/models';
@@ -36,23 +35,13 @@ import { findObjectInArray, updateObjectInArray } from 'utils/helpers/arrayHelpe
 import { useDebounce } from 'utils/helpers/useDebounce';
 import { listQuery, listNotificationQuery, searchUserQuery, userQuery } from 'utils/queries';
 import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
+import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
 
 const schema = yup
 	.object({
 		title: yup.string().required(),
 	})
 	.required();
-
-const SingleListEditableInitial: SingleListEditableInitialInterface = {
-	isEdited: null,
-	value: {
-		title: null,
-		newItem: {
-			title: null,
-			done: false,
-		},
-	},
-};
 
 export const useList = () => {
 	// REDUX
@@ -70,8 +59,6 @@ export const useList = () => {
 
 	// NEW LIST ALL VALUES EDITITED
 	const [editedSingleList, setEditedSingleList] = useState<SingleListInterface | null>(null);
-	const [singleListItemsEditable, setSingleListItemsEditable] =
-		useState<SingleListEditableInitialInterface>(SingleListEditableInitial);
 	const [listUsers, setListUsers] = useState<User[]>([]);
 	const [newShop, setNewShop] = useState<ShopDataInterface | null>(null);
 	const [sortedListItemsByCategories, setSortedListItemsByCategories] = useState<any | null>([]);
@@ -260,26 +247,18 @@ export const useList = () => {
 				});
 	};
 
-	const inputHandler = (title: ChangeEvent<HTMLInputElement> | string) => {
-		const newItem = {
-			title: title as string,
-			done: false,
-		};
-		setSingleListItemsEditable({
-			isEdited: 'items',
-			value: { ...singleListItemsEditable?.value, newItem },
-		});
-	};
-
-	const addSingleListItem = () => {
+	const addSingleListItem = (title: string, callback: () => void) => {
 		setAddNewListItemLoader(true);
 		if (singleList?.items) {
-			const newItems = singleList?.items;
-			const newData = [...newItems, singleListItemsEditable?.value?.newItem];
+			const newItem = {
+				title,
+				done: false,
+			};
+
+			const newData = [...singleList.items, newItem];
 			sendSingleListPutRequest(newData as ItemInterface[], () => {
-				inputHandler('');
 				setAddNewListItemLoader(false);
-				setSingleListItemsEditable(SingleListEditableInitial);
+				callback();
 			});
 		}
 	};
@@ -429,21 +408,42 @@ export const useList = () => {
 		const newListItems: any = [];
 		if (categories && categories?.length > 0 && itemsToSort && itemsToSort?.length > 0) {
 			categories.forEach(({ value }) => {
+				const parentCategoryItems = itemsToSort?.filter(({ category }) => category?.toLowerCase() === value?.toLowerCase());
+				const childCategoryItems: ItemInterface[] = [];
+
+				categoriesHandler(value)?.forEach((childCat) => {
+					const newItems = itemsToSort?.filter(({ category }) => category?.toLowerCase() === childCat?.toLowerCase());
+					if (newItems) childCategoryItems?.push(...newItems);
+				});
+
 				const newCategoryItems = {
 					category: value,
-					items: itemsToSort?.filter(({ category }) => category?.toLowerCase() === value?.toLowerCase()),
+					childCategories: categoriesHandler(value),
+					items: [...parentCategoryItems, ...childCategoryItems],
 				};
-				if (newCategoryItems) newListItems.push(newCategoryItems);
+				if (newCategoryItems) {
+					newListItems.push(newCategoryItems);
+				}
 			});
 		}
 		if (newListItems?.length > 0) setSortedListItemsByCategories(newListItems);
 	};
 
+	useEffect(() => {
+		if (
+			singleList?.shop?.orders &&
+			singleList?.shop?.orders?.length > 0 &&
+			singleList?.items &&
+			singleList?.items?.length > 0 &&
+			sortedListItemsByCategories?.length > 0
+		)
+			sortItemsByCategories();
+	}, [singleList?.items]);
+
 	return {
 		singleList,
 		isLoading,
 		user,
-		singleListItemsEditable,
 		filteredItems,
 		showDone,
 		visible,
@@ -473,7 +473,6 @@ export const useList = () => {
 		getList,
 		deleteList,
 		setNewList,
-		inputHandler,
 		setShowDone,
 		setVisible,
 		handleSubmit,
