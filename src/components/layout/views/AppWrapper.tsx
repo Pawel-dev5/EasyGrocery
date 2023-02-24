@@ -155,7 +155,12 @@ export const AppWrapper = ({
 				<View style={styles.componentContainer}>
 					{navigation?.canGoBack() && routeName !== t<string>('general.myLists') && (
 						<View style={{ width: 45, aspectRatio: 1 }}>
-							<StyledButton onPress={() => navigation?.goBack()}>
+							<StyledButton
+								onPress={() => {
+									navigation?.goBack();
+									if (globalSearchInput) dispatch(globalSetGlobalSearchInput(''));
+								}}
+							>
 								<Icon variant="grey" name="angle-left" size={30} />
 							</StyledButton>
 						</View>
@@ -190,8 +195,9 @@ export const AppWrapper = ({
 								<Loader size={25} />
 							) : (
 								<>
-									{searchActive && <Icon name={animationStart ? 'times' : 'search'} size={20} />}
-									{globalAddInput && <Icon name={animationStart ? 'times' : 'plus'} size={20} />}
+									{(searchActive || globalAddInput) && (
+										<Icon name={animationStart ? 'times' : `${globalAddInput ? 'plus' : 'search'}`} size={20} />
+									)}
 								</>
 							)}
 						</TouchableOpacity>

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { t } from 'i18next';
+import { TouchableOpacity } from 'react-native';
 import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
 // CONTEXT
@@ -8,9 +7,7 @@ import { ListsContextData } from 'components/lists/hooks/useList';
 
 // COMPONENTS
 import { Item } from 'components/lists/partials';
-
-// STYLES
-import { StyledSortedCategoryTitle } from 'components/lists/elements/Styles';
+import { ExpandableList } from 'components/layout/common/expandableListView';
 
 // MODELS
 import { ItemInterface } from 'components/lists/models/sections';
@@ -22,16 +19,7 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 	return (
 		<>
 			{sortedListItemsByCategories?.length > 0 ? (
-				<ScrollView keyboardShouldPersistTaps="always">
-					{sortedListItemsByCategories?.map((item: any) => (
-						<View key={item?.category}>
-							<StyledSortedCategoryTitle>{t<string>(`shopCategories.${item?.category}`)}</StyledSortedCategoryTitle>
-							{item?.items?.map((newItem: ItemInterface) => (
-								<Item key={newItem?.id} {...newItem} />
-							))}
-						</View>
-					))}
-				</ScrollView>
+				<ExpandableList data={sortedListItemsByCategories} bottomSheetHeight={bottomSheetHeight} />
 			) : (
 				<>
 					{listItems && listItems?.length > 0 && (
