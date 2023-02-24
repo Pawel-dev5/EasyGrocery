@@ -16,6 +16,8 @@ import {
 	StyledSortedCategoryTitleWrapper,
 	StyledExpandButton,
 } from 'components/layout/common/expandableListView/views/Styles';
+
+// HELPERS
 import { iconHandler } from 'components/shops/helpers/iconHandler';
 
 export const ExpandableComponent = ({ item, onClickFunction }: ExpandableComponentInterface) => {

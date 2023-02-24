@@ -1,26 +1,25 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { LayoutAnimation, Platform, UIManager, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 
 // COMPONENTS
 import { ExpandableComponent } from 'components/layout/common/expandableListView/sections';
+import { Icon } from 'components/layout/common/Icon';
 
 // MODELS
 import { DataListInterface, ExpandListInterface } from 'components/layout/common/expandableListView/models/views';
-import { Icon } from '../../Icon';
 
-const convertDataToExpand = (data: DataListInterface[]) => {
-	const newArr: ExpandListInterface[] = [];
-	if (data && data?.length > 0) {
-		data.forEach((dataItem) => newArr.push({ ...dataItem, isExpanded: true }));
-	}
-	return newArr;
-};
+// HELPERS
+import { convertDataToExpand } from 'components/layout/common/expandableListView/helpers/expandHelpers';
 
 export const ExpandableList = ({ data, bottomSheetHeight }: { data: DataListInterface[]; bottomSheetHeight: number }) => {
-	const [listDataSource, setListDataSource] = useState<ExpandListInterface[]>(convertDataToExpand(data));
+	const [listDataSource, setListDataSource] = useState<ExpandListInterface[]>(convertDataToExpand([], data));
 	const [multiSelect, setMultiSelect] = useState(true);
 
 	if (Platform.OS === 'android') UIManager.setLayoutAnimationEnabledExperimental(true);
+
+	useEffect(() => {
+		setListDataSource(convertDataToExpand(listDataSource, data));
+	}, [data]);
 
 	const updateLayout = (index: number) => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -65,23 +64,18 @@ export const ExpandableList = ({ data, bottomSheetHeight }: { data: DataListInte
 					flexDirection: 'row',
 					justifyContent: 'space-between',
 					paddingLeft: 16,
-					paddingRight: 16,
-					paddingBottom: 8,
+					paddingRight: 8,
 				}}
 			>
-				<TouchableOpacity onPress={() => setMultiSelect(!multiSelect)}>
-					<Text
-						style={{
-							textAlign: 'center',
-							justifyContent: 'center',
-						}}
-					>
-						{multiSelect ? 'Single Expand' : 'Multiple Expand'}
-					</Text>
+				<TouchableOpacity style={{ height: 30, width: 150 }} onPress={() => setMultiSelect(!multiSelect)}>
+					<Text>{multiSelect ? 'Single Expand' : 'Multiple Expand'}</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity onPress={() => (isAllExpanded() ? toggleAll('collapse') : toggleAll('expand'))}>
-					<Icon name={isAllExpanded() ? 'angle-double-up' : 'angle-double-down'} size={20} />
+				<TouchableOpacity
+					style={{ height: 30, width: 30, alignItems: 'center', justifyContent: 'center' }}
+					onPress={() => (isAllExpanded() ? toggleAll('collapse') : toggleAll('expand'))}
+				>
+					<Icon name={isAllExpanded() ? 'angle-double-up' : 'angle-double-down'} size={16} />
 				</TouchableOpacity>
 			</View>
 
