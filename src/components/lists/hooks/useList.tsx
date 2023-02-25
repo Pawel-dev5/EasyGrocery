@@ -311,7 +311,7 @@ export const useList = () => {
 			if (showDone === null) return null;
 		}
 		return null;
-	}, [showDone]);
+	}, [showDone, singleList?.items]);
 
 	const deleteUnAccessUser = () => {
 		const newArr = listUsers?.filter((item) => item?.access === 'FULL');
@@ -416,7 +416,7 @@ export const useList = () => {
 	};
 
 	const sortItemsByCategories = () => {
-		const itemsToSort = singleList?.items;
+		const itemsToSort = filteredItems || singleList?.items;
 
 		let categories = singleList?.customShopOrder;
 		if (singleList && singleList?.customShopOrder?.length > 0) {
@@ -458,7 +458,7 @@ export const useList = () => {
 			sortedListItemsByCategories?.length > 0
 		)
 			sortItemsByCategories();
-	}, [singleList?.items, singleList?.customShopOrder]);
+	}, [singleList?.items, singleList?.customShopOrder, filteredItems]);
 
 	return {
 		singleList,

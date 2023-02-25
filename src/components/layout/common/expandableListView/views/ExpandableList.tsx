@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { LayoutAnimation, Platform, UIManager, View, Text, TouchableOpacity } from 'react-native';
+import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
 // COMPONENTS
 import { ExpandableComponent } from 'components/layout/common/expandableListView/sections';
@@ -10,7 +11,6 @@ import { ExpandListDataInterface, ExpandableListInterface } from 'components/lay
 
 // HELPERS
 import { convertDataToExpand } from 'components/layout/common/expandableListView/helpers/expandHelpers';
-import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
 export const ExpandableList = ({ data, bottomSheetHeight, onDragEnd }: ExpandableListInterface) => {
 	const [listDataSource, setListDataSource] = useState<ExpandListDataInterface[]>(convertDataToExpand([], data));
@@ -53,7 +53,7 @@ export const ExpandableList = ({ data, bottomSheetHeight, onDragEnd }: Expandabl
 	};
 
 	const isAllExpanded = useCallback(() => {
-		const filteretOnlyWithItems = listDataSource?.filter((item) => item.items?.length > 0);
+		const filteretOnlyWithItems = listDataSource?.filter((item) => item?.items?.length > 0);
 		const result = filteretOnlyWithItems?.every((obj) => obj?.isExpanded);
 		return result;
 	}, [listDataSource]);

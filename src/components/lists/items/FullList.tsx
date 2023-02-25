@@ -113,14 +113,14 @@ export const FullListWrapper = (props: any) => {
 							</StyledListCardItemElement>
 						</StyledUsersWrapper>
 
-						{listPricesSum(listItems) && (
+						{listPricesSum(singleList?.items) && (
 							<StyledUsersWrapper>
 								<StyledActionButton>
 									<Icon name="money-bill-wave" size={20} />
 								</StyledActionButton>
 
 								<StyledListCardItemElement>
-									<StyledUsersCounter>{listPricesSum(listItems)}</StyledUsersCounter>
+									<StyledUsersCounter>{listPricesSum(singleList?.items)}</StyledUsersCounter>
 								</StyledListCardItemElement>
 							</StyledUsersWrapper>
 						)}
