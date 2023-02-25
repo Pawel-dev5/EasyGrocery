@@ -12,6 +12,7 @@ import { SingleListInterface } from 'components/lists/models/items';
 // HELPERS
 import { updateObjectInArray } from 'utils/helpers/arrayHelpers';
 import { updateObject } from 'utils/helpers/objectHelpers';
+import { UpdateCustomOrderInterface } from 'components/lists/models/hooks';
 
 const initialState: InitialStateInterface = {
 	lists: [],
@@ -63,6 +64,11 @@ export const listsSlice = createSlice({
 				state.list = { ...state.list, items: action.payload };
 			}
 		},
+		listsUpdateDnDListcustomShopOrder: (state, action: PayloadAction<UpdateCustomOrderInterface[]>) => {
+			if (state?.list) {
+				state.list = { ...state.list, customShopOrder: action.payload };
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(logoutAction, () => initialState);
@@ -78,6 +84,7 @@ export const {
 	listsUpdateListStatus,
 	listsDeleteListItem,
 	listsUpdateDnDListItem,
+	listsUpdateDnDListcustomShopOrder,
 } = listsSlice.actions;
 
 export const selectLists = (state: RootState) => state.lists;

@@ -19,6 +19,7 @@ import {
 	selectLists,
 	listsDeleteListItem,
 	listsUpdateDnDListItem,
+	listsUpdateDnDListcustomShopOrder,
 } from 'redux/slices/lists';
 
 // MODELS
@@ -28,6 +29,7 @@ import { EditItemInterface } from 'components/lists/models/elements';
 import { ContextProviderProps, SocketErrorInterface, User } from 'config/models';
 import { ShopDataInterface } from 'components/shops/models/hooks';
 import { AlertTypes } from 'redux/slices/global/models';
+import { UpdateCustomOrderInterface } from 'components/lists/models/hooks';
 
 // HELPERS
 import { updateObject } from 'utils/helpers/objectHelpers';
@@ -36,6 +38,7 @@ import { useDebounce } from 'utils/helpers/useDebounce';
 import { listQuery, listNotificationQuery, searchUserQuery, userQuery } from 'utils/queries';
 import { convertListShopAttrubites } from 'components/lists/helpers/convertListShopAttrubites';
 import { categoriesHandler } from 'components/shops/helpers/categoriesHandler';
+import { DataListInterface, ExpandListDataInterface } from 'components/layout/common/expandableListView/models/views';
 
 const schema = yup
 	.object({
@@ -280,6 +283,16 @@ export const useList = () => {
 		if (singleList?.items) dispatch(listsUpdateListStatus(id));
 	};
 
+	const updateListShopOrders = (data: ExpandListDataInterface[]) => {
+		if (data && data?.length > 0) {
+			const convertedToShopOrderBaseData: UpdateCustomOrderInterface[] = [];
+			data?.forEach(({ category, priority }) => convertedToShopOrderBaseData.push({ value: category, priority }));
+
+			if (convertedToShopOrderBaseData?.length > 0)
+				dispatch(listsUpdateDnDListcustomShopOrder(convertedToShopOrderBaseData));
+		}
+	};
+
 	const updateSingleListItemName = (id: string, item: EditItemInterface, callback: () => void) => {
 		if (singleList?.items) {
 			const newData = updateObjectInArray(singleList?.items, 'id', id, (todo: ItemInterface) =>
@@ -404,10 +417,15 @@ export const useList = () => {
 
 	const sortItemsByCategories = () => {
 		const itemsToSort = singleList?.items;
-		const categories = singleList?.shop?.orders;
-		const newListItems: any = [];
+
+		let categories = singleList?.customShopOrder;
+		if (singleList && singleList?.customShopOrder?.length > 0) {
+			categories = singleList?.customShopOrder;
+		}
+		const newListItems: DataListInterface[] = [];
+
 		if (categories && categories?.length > 0 && itemsToSort && itemsToSort?.length > 0) {
-			categories.forEach(({ value }) => {
+			categories.forEach(({ id, value, priority }) => {
 				const parentCategoryItems = itemsToSort?.filter(({ category }) => category?.toLowerCase() === value?.toLowerCase());
 				const childCategoryItems: ItemInterface[] = [];
 
@@ -417,6 +435,8 @@ export const useList = () => {
 				});
 
 				const newCategoryItems = {
+					id,
+					priority,
 					category: value,
 					childCategories: categoriesHandler(value),
 					items: [...parentCategoryItems, ...childCategoryItems],
@@ -438,7 +458,7 @@ export const useList = () => {
 			sortedListItemsByCategories?.length > 0
 		)
 			sortItemsByCategories();
-	}, [singleList?.items]);
+	}, [singleList?.items, singleList?.customShopOrder]);
 
 	return {
 		singleList,
@@ -483,6 +503,7 @@ export const useList = () => {
 		sortItemsByCategories,
 		setSortedListItemsByCategories,
 		setSearchIcons,
+		updateListShopOrders,
 	};
 };
 

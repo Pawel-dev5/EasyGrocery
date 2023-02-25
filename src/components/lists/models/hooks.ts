@@ -6,3 +6,9 @@ export interface UseListInterface {
 	lists?: ListInterface[];
 	setLists?: Dispatch<SetStateAction<ListInterface[]>>;
 }
+
+export interface UpdateCustomOrderInterface {
+	id?: number;
+	value: string;
+	priority: number;
+}

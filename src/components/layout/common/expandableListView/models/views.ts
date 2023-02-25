@@ -1,11 +1,19 @@
 import { ItemInterface } from 'components/lists/models/sections';
 
-export interface ExpandListInterface extends DataListInterface {
+export interface DataListInterface {
+	id?: number;
+	category: string;
+	priority: number;
+	items: ItemInterface[];
+	childCategories: string[];
+}
+
+export interface ExpandListDataInterface extends DataListInterface {
 	isExpanded: boolean;
 }
 
-export interface DataListInterface {
-	category: string;
-	items: ItemInterface[];
-	childCategories: string[];
+export interface ExpandableListInterface {
+	data: DataListInterface[];
+	bottomSheetHeight: number;
+	onDragEnd: (arg: ExpandListDataInterface[]) => void;
 }

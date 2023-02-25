@@ -2,6 +2,7 @@
 import { User } from 'config/models';
 import { ItemInterface } from 'components/lists/models/sections';
 import { ShopDataInterface } from 'components/shops/models/hooks';
+import { UpdateCustomOrderInterface } from 'components/lists/models/hooks';
 
 export interface InvitationUser {
 	uuid: number;
@@ -21,4 +22,5 @@ export interface SingleListInterface {
 	color: string | null;
 	shop: ShopDataInterface;
 	invitations: InvitationUser[];
+	customShopOrder: UpdateCustomOrderInterface[];
 }

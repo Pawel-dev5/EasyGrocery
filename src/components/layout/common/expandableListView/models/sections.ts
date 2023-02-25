@@ -1,6 +1,8 @@
-import { ExpandListInterface } from 'components/layout/common/expandableListView/models/views';
+import { ExpandListDataInterface } from 'components/layout/common/expandableListView/models/views';
 
 export interface ExpandableComponentInterface {
-	item: ExpandListInterface;
+	item: ExpandListDataInterface;
 	onClickFunction: () => void;
+	isActive: boolean;
+	drag: () => void;
 }

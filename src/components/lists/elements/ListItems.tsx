@@ -14,12 +14,16 @@ import { ItemInterface } from 'components/lists/models/sections';
 import { ListItemInterface } from 'components/lists/models/partials';
 
 export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) => {
-	const { itemsDnDUpdate, sortedListItemsByCategories } = useContext(ListsContextData);
+	const { itemsDnDUpdate, sortedListItemsByCategories, updateListShopOrders } = useContext(ListsContextData);
 
 	return (
 		<>
 			{sortedListItemsByCategories?.length > 0 ? (
-				<ExpandableList data={sortedListItemsByCategories} bottomSheetHeight={bottomSheetHeight} />
+				<ExpandableList
+					data={sortedListItemsByCategories}
+					onDragEnd={(data) => updateListShopOrders(data)}
+					bottomSheetHeight={bottomSheetHeight}
+				/>
 			) : (
 				<>
 					{listItems && listItems?.length > 0 && (
@@ -29,8 +33,8 @@ export const ListItems = ({ listItems, bottomSheetHeight }: ListItemInterface) =
 							style={{
 								maxHeight: '100%',
 								height: bottomSheetHeight === 1 ? '77%' : '100%',
-								paddingRight: 15,
-								paddingLeft: 15,
+								paddingRight: 16,
+								paddingLeft: 16,
 							}}
 							keyExtractor={(item: ItemInterface) => item?.id}
 							renderItem={({ item, drag, isActive, getIndex }: RenderItemParams<ItemInterface>) => {

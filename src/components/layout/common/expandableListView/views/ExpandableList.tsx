@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { LayoutAnimation, Platform, UIManager, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { LayoutAnimation, Platform, UIManager, View, Text, TouchableOpacity } from 'react-native';
 
 // COMPONENTS
 import { ExpandableComponent } from 'components/layout/common/expandableListView/sections';
 import { Icon } from 'components/layout/common/Icon';
 
 // MODELS
-import { DataListInterface, ExpandListInterface } from 'components/layout/common/expandableListView/models/views';
+import { ExpandListDataInterface, ExpandableListInterface } from 'components/layout/common/expandableListView/models/views';
 
 // HELPERS
 import { convertDataToExpand } from 'components/layout/common/expandableListView/helpers/expandHelpers';
+import DraggableFlatList, { OpacityDecorator, RenderItemParams } from 'react-native-draggable-flatlist';
 
-export const ExpandableList = ({ data, bottomSheetHeight }: { data: DataListInterface[]; bottomSheetHeight: number }) => {
-	const [listDataSource, setListDataSource] = useState<ExpandListInterface[]>(convertDataToExpand([], data));
+export const ExpandableList = ({ data, bottomSheetHeight, onDragEnd }: ExpandableListInterface) => {
+	const [listDataSource, setListDataSource] = useState<ExpandListDataInterface[]>(convertDataToExpand([], data));
 	const [multiSelect, setMultiSelect] = useState(true);
 
 	if (Platform.OS === 'android') UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -42,7 +43,7 @@ export const ExpandableList = ({ data, bottomSheetHeight }: { data: DataListInte
 	};
 
 	const toggleAll = (variant: 'expand' | 'collapse') => {
-		const newArr: ExpandListInterface[] = [];
+		const newArr: ExpandListDataInterface[] = [];
 		listDataSource?.forEach((listItem) => newArr.push({ ...listItem, isExpanded: variant === 'expand' }));
 		if (newArr?.length > 0) {
 			setMultiSelect(true);
@@ -79,11 +80,27 @@ export const ExpandableList = ({ data, bottomSheetHeight }: { data: DataListInte
 				</TouchableOpacity>
 			</View>
 
-			<ScrollView style={{ height: bottomSheetHeight === 1 ? '74%' : '97%', paddingLeft: 16, paddingRight: 16 }}>
-				{listDataSource.map((item, key) => (
-					<ExpandableComponent key={item?.category} onClickFunction={() => updateLayout(key)} item={item} />
-				))}
-			</ScrollView>
+			<DraggableFlatList
+				data={listDataSource}
+				onDragEnd={({ data: newData }: { data: ExpandListDataInterface[] }) => onDragEnd(newData)}
+				style={{
+					maxHeight: '100%',
+					height: bottomSheetHeight === 1 ? '83%' : '95.5%',
+					paddingRight: 16,
+					paddingLeft: 16,
+				}}
+				keyExtractor={(item: ExpandListDataInterface) => item?.category}
+				renderItem={({ item, drag, isActive, getIndex }: RenderItemParams<ExpandListDataInterface>) => (
+					<OpacityDecorator>
+						<ExpandableComponent
+							item={item}
+							drag={drag}
+							isActive={isActive}
+							onClickFunction={() => updateLayout(getIndex()!)}
+						/>
+					</OpacityDecorator>
+				)}
+			/>
 		</View>
 	);
 };

@@ -20,7 +20,7 @@ import {
 // HELPERS
 import { iconHandler } from 'components/shops/helpers/iconHandler';
 
-export const ExpandableComponent = ({ item, onClickFunction }: ExpandableComponentInterface) => {
+export const ExpandableComponent = ({ item, onClickFunction, drag, isActive }: ExpandableComponentInterface) => {
 	const [layoutHeight, setLayoutHeight] = useState<number | null>(0);
 
 	useEffect(() => {
@@ -36,8 +36,9 @@ export const ExpandableComponent = ({ item, onClickFunction }: ExpandableCompone
 			<StyledExpandButton
 				activeOpacity={0.8}
 				onPress={onClickFunction}
+				onLongPress={drag}
 				isExpanded={item?.isExpanded && item?.items?.length > 0}
-				disabled={item?.items?.length === 0}
+				disabled={isActive}
 			>
 				<StyledSortedCategoryTitleWrapper>
 					{iconHandler(item?.category, item?.isExpanded, 'mini')?.icon}
@@ -52,6 +53,8 @@ export const ExpandableComponent = ({ item, onClickFunction }: ExpandableCompone
 					{
 						height: layoutHeight,
 						overflow: 'hidden',
+						marginTop: item?.isExpanded && item?.items?.length > 0 ? -8 : 0,
+						marginBottom: item?.isExpanded && item?.items?.length > 0 ? 16 : 0,
 					} as StyleProp<ViewStyle>
 				}
 			>

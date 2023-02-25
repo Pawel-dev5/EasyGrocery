@@ -30,7 +30,7 @@ export interface ShopDataInterface extends ShopDataAttributes {
 }
 
 export interface OrderInterface {
-	id: string;
+	id: number;
 	value: string;
 	priority: number;
 }
