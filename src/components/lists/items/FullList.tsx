@@ -86,7 +86,7 @@ export const FullListWrapper = (props: any) => {
 	}, []);
 
 	useEffect(() => {
-		if (globalSearchInput !== '') {
+		if (navigation?.isFocused() && globalSearchInput !== '') {
 			addSingleListItem(globalSearchInput, () => dispatch(globalSetGlobalSearchInput('')));
 		}
 	}, [globalSearchInput]);
