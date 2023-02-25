@@ -418,7 +418,7 @@ export const useList = () => {
 	const sortItemsByCategories = () => {
 		const itemsToSort = filteredItems || singleList?.items;
 
-		let categories = singleList?.customShopOrder;
+		let categories = singleList?.shop.orders as UpdateCustomOrderInterface[];
 		if (singleList && singleList?.customShopOrder?.length > 0) {
 			categories = singleList?.customShopOrder;
 		}
@@ -439,13 +439,14 @@ export const useList = () => {
 					priority,
 					category: value,
 					childCategories: categoriesHandler(value),
-					items: [...parentCategoryItems, ...childCategoryItems],
+					items: childCategoryItems?.length > 1 ? [...parentCategoryItems, ...childCategoryItems] : parentCategoryItems,
 				};
 				if (newCategoryItems) {
 					newListItems.push(newCategoryItems);
 				}
 			});
 		}
+
 		if (newListItems?.length > 0) setSortedListItemsByCategories(newListItems);
 	};
 
